@@ -5,13 +5,13 @@ from pathlib import Path
 from datetime import datetime
 import asyncio
 import aiohttp
+from utils.files import get_latest_bootstrap_file
+from config import CURRENT_SEASON
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw'
 
 logger = logging.getLogger(__name__)
-
-season = '2026'
 
 def extract_bootstrap():
     """Extracts bootstrap data from the FPL API and saves it to a JSON file."""
@@ -32,7 +32,7 @@ def extract_bootstrap():
     # Save the extracted data to a JSON file named with the current date   
     current_date = datetime.now().strftime('%Y-%m-%d')
 
-    file_path = RAW_DATA_DIR / 'bootstrap-static' / f'season={season}' / f'{current_date}.json'
+    file_path = RAW_DATA_DIR / 'bootstrap-static' / f'season={CURRENT_SEASON}' / f'{current_date}.json'
     file_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(file_path, 'w', encoding='utf-8') as f:
@@ -54,7 +54,7 @@ async def extract_element_summaries_async():
 
     # Create base directory for element summaries
     current_date = datetime.now().strftime('%Y-%m-%d')
-    base_path = RAW_DATA_DIR / 'element-summary' / f'season={season}' / f'{current_date}'
+    base_path = RAW_DATA_DIR / 'element-summary' / f'season={CURRENT_SEASON}' / f'{current_date}'
     base_path.mkdir(parents=True, exist_ok=True)
 
     # Async fetch with concurrency control
@@ -66,19 +66,6 @@ async def extract_element_summaries_async():
         await asyncio.gather(*tasks)
 
     logger.info('Element summary extraction complete.')
-
-
-def get_latest_bootstrap_file():
-    """Returns the path to the most recent bootstrap JSON file."""
-
-    bootstrap_dir = RAW_DATA_DIR / 'bootstrap-static' / f'season={season}'
-
-    file_list = list(bootstrap_dir.glob('*.json'))
-
-    if not file_list:
-        raise FileNotFoundError(f'No bootstrap files found in {bootstrap_dir}')
-    
-    return max(file_list)
 
 
 async def fetch_player(session, semaphore, player_id, base_path):
@@ -104,5 +91,3 @@ async def fetch_player(session, semaphore, player_id, base_path):
             logger.error(f'Error fetching player {player_id}: {e}')
 
         await asyncio.sleep(0.1)  # RATE LIMIT
-
-asyncio.run(extract_element_summaries_async())

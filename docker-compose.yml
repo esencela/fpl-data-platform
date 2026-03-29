@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: fpl-postgres
+    environment:
+      POSTGRES_USER: fpl_user
+      POSTGRES_PASSWORD: fpl_password
+      POSTGRES_DB: fpl_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - fpl_postgres_data:/var/lib/postgresql/data
+      - ./sql/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    restart: always
+
+volumes:
+  fpl_postgres_data:
