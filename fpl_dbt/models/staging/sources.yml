@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: bootstrap_static
+        description: 'Raw data from bootstrap-static endpoint of the FPL API'
+      - name: element_summary
+        description: 'Raw data from element-summary endpoint of the FPL API'
