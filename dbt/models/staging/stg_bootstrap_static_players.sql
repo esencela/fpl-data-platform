@@ -1,6 +1,6 @@
 {{ config(materialized='view') }}
 
--- Only get data from most recent data
+-- Only get data from most recent fetch
 with latest_snapshot as (
     select raw_data
     from {{ source('raw', 'bootstrap_static') }}

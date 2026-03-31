@@ -1,6 +1,6 @@
 {{ config(materialized='view') }}
 
--- Only get data from most recent data
+-- Only get data from most recent fetch
 with latest_snapshot as (
     select raw_data
     from {{ source('raw', 'bootstrap_static') }}
@@ -15,7 +15,7 @@ source_data as (
 
 select 
     (team->>'code')::int as team_id,
-    (team->>'id')::int as season_team_id,
+    (team->>'id')::int as team_season_id,
     team->>'name' as name,
     team->>'short_name' as short_name,
     team->>'strength_overall_home' as strength_overall_home,
