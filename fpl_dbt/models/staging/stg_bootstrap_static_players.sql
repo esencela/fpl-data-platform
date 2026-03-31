@@ -1,8 +1,16 @@
 {{ config(materialized='view') }}
 
-with source_data as (
-    select jsonb_array_elements(raw_data->'elements') as element
+-- Only get data from most recent data
+with latest_snapshot as (
+    select raw_data
     from {{ source('raw', 'bootstrap_static') }}
+    order by fetched_at desc
+    limit 1
+),
+
+source_data as (
+    select jsonb_array_elements(raw_data->'elements') as element
+    from latest_snapshot
 )
 
 select
