@@ -13,7 +13,7 @@ RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw'
 
 logger = logging.getLogger(__name__)
 
-def extract_bootstrap():
+def extract_bootstrap() -> None:
     """Extracts bootstrap data from the FPL API and saves it to a JSON file."""
 
     api_url = 'https://fantasy.premierleague.com/api/bootstrap-static/'
@@ -41,7 +41,8 @@ def extract_bootstrap():
     logger.info(f'Bootstrap data saved to {file_path}')
 
 
-async def extract_element_summaries_async():
+async def extract_element_summaries_async() -> None:
+    """Extracts element summary data (player data) asynchronously and saves each to a separate JSON file."""
 
     latest_file = get_latest_bootstrap_file()
 
@@ -62,14 +63,23 @@ async def extract_element_summaries_async():
     semaphore = asyncio.Semaphore(max_concurrent_requests)
 
     async with aiohttp.ClientSession() as session:
-        tasks = [fetch_player(session, semaphore, id, base_path) for id in player_ids]
+        tasks = [fetch_player_async(session, semaphore, id, base_path) for id in player_ids]
         await asyncio.gather(*tasks)
 
     logger.info('Element summary extraction complete.')
 
 
-async def fetch_player(session, semaphore, player_id, base_path):
+async def fetch_player_async(session: aiohttp.ClientSession, semaphore: asyncio.Semaphore, player_id: int, base_path: Path) -> None:
+    """
+    Fetches the element summary for a single player and saves it to a JSON file.
 
+    Params:
+        session(aiohttp.ClientSession): The aiohttp client session to use for the request.
+        semaphore(asyncio.Semaphore): The asyncio semaphore to control concurrency.
+        player_id(int): The ID of the player to fetch.
+        base_path(pathlib.Path): The base directory where the player JSON file should be saved.
+    """
+    
     url = f'https://fantasy.premierleague.com/api/element-summary/{player_id}/'
 
     async with semaphore:
@@ -78,7 +88,6 @@ async def fetch_player(session, semaphore, player_id, base_path):
                 if resp.status == 200:
                     data = await resp.json()
                     
-                    current_date = datetime.now().strftime('%Y-%m-%d')
                     file_path = base_path / f'player_id={player_id}.json'
 
                     with open(file_path, 'w', encoding='utf-8') as f:
