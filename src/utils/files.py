@@ -5,7 +5,8 @@ from config import CURRENT_SEASON
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw'
 
-def get_latest_bootstrap_file():
+
+def get_latest_bootstrap_file() -> Path:
     """Returns the path to the most recent bootstrap JSON file."""
 
     bootstrap_dir = RAW_DATA_DIR / 'bootstrap-static' / f'season={CURRENT_SEASON}'
@@ -18,7 +19,7 @@ def get_latest_bootstrap_file():
     return max(file_list)
 
 
-def get_latest_element_summaries():
+def get_latest_element_summaries() -> list[tuple[int, int, str, str]]:
     """Returns a list of records from the most recent element summary JSON files."""
     
     element_summary_dir = RAW_DATA_DIR / 'element-summary' / f'season={CURRENT_SEASON}'
