@@ -1,0 +1,361 @@
+version: 2
+
+models:
+  - name: stg_bootstrap_static_players
+    description: 'Staging model for player data from the bootstrap-static endpoint of the FPL API'
+    columns:
+      - name: player_id
+        description: 'Unique identifier for each player'
+        tests:
+          - unique
+          - not_null
+      - name: season
+        description: 'Season for which the player data is relevant - e.g. 2026 for the 2025/2026 season'
+        tests:
+          - not_null
+      - name: player_season_id
+        description: 'Unique identifier for each player within a season'
+        tests:
+          - not_null
+      - name: team_id
+        description: 'Unique identifier of the team the player belongs to'
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_bootstrap_static_teams')
+                field: team_id
+      - name: team_season_id
+        description: 'Unique identifier for each team within a season'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_bootstrap_static_teams')
+                field: team_season_id
+      - name: first_name
+        description: 'Player first name'
+      - name: last_name
+        description: 'Player last name'
+      - name: web_name
+        description: 'Player name used on the FPL website'
+      - name: known_name
+        description: 'Alternate names for certain players - e.g. Brazilian players with long names'
+      - name: country_id
+        description: 'Unique identifier for the players country of origin'
+      - name: birth_date
+        description: 'Player birth date'
+      - name: position_id
+        description: 'Unique identifier for the players position'
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['GKP', 'DEF', 'MID', 'FWD']
+      - name: now_cost
+        description: 'Current cost of the player in the FPL game'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "now_cost >= 0"
+
+  - name: stg_bootstrap_static_teams
+    description: 'Staging model for team data from the bootstrap-static endpoint of the FPL API'
+    columns:
+      - name: team_id
+        description: 'Unique identifier for each team'
+        tests:
+          - unique
+          - not_null
+      - name: season
+        description: 'Season for which the team data is relevant - e.g. 2026 for the 2025/2026 season'
+        tests:
+          - not_null
+      - name: team_season_id
+        description: 'Unique identifier for each team within a season'
+        tests:
+          - not_null
+      - name: name
+        description: 'Team name'
+        tests:
+          - not_null
+      - name: short_name
+        description: 'Abbreviated 3-letter team name used in FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "length(short_name) = 3"
+      - name: strength_overall_home
+        description: 'Overall team strength rating for home matches provided by FPL'
+        tests:
+          - not_null
+      - name: strength_overall_away
+        description: 'Overall team strength rating for away matches provided by FPL'
+        tests:
+          - not_null
+      - name: strength_attack_home
+        description: 'Attacking strength rating for home matches provided by FPL'
+        tests:
+          - not_null
+      - name: strength_attack_away
+        description: 'Attacking strength rating for away matches provided by FPL'
+        tests:
+          - not_null
+      - name: strength_defence_home
+        description: 'Defensive strength rating for home matches provided by FPL'
+        tests:
+          - not_null
+      - name: strength_defence_away
+        description: 'Defensive strength rating for away matches provided by FPL'
+        tests:
+          - not_null
+  
+  - name: stg_fixtures
+    description: 'Staging model for fixture data from the fixtures endpoint of the FPL API'
+    columns:
+      - name: fixture_id
+        description: 'Unique identifier for each fixture'
+        tests:
+          - unique
+          - not_null
+      - name: season
+        description: 'Season for which the fixture data is relevant - e.g. 2026 for the 2025/2026 season'
+        tests:
+          - not_null
+      - name: fixture_season_id
+        description: 'Unique identifier for each fixture within a season'
+        tests:
+          - not_null
+      - name: gameweek_id
+        description: 'Gameweek in which the fixture takes place'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "gameweek_id > 0"
+      - name: kickoff_time
+        description: 'Date and time of fixture kickoff'
+      - name: finished
+        description: 'Whether fixture has been played (true) or is upcoming (false)'
+        tests: 
+          - not_null
+      - name: home_team_season_id
+        description: 'Unique identifier for home team within a season'
+        tests:
+          - not_null
+          - stg_team_season_id_exists:
+              arguments:
+                team_season_id: home_team_season_id
+      - name: home_team_score
+        description: 'Goals scored by home team (null if fixture is upcoming)'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "home_team_score >= 0 or home_team_score iS NULL"
+      - name: away_team_season_id
+        description: 'Unique identifier for away team within a season'
+        tests:
+          - not_null
+          - stg_team_season_id_exists:
+              arguments:
+                team_season_id: away_team_season_id
+      - name: away_team_score
+        description: 'Goals scored by away team (null if fixture is upcoming)'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "away_team_score >= 0 or away_team_score iS NULL"
+      - name: home_team_difficulty
+        description: 'Difficulty rating of fixture for home team provided by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "home_team_difficulty >= 1 and home_team_difficulty <= 5"
+      - name: away_team_difficulty
+        description: 'Difficulty rating of fixture for away team provided by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "away_team_difficulty >= 1 and away_team_difficulty <= 5"
+  
+  - name: stg_events
+    description: 'Staging model of player stats for each gameweek from the events endpoint of the FPL API'
+    columns:
+      - name: gameweek_id
+        description: 'Gameweek number for which the event data is relevant'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "gameweek_id > 0"
+      - name: season
+        description: 'Season for which the event data is relevant - e.g. 2026 for the 2025/2026 season'
+        tests:
+          - not_null
+      - name: player_season_id
+        description: 'Unique identifier of player within a season'
+        tests:
+          - not_null
+          - stg_player_season_id_exists:
+              arguments:
+                player_season_id: player_season_id
+      - name: minutes
+        description: 'Minutes played'
+        tests:
+        - not_null
+      - name: starts
+        description: 'Amount of starts'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "starts >= 0"
+      - name: goals_scored
+        description: 'Goals scored'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "goals_scored >= 0"
+      - name: assists
+        description: 'Assists'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "assists >= 0"
+      - name: clean_sheets
+        description: 'Clean sheets'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "clean_sheets >= 0"
+      - name: goals_conceded
+        description: 'Goals conceded'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "goals_conceded >= 0"
+      - name: own_goals
+        description: 'Own goals'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "own_goals >= 0"
+      - name: penalties_saved
+        description: 'Penalties saved (for goalkeepers)'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "penalties_saved >= 0"
+      - name: penalties_missed
+        description: 'Penalties taken and missed'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "penalties_missed >= 0"
+      - name: yellow_cards
+        description: 'Yellow cards received'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "yellow_cards >= 0"
+      - name: red_cards
+        description: 'Red cards received'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "red_cards >= 0"
+      - name: saves
+        description: 'Saves made (for goalkeepers)'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "saves >= 0"
+      - name: total_points
+        description: 'Total fantasy points scored for the gameweek'
+        tests:
+          - not_null
+      - name: bonus
+        description: 'Bonus fantasy points awarded by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "bonus >= 0"
+      - name: bps
+        description: 'Bonus points system (BPS) score awarded by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "bps >= 0"
+      - name: influence
+        description: 'Influence score provided by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "influence >= 0"
+      - name: creativity
+        description: 'Creativity score provided by FPL' 
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "creativity >= 0"
+      - name: threat
+        description: 'Threat score provided by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "threat >= 0"
+      - name: ict_index
+        description: 'Overall index score combining influence, creativity, and threat provided by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "ict_index >= 0"
+      - name: expected_goals
+        description: 'Expected goals (xG) metric provided by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "expected_goals >= 0"
+      - name: expected_assists
+        description: 'Expected assists (xA) metric provided by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "expected_assists >= 0"
+      - name: expected_goal_involvements
+        description: 'Expected goal involvements (xGI) metric provided by FPL - sum of xG and xA'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "expected_goal_involvements >= 0"
+      - name: expected_goals_conceded
+        description: 'Expected goals conceded (xGC) metric provided by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "expected_goals_conceded >= 0"

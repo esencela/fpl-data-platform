@@ -18,16 +18,22 @@ source_data as (
 )
 
 select
+    -- Fixture identifiers
     (fixture->>'code')::int as fixture_id,
     season::int as season,
     (fixture->>'id')::int as fixture_season_id,
+
+    -- Fixture info
     (fixture->>'event')::int as gameweek_id,
     (fixture->>'kickoff_time')::timestamptz as kickoff_time,    
     (fixture->>'finished')::boolean as finished,
-    (fixture->>'team_h')::int as home_season_team_id,
+
+    -- Team info
+    (fixture->>'team_h')::int as home_team_season_id,
     (fixture->>'team_h_score')::int as home_team_score,
-    (fixture->>'team_a')::int as away_season_team_id,
+    (fixture->>'team_a')::int as away_team_season_id,
     (fixture->>'team_a_score')::int as away_team_score,
     (fixture->>'team_h_difficulty')::int as home_team_difficulty,
     (fixture->>'team_a_difficulty')::int as away_team_difficulty
+
 from source_data
