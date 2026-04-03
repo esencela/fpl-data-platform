@@ -2,19 +2,24 @@
 
 -- Only get data from most recent fetch
 with latest_snapshot as (
-    select raw_data
+    select 
+        raw_data,
+        season
     from {{ source('raw', 'fixtures') }}
     order by fetched_at desc
     limit 1
 ),
 
 source_data as (
-    select jsonb_array_elements(raw_data) as fixture
+    select 
+        jsonb_array_elements(raw_data) as fixture,
+        season
     from latest_snapshot
 )
 
 select
     (fixture->>'code')::int as fixture_id,
+    season::int as season,
     (fixture->>'id')::int as fixture_season_id,
     (fixture->>'event')::int as gameweek_id,
     (fixture->>'kickoff_time')::timestamptz as kickoff_time,    

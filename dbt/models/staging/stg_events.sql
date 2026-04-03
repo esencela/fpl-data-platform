@@ -2,19 +2,24 @@
 
 -- Only get data from most recent fetch
 with latest_snapshot as (
-    select raw_data
+    select 
+        raw_data,
+        season
     from {{ source('raw', 'events') }}
     where fetched_at = (select max(fetched_at) from {{ source('raw', 'events') }})
 ),
 
 source_data as (
-    select jsonb_array_elements(raw_data->'elements') as event
+    select 
+        jsonb_array_elements(raw_data->'elements') as event,
+        season
     from latest_snapshot
 ),
 
 flattened as (
     select
         (event->>'id')::int as player_season_id,
+        season,
         jsonb_array_elements(event->'explain') as explain,
         event->'stats' as stats
     from source_data
@@ -22,6 +27,7 @@ flattened as (
 
 select
     (explain->'fixture')::int as fixture_season_id,
+    season,
     player_season_id,
 
     -- Core stats

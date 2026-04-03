@@ -2,23 +2,28 @@
 
 -- Only get data from most recent fetch
 with latest_snapshot as (
-    select raw_data
+    select 
+        raw_data, 
+        season
     from {{ source('raw', 'bootstrap_static') }}
     order by fetched_at desc
     limit 1
 ),
 
 source_data as (
-    select jsonb_array_elements(raw_data->'elements') as element
+    select 
+        jsonb_array_elements(raw_data->'elements') as element,
+        season
     from latest_snapshot
 )
 
 select
     (element->>'code')::int as player_id,
+    season::int as season,
     (element->>'id')::int as player_season_id,
     (element->>'team_code')::int as team_id,
     (element->>'team')::int as season_team_id,
-    element->>'first_name' as first_name
+    element->>'first_name' as first_name,
     element->>'second_name' as second_name,
     element->>'web_name' as web_name,
     CASE
