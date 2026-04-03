@@ -16,6 +16,7 @@ source_data as (
 )
 
 select
+    -- Identifiers
     (player_game->>'element')::int as player_season_id,
     season::int as season,
     (player_game->>'fixture')::int as fixture_season_id,
@@ -65,6 +66,5 @@ select
     (player_game->>'transfers_in')::int as transfers_in,
     (player_game->>'transfers_out')::int as transfers_out,
     (player_game->>'transfers_balance')::int as transfers_balance
-
 
 from source_data
