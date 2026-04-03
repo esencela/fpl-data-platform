@@ -4,7 +4,12 @@ import json
 from pathlib import Path
 import logging
 from datetime import datetime
-from utils.files import get_latest_bootstrap_file, get_latest_element_summaries, get_latest_fixtures_file, get_latest_events
+from utils.files import (
+    get_latest_bootstrap_file, 
+    get_latest_element_summaries, 
+    get_latest_fixtures_file, 
+    get_latest_events
+)
 
 logger = logging.getLogger(__name__)
 
