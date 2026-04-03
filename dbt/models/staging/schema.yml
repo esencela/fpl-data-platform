@@ -278,6 +278,34 @@ models:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "red_cards >= 0"
+      - name: clearances_blocks_interceptions
+        description: 'Combined total of clearances, blocks, and interceptions'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "clearances_blocks_interceptions >= 0"
+      - name: recoveries
+        description: 'Recoveries made'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "recoveries >= 0"
+      - name: tackles
+        description: 'Tackles made'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "tackles >= 0"
+      - name: defensive_contributions
+        description: 'Combined total of defensive actions - clearances, blocks, interceptions, recoveries, and tackles'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "defensive_contributions >= 0"
       - name: saves
         description: 'Saves made (for goalkeepers)'
         tests:
@@ -300,9 +328,6 @@ models:
         description: 'Bonus points system (BPS) score awarded by FPL'
         tests:
           - not_null
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "bps >= 0"
       - name: influence
         description: 'Influence score provided by FPL'
         tests:

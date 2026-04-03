@@ -53,7 +53,7 @@ select
     (stats->>'clearances_blocks_interceptions')::int as clearances_blocks_interceptions,
     (stats->>'recoveries')::int as recoveries,
     (stats->>'tackles')::int as tackles,
-    (stats->>'defensive_contribution')::int as defensive_contribution,
+    (stats->>'defensive_contribution')::int as defensive_contributions,
     (stats->>'saves')::int as saves,
 
     -- FPL metrics
