@@ -46,7 +46,7 @@ def get_latest_element_summaries() -> list[tuple[int, int, str, str]]:
 def get_latest_fixtures_file() -> Path:
     """Returns the path to the most recent fixtures JSON file."""
 
-    fixtures_dir = RAW_DATA_DIR / 'bootstrap-static' / f'season={CURRENT_SEASON}'
+    fixtures_dir = RAW_DATA_DIR / 'fixtures' / f'season={CURRENT_SEASON}'
 
     file_list = list(fixtures_dir.glob('*.json'))
 

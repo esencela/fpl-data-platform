@@ -27,7 +27,7 @@ flattened as (
 
 select
     (explain->'fixture')::int as fixture_season_id,
-    season,
+    season::int as season,
     player_season_id,
 
     -- Core stats
