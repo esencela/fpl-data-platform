@@ -3,7 +3,7 @@
 
 select *
 from {{ model }} f
-left join {{ ref('stg_fixtures') }} fx
+left join {{ ref('stg_fpl__fixtures') }} fx
     on f.{{ column_name }} = fx.fixture_season_id
     and f.season = fx.season
 where fx.fixture_season_id is null

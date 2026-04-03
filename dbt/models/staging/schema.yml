@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_bootstrap_static_players
+  - name: stg_fpl__players
     description: 'Staging model for player data from the bootstrap-static endpoint of the FPL API'
     columns:
       - name: player_id
@@ -24,7 +24,7 @@ models:
           - not_null
           - relationships:
               arguments:
-                to: ref('stg_bootstrap_static_teams')
+                to: ref('stg_fpl__teams')
                 field: team_id
       - name: team_season_id
         description: 'Unique identifier for each team within a season'
@@ -32,7 +32,7 @@ models:
           - not_null
           - relationships:
               arguments:
-                to: ref('stg_bootstrap_static_teams')
+                to: ref('stg_fpl__teams')
                 field: team_season_id
       - name: first_name
         description: 'Player first name'
@@ -61,7 +61,7 @@ models:
               arguments:
                 expression: "now_cost >= 0"
 
-  - name: stg_bootstrap_static_teams
+  - name: stg_fpl__teams
     description: 'Staging model for team data from the bootstrap-static endpoint of the FPL API'
     columns:
       - name: team_id
@@ -113,7 +113,7 @@ models:
         tests:
           - not_null
 
-  - name: stg_element_summaries
+  - name: stg_fpl__player_game
     description: 'Staging model of player stats for each fixture from the element-summary endpoint of the FPL API'
     columns:
       - name: player_season_id
@@ -350,7 +350,7 @@ models:
               arguments:
                 expression: "transfers_balance = transfers_in - transfers_out"
   
-  - name: stg_fixtures
+  - name: stg_fpl__fixtures
     description: 'Staging model for fixture data from the fixtures endpoint of the FPL API'
     columns:
       - name: fixture_id
@@ -420,7 +420,7 @@ models:
               arguments:
                 expression: "away_team_difficulty >= 1 and away_team_difficulty <= 5"
   
-  - name: stg_events
+  - name: stg_fpl__player_gameweek
     description: 'Staging model of player stats for each gameweek from the events endpoint of the FPL API'
     columns:
       - name: gameweek_id

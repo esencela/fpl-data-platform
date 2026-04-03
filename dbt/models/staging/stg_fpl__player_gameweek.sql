@@ -70,4 +70,5 @@ select
     (stats->>'expected_assists')::decimal as expected_assists,
     (stats->>'expected_goal_involvements')::decimal as expected_goal_involvements,
     (stats->>'expected_goals_conceded')::decimal as expected_goals_conceded    
+
 from flattened
