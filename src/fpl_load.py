@@ -22,7 +22,7 @@ DB_PARAMS = {
 }
 
 def load_bootstrap_to_postgres():
-    """Loads raw bootstrap JSON data into PostgreSQL database."""    
+    """Loads latest raw bootstrap JSON data into PostgreSQL database."""    
 
     try:
         conn = psycopg2.connect(**DB_PARAMS)
@@ -55,7 +55,7 @@ def load_bootstrap_to_postgres():
 
 
 def load_element_summaries_to_postgres():
-    """Loads raw element summary JSON data into PostgreSQL database."""
+    """Loads latest raw element summary JSON data into PostgreSQL database."""
     
     values = get_latest_element_summaries()
 
@@ -83,7 +83,7 @@ def load_element_summaries_to_postgres():
         
 
 def load_fixtures_to_postgres():
-    """Loads raw fixtures JSON data into PostgreSQL database."""
+    """Loads latest raw fixtures JSON data into PostgreSQL database."""
     
     try:
         conn = psycopg2.connect(**DB_PARAMS)
@@ -116,7 +116,7 @@ def load_fixtures_to_postgres():
 
 
 def load_events_to_postgres():
-    """Loads raw events JSON data into PostgreSQL database."""
+    """Loads latest raw events JSON data into PostgreSQL database."""
     
     values = get_latest_events()
 
