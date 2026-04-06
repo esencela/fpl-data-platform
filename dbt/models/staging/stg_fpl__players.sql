@@ -23,7 +23,7 @@ select
     season::int as season,
     (element->>'id')::int as player_season_id,
     (element->>'team_code')::int as team_id,
-    (element->>'team')::int as season_team_id,
+    (element->>'team')::int as team_season_id,
 
     -- Personal info
     element->>'first_name' as first_name,
