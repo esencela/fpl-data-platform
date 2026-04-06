@@ -3,3 +3,4 @@ pandas
 aiohttp
 psycopg2-binary
 dbt-postgres
+pyarrow
