@@ -5,7 +5,7 @@ from pathlib import Path
 from datetime import datetime
 import asyncio
 import aiohttp
-from src.utils.fpl_files import get_latest_bootstrap_file
+from src.utils.fpl_file_helper import get_latest_bootstrap_file
 from src.config import CURRENT_SEASON
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
