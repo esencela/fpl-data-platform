@@ -1,9 +1,9 @@
 import json
 from pathlib import Path
-from config import CURRENT_SEASON
+from src.config import CURRENT_SEASON
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw'
+RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw' / 'fpl'
 
 
 def get_latest_bootstrap_file() -> Path:

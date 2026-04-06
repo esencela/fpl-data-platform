@@ -5,11 +5,11 @@ from pathlib import Path
 from datetime import datetime
 import asyncio
 import aiohttp
-from utils.files import get_latest_bootstrap_file
-from config import CURRENT_SEASON
+from src.utils.fpl_files import get_latest_bootstrap_file
+from src.config import CURRENT_SEASON
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw'
+RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw' / 'fpl'
 
 CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
 

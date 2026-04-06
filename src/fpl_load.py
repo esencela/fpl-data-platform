@@ -1,10 +1,9 @@
 import psycopg2
 from psycopg2.extras import execute_values
 import json
-from pathlib import Path
 import logging
 from datetime import datetime
-from utils.files import (
+from src.utils.fpl_files import (
     get_latest_bootstrap_file, 
     get_latest_element_summaries, 
     get_latest_fixtures_file, 
