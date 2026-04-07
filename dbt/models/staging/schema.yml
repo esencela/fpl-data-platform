@@ -136,6 +136,8 @@ models:
               arguments:
                 to: ref('stg_fpl__fixtures')
                 field: fixture_season_id
+      - name: gameweek_id
+        description: 'Gameweek match was played in'
       - name: minutes
         description: 'Minutes played'
         tests:
