@@ -3,15 +3,15 @@ CREATE SCHEMA IF NOT EXISTS raw;
 CREATE SCHEMA IF NOT EXISTS staging;
 CREATE SCHEMA IF NOT EXISTS serving;
 
--- Create raw tables
-CREATE TABLE IF NOT EXISTS raw.bootstrap_static (
+-- Create raw tables for fpl api data
+CREATE TABLE IF NOT EXISTS raw.fpl_bootstrap_static (
     season INT NOT NULL,
     raw_data JSONB NOT NULL,
     fetched_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (season, fetched_at)
 );
 
-CREATE TABLE IF NOT EXISTS raw.element_summary (
+CREATE TABLE IF NOT EXISTS raw.fpl_element_summary (
     season INT NOT NULL,
     player_id INT NOT NULL,
     raw_data JSONB NOT NULL,
@@ -19,14 +19,14 @@ CREATE TABLE IF NOT EXISTS raw.element_summary (
     PRIMARY KEY (season, player_id)
 );
 
-CREATE TABLE IF NOT EXISTS raw.fixtures (
+CREATE TABLE IF NOT EXISTS raw.fpl_fixtures (
     season INT NOT NULL,
     raw_data JSONB NOT NULL,
     fetched_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (season, fetched_at)
 );
 
-CREATE TABLE IF NOT EXISTS raw.events (
+CREATE TABLE IF NOT EXISTS raw.fpl_events (
     season INT NOT NULL,
     gameweek_id INT NOT NULL,
     raw_data JSONB NOT NULL,
@@ -35,26 +35,36 @@ CREATE TABLE IF NOT EXISTS raw.events (
 );
 
 -- Create indexes for raw tables
-CREATE INDEX IF NOT EXISTS idx_bootstrap_static_season 
-ON raw.bootstrap_static(season);
+CREATE INDEX IF NOT EXISTS idx_fpl_bootstrap_static_season 
+ON raw.fpl_bootstrap_static(season);
 
-CREATE INDEX IF NOT EXISTS idx_bootstrap_static_jsonb
-ON raw.bootstrap_static USING GIN (raw_data);
+CREATE INDEX IF NOT EXISTS idx_fpl_bootstrap_static_jsonb
+ON raw.fpl_bootstrap_static USING GIN (raw_data);
 
-CREATE INDEX IF NOT EXISTS idx_element_summary_season_player
-ON raw.element_summary(season, player_id);
+CREATE INDEX IF NOT EXISTS idx_fpl_element_summary_season_player
+ON raw.fpl_element_summary(season, player_id);
 
-CREATE INDEX IF NOT EXISTS idx_element_summary_jsonb
-ON raw.element_summary USING GIN (raw_data);
+CREATE INDEX IF NOT EXISTS idx_fpl_element_summary_jsonb
+ON raw.fpl_element_summary USING GIN (raw_data);
 
-CREATE INDEX IF NOT EXISTS idx_fixtures_season
-ON raw.fixtures(season);
+CREATE INDEX IF NOT EXISTS idx_fpl_fixtures_season
+ON raw.fpl_fixtures(season);
 
-CREATE INDEX IF NOT EXISTS idx_fixtures_jsonb
-ON raw.fixtures USING GIN (raw_data);
+CREATE INDEX IF NOT EXISTS idx_fpl_fixtures_jsonb
+ON raw.fpl_fixtures USING GIN (raw_data);
 
-CREATE INDEX IF NOT EXISTS idx_events_season_gameweek
-ON raw.events(season, gameweek_id);
+CREATE INDEX IF NOT EXISTS idx_fpl_events_season_gameweek
+ON raw.fpl_events(season, gameweek_id);
 
-CREATE INDEX IF NOT EXISTS idx_events_jsonb
-ON raw.events USING GIN (raw_data);
+CREATE INDEX IF NOT EXISTS idx_fpl_events_jsonb
+ON raw.fpl_events USING GIN (raw_data);
+
+
+-- Create raw tables for vaastav parquet data
+CREATE TABLE IF NOT EXISTS raw.vaastav_players (
+    season INT NOT NULL,
+    player_season_id INT NOT NULL,
+    raw_data JSONB NOT NULL,
+    fetched_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (season, player_season_id, fetched_at)
+);
