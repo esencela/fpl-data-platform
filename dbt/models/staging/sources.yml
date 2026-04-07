@@ -14,3 +14,5 @@ sources:
         description: 'Raw data from event endpoint of the FPL API'
       - name: vaastav_players
         description: 'Raw player data from vaastav repo'
+      - name: vaastav_gws
+        description: 'Raw player-game data from vaastav repo'

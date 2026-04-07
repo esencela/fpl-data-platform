@@ -20,6 +20,7 @@ select
     (player_game->>'element')::int as player_season_id,
     season::int as season,
     (player_game->>'fixture')::int as fixture_season_id,
+    (player_game->>'round')::int as gameweek_id,
     
     -- Core stats
     (player_game->>'minutes')::int as minutes,
