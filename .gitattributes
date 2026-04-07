@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Remove notebooks from linguist
+*.ipynb linguist-vendored
