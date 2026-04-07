@@ -22,7 +22,9 @@ seasons = [(get_season_string(season), season) for season in range(MIN_SEASON, M
 
 
 def extract_player_data() -> None:
-    """Extracts raw player CSV files from GitHub and saves them as Parquet files."""    
+    """Extracts raw player CSV files from GitHub and saves as parquet files."""  
+
+    logger.info('Extracting player data from GitHub...')  
 
     for season_string, season in seasons:
         base_url = f'https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/{season_string}/'
@@ -31,11 +33,29 @@ def extract_player_data() -> None:
 
         # Raw player data
         player_url = base_url + 'players_raw.csv'
-        player_df = pd.read_csv(player_url)
+        df_player = pd.read_csv(player_url)
 
         file_path = base_path / f'{CURRENT_DATE}.parquet'
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        player_df.to_parquet(file_path, index=False)
+        df_player.to_parquet(file_path, index=False)
         logger.info(f'Player data for season {season} extracted and saved to {file_path}')
 
 
+def extract_gameweek_data() -> None:
+    """Extracts raw player-game CSV files from GitHub and saves as parquet files"""
+
+    logger.info('Extracting player-game data from GitHub...')  
+
+    for season_string, season in seasons:
+        base_url = f'https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/{season_string}/gws/'
+
+        base_path = RAW_DATA_DIR / 'gws' / f'season={season}'
+
+        # Raw player-game data
+        gw_url = base_url + 'merged_gw.csv'
+        df_gw = pd.read_csv(gw_url, encoding='latin-1') # utf-8 fails so use latin-1 for github data
+
+        file_path = base_path / f'{CURRENT_DATE}.parquet'
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        df_gw.to_parquet(file_path, index=False)
+        logger.info(f'Player-Game data for season {season} extracted and saved to {file_path}')
