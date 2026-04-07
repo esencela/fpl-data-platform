@@ -5,7 +5,7 @@ with latest_snapshot as (
     select
         raw_data,
         season
-    from {{ source('raw', 'element_summary')}}
+    from {{ source('raw', 'fpl_element_summary')}}
 ),
 
 source_data as (

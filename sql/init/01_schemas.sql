@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS raw.fpl_events (
     PRIMARY KEY (season, gameweek_id)
 );
 
--- Create indexes for raw tables
+-- Create indexes for raw fpl api tables
 CREATE INDEX IF NOT EXISTS idx_fpl_bootstrap_static_season 
 ON raw.fpl_bootstrap_static(season);
 
@@ -68,3 +68,7 @@ CREATE TABLE IF NOT EXISTS raw.vaastav_players (
     fetched_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (season, player_season_id, fetched_at)
 );
+
+-- Create indexes for raw vaastav tables
+CREATE INDEX IF NOT EXISTS idx_vaastav_players_season_player
+ON raw.vaastav_players(season, player_season_id);

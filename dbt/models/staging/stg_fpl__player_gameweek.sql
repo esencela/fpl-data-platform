@@ -6,8 +6,8 @@ with latest_snapshot as (
         raw_data,
         season,
         gameweek_id
-    from {{ source('raw', 'events') }}
-    where fetched_at = (select max(fetched_at) from {{ source('raw', 'events') }})
+    from {{ source('raw', 'fpl_events') }}
+    where fetched_at = (select max(fetched_at) from {{ source('raw', 'fpl_events') }})
 ),
 
 source_data as (

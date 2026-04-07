@@ -5,7 +5,7 @@ with latest_snapshot as (
     select 
         raw_data, 
         season
-    from {{ source('raw', 'bootstrap_static') }}
+    from {{ source('raw', 'fpl_bootstrap_static') }}
     order by fetched_at desc
     limit 1
 ),

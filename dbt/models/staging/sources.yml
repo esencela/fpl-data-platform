@@ -4,11 +4,13 @@ sources:
   - name: raw
     schema: raw
     tables:
-      - name: bootstrap_static
+      - name: fpl_bootstrap_static
         description: 'Raw data from bootstrap-static endpoint of the FPL API'
-      - name: element_summary
+      - name: fpl_element_summary
         description: 'Raw data from element-summary endpoint of the FPL API'
-      - name: fixtures
+      - name: fpl_fixtures
         description: 'Raw data from fixtures endpoint of the FPL API'
-      - name: events
+      - name: fpl_events
         description: 'Raw data from event endpoint of the FPL API'
+      - name: vaastav_players
+        description: 'Raw player data from vaastav repo'

@@ -42,7 +42,7 @@ def load_bootstrap_to_postgres():
     fetch_date = datetime.strptime(bootstrap_file.stem, '%Y-%m-%d')
 
     cursor.execute("""
-        INSERT INTO raw.bootstrap_static (season, raw_data, fetched_at) 
+        INSERT INTO raw.fpl_bootstrap_static (season, raw_data, fetched_at) 
         VALUES (%s, %s, %s)
         ON CONFLICT (season, fetched_at) DO UPDATE
         SET raw_data = EXCLUDED.raw_data, fetched_at = EXCLUDED.fetched_at
@@ -68,7 +68,7 @@ def load_element_summaries_to_postgres():
         return
     
     query = """
-        INSERT INTO raw.element_summary (season, player_id, raw_data, fetched_at) 
+        INSERT INTO raw.fpl_element_summary (season, player_id, raw_data, fetched_at) 
         VALUES %s
         ON CONFLICT (season, player_id) DO UPDATE 
         SET raw_data = EXCLUDED.raw_data, fetched_at = EXCLUDED.fetched_at
@@ -103,7 +103,7 @@ def load_fixtures_to_postgres():
     fetch_date = datetime.strptime(fixtures_file.stem, '%Y-%m-%d')
 
     cursor.execute("""
-        INSERT INTO raw.fixtures (season, raw_data, fetched_at)
+        INSERT INTO raw.fpl_fixtures (season, raw_data, fetched_at)
         VALUES (%s, %s, %s)
         ON CONFLICT (season, fetched_at) DO UPDATE
         SET raw_data = EXCLUDED.raw_data, fetched_at = EXCLUDED.fetched_at
@@ -129,7 +129,7 @@ def load_events_to_postgres():
         return
     
     query = """
-        INSERT INTO raw.events (season, gameweek_id, raw_data, fetched_at) 
+        INSERT INTO raw.fpl_events (season, gameweek_id, raw_data, fetched_at) 
         VALUES %s
         ON CONFLICT (season, gameweek_id) DO UPDATE
         SET raw_data = EXCLUDED.raw_data, fetched_at = EXCLUDED.fetched_at
