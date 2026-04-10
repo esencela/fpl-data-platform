@@ -39,25 +39,25 @@ CREATE INDEX IF NOT EXISTS idx_fpl_bootstrap_static_season
 ON raw.fpl_bootstrap_static(season);
 
 CREATE INDEX IF NOT EXISTS idx_fpl_bootstrap_static_jsonb
-ON raw.fpl_bootstrap_static USING GIN (raw_data);
+ON raw.fpl_bootstrap_static USING GIN(raw_data);
 
 CREATE INDEX IF NOT EXISTS idx_fpl_element_summary_season_player
 ON raw.fpl_element_summary(season, player_id);
 
 CREATE INDEX IF NOT EXISTS idx_fpl_element_summary_jsonb
-ON raw.fpl_element_summary USING GIN (raw_data);
+ON raw.fpl_element_summary USING GIN(raw_data);
 
 CREATE INDEX IF NOT EXISTS idx_fpl_fixtures_season
 ON raw.fpl_fixtures(season);
 
 CREATE INDEX IF NOT EXISTS idx_fpl_fixtures_jsonb
-ON raw.fpl_fixtures USING GIN (raw_data);
+ON raw.fpl_fixtures USING GIN(raw_data);
 
 CREATE INDEX IF NOT EXISTS idx_fpl_events_season_gameweek
 ON raw.fpl_events(season, gameweek_id);
 
 CREATE INDEX IF NOT EXISTS idx_fpl_events_jsonb
-ON raw.fpl_events USING GIN (raw_data);
+ON raw.fpl_events USING GIN(raw_data);
 
 
 -- Create raw tables for vaastav parquet data
@@ -79,9 +79,29 @@ CREATE TABLE IF NOT EXISTS raw.vaastav_gws (
     PRIMARY KEY (season, player_season_id, fixture_season_id, gameweek_id, fetched_at)
 );
 
+CREATE TABLE IF NOT EXISTS raw.vaastav_fixtures(
+    season INT NOT NULL,
+    fixture_season_id INT NOT NULL,
+    raw_data JSONB NOT NULL,
+    fetched_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (season, fixture_season_id, fetched_at)
+);
+
 -- Create indexes for raw vaastav tables
 CREATE INDEX IF NOT EXISTS idx_vaastav_players_season_player
 ON raw.vaastav_players(season, player_season_id);
 
+CREATE INDEX IF NOT EXISTS idx_vaastav_players_jsonb
+ON raw.vaastav_players USING GIN(raw_data);
+
 CREATE INDEX IF NOT EXISTS idx_vaastav_gws_season
 ON raw.vaastav_gws(season, player_season_id, fixture_season_id, gameweek_id);
+
+CREATE INDEX IF NOT EXISTS idx_vaastav_gws_jsonb
+ON raw.vaastav_gws USING GIN(raw_data);
+
+CREATE INDEX IF NOT EXISTS idx_vaastav_fixtures_season_fixture
+ON raw.vaastav_fixtures(season, fixture_id);
+
+CREATE INDEX IF NOT EXISTS idx_vaastav_fixtures_jsonb
+ON raw.vaastav_fixtures USING GIN(raw_data);

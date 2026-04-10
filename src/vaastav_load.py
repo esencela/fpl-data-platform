@@ -77,7 +77,7 @@ def load_gws_to_postgres() -> None:
 
         df.to_sql('vaastav_gws', engine, schema='raw', if_exists='append', index=False)
 
-    logger.info(f'Succesfully loaded {len(gw_files)} rows to raw.vaastav_players')
+    logger.info(f'Succesfully loaded {len(gw_files)} rows to raw.vaastav_gws')
 
 
 def load_fixtures_to_postgres() -> None:
@@ -107,4 +107,4 @@ def load_fixtures_to_postgres() -> None:
 
         df.to_sql('vaastav_fixtures', engine, schema='raw', if_exists='append', index=False)
 
-    logger.info(f'Succesfully loaded {len(fixture_files)} rows to raw.vaastav_players')
+    logger.info(f'Succesfully loaded {len(fixture_files)} rows to raw.vaastav_fixtures')

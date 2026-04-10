@@ -16,3 +16,5 @@ sources:
         description: 'Raw player data from vaastav repo'
       - name: vaastav_gws
         description: 'Raw player-game data from vaastav repo'
+      - name: vaastav_fixtures
+        description: 'Raw fixture data from vaastav repo'

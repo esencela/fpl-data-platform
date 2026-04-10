@@ -9,6 +9,7 @@ with latest_snapshot as (
         fixture_season_id,
         gameweek_id
     from {{ source('raw', 'vaastav_gws')}}
+    where fetched_at = (select max(fetched_at) from {{ source('raw', 'vaastav_gws') }})
 )
 
 select
