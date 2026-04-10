@@ -47,7 +47,6 @@ def extract_player_data() -> None:
         
         except Exception as e:
             logger.error(f'Failed to retrieve player data: {e}')
-            raise
 
 
 def extract_gameweek_data() -> None:
@@ -72,7 +71,7 @@ def extract_gameweek_data() -> None:
 
         except Exception as e:
             logger.error(f'Failed to retrieve player-game data: {e}')
-            raise
+
 
 def extract_fixture_data() -> None:
     """Extracts raw fixture CSV files from GitHub and saves as parquet files"""
@@ -99,7 +98,5 @@ def extract_fixture_data() -> None:
                 logger.warning(f'Fixture data not available for {season} season')
             else:
                 logger.error(f'Failed to retrieve fixture data: {e}')
-                raise
         except Exception as e:
             logger.error(f'Failed to retrieve fixture data: {e}')
-            raise

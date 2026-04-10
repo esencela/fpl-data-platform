@@ -16,12 +16,6 @@ CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
 RATE_LIMIT = 0.1  # seconds between requests to avoid hitting API rate 
 
 logger = logging.getLogger(__name__)
-# logger.setLevel(level=logging.INFO)
-# 
-# handler = logging.StreamHandler()
-# handler.setLevel(logging.INFO)
-# 
-# logger.addHandler(handler)
 
 
 def extract_bootstrap() -> None:
