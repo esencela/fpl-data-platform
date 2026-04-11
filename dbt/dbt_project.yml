@@ -31,3 +31,9 @@ models:
     staging:
       +schema: staging
       +materialized: view
+
+seeds:
+  fpl_dbt:
+    missing_teams:
+      +schema: seed
+      +alias: missing_teams
