@@ -1,0 +1,61 @@
+season,team_id,team_season_id,name,short_name
+2017,3,1,Arsenal,ARS
+2017,91,2,Bournemouth,BOU
+2017,90,3,Burnley,BUR
+2017,8,4,Chelsea,CHE
+2017,31,5,Crystal Palace,CRY
+2017,11,6,Everton,EVE
+2017,88,7,Hull,HUL
+2017,13,8,Leicester,LEI
+2017,14,9,Liverpool,LIV
+2017,43,10,Man City,MCI
+2017,1,11,Man Utd,MUN
+2017,25,12,Boro,MID
+2017,20,13,Southampton,SOU
+2017,110,14,Stoke,STK
+2017,56,15,Sunderland,SUN
+2017,80,16,Swansea,SWA
+2017,6,17,Spurs,TOT
+2017,57,18,Watford,WAT
+2017,35,19,West Brom,WBA
+2017,21,20,West Ham,WHU
+2018,3,1,Arsenal,ARS
+2018,91,2,Bournemouth,BOU
+2018,36,3,Brighton,BHA
+2018,90,4,Burnley,BUR
+2018,8,5,Chelsea,CHE
+2018,31,6,Crystal Palace,CRY
+2018,11,7,Everton,EVE
+2018,38,8,Huddersfield,HUD
+2018,13,9,Leicester,LEI
+2018,14,10,Liverpool,LIV
+2018,43,11,Man City,MCI
+2018,1,12,Man Utd,MUN
+2018,4,13,Newcastle,NEW
+2018,20,14,Southampton,SOU
+2018,110,15,Stoke,STK
+2018,80,16,Swansea,SWA
+2018,6,17,Spurs,TOT
+2018,57,18,Watford,WAT
+2018,35,19,West Brom,WBA
+2018,21,20,West Ham,WHU
+2019,3,1,Arsenal,ARS
+2019,91,2,Bournemouth,BOU
+2019,36,3,Brighton,BHA
+2019,90,4,Burnley,BUR
+2019,97,5,Cardiff,CAR
+2019,8,6,Chelsea,CHE
+2019,31,7,Crystal Palace,CRY
+2019,11,8,Everton,EVE
+2019,54,9,Fulham,FUL
+2019,38,10,Huddersfield,HUD
+2019,13,11,Leicester,LEI
+2019,14,12,Liverpool,LIV
+2019,43,13,Man City,MCI
+2019,1,14,Man Utd,MUN
+2019,4,15,Newcastle,NEW
+2019,20,16,Southampton,SOU
+2019,6,17,Spurs,TOT
+2019,57,18,Watford,WAT
+2019,21,19,West Ham,WHU
+2019,39,20,Wolves,WOL
