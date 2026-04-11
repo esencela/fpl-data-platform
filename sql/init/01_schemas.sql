@@ -87,6 +87,14 @@ CREATE TABLE IF NOT EXISTS raw.vaastav_fixtures(
     PRIMARY KEY (season, fixture_season_id, fetched_at)
 );
 
+CREATE TABLE IF NOT EXISTS raw.vaastav_teams(
+    season INT NOT NULL,
+    team_season_id INT NOT NULL,
+    raw_data JSONB NOT NULL,
+    fetched_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (season, team_season_id, fetched_at)
+);
+
 -- Create indexes for raw vaastav tables
 CREATE INDEX IF NOT EXISTS idx_vaastav_players_season_player
 ON raw.vaastav_players(season, player_season_id);
@@ -105,3 +113,9 @@ ON raw.vaastav_fixtures(season, fixture_id);
 
 CREATE INDEX IF NOT EXISTS idx_vaastav_fixtures_jsonb
 ON raw.vaastav_fixtures USING GIN(raw_data);
+
+CREATE INDEX IF NOT EXISTS idx_vaastav_teams_season_team
+ON raw.vaastav_teams(season, team_season_id);
+
+CREATE INDEX IF NOT EXISTS idx_vaastav_teams_jsonb
+ON raw.vaastav_teams USING GIN(raw_data);

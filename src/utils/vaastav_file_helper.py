@@ -61,3 +61,22 @@ def get_latest_fixture_files() -> list[Path]:
         latest_files.append(latest_file)
 
     return latest_files
+
+
+def get_latest_team_files() -> list[Path]:
+    """Returns a list of paths to the latest raw team parquet files."""
+
+    team_dir = RAW_DATA_DIR / 'teams'
+
+    latest_files = []
+
+    for season_folder in team_dir.glob('season=*'):
+        file_list = list(season_folder.glob('*.parquet'))
+
+        if not file_list:
+            raise FileNotFoundError(f'No team files found in {season_folder}')
+        
+        latest_file = max(file_list)
+        latest_files.append(latest_file)
+
+    return latest_files

@@ -6,7 +6,8 @@ from datetime import datetime
 from src.utils.vaastav_file_helper import (
     get_latest_player_files, 
     get_latest_gameweek_files,
-    get_latest_fixture_files
+    get_latest_fixture_files,
+    get_latest_team_files
 )
 
 logger = logging.getLogger(__name__)
@@ -108,3 +109,33 @@ def load_fixtures_to_postgres() -> None:
         df.to_sql('vaastav_fixtures', engine, schema='raw', if_exists='append', index=False)
 
     logger.info(f'Succesfully loaded {len(fixture_files)} rows to raw.vaastav_fixtures')
+
+
+def load_teams_to_postgres() -> None:
+    """Loads latest raw team parquet files to PostgreSQL database."""
+
+    logger.info('Fetching latest raw team files...')
+
+    team_files = get_latest_team_files()
+
+    for file in team_files:
+        season = int(file.parent.name.split('=')[1])
+        fetch_date = datetime.strptime(file.stem, '%Y-%m-%d')
+        df = pd.read_parquet(file)
+
+        df['season'] = season
+        df['fetched_at'] = fetch_date
+
+        df = df.rename(columns={'id': 'team_season_id'})
+
+        known_cols = ['season', 'team_season_id', 'fetched_at']
+        extra_cols = [col for col in df.columns if col not in known_cols]
+
+        df['raw_data'] = df[extra_cols].apply(lambda row: row.to_json(default_handler=str), axis=1)
+        df = df[known_cols + ['raw_data']]
+
+        logger.info(f'Loading {file} to PostgreSQL...')
+
+        df.to_sql('vaastav_teams', engine, schema='raw', if_exists='append', index=False)
+
+    logger.info(f'Succesfully loaded {len(team_files)} rows to raw.vaastav_teams')

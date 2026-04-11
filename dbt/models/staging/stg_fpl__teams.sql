@@ -28,12 +28,12 @@ select
     team->>'short_name' as short_name,
 
     -- Team strength metrics
-    team->>'strength_overall_home' as strength_overall_home,
-    team->>'strength_overall_away' as strength_overall_away,
-    team->>'strength_attack_home' as strength_attack_home,
-    team->>'strength_attack_away' as strength_attack_away,
-    team->>'strength_defence_home' as strength_defence_home,
-    team->>'strength_defence_away' as strength_defence_away
+    (team->>'strength_overall_home')::int as strength_overall_home,
+    (team->>'strength_overall_away')::int as strength_overall_away,
+    (team->>'strength_attack_home')::int as strength_attack_home,
+    (team->>'strength_attack_away')::int as strength_attack_away,
+    (team->>'strength_defence_home')::int as strength_defence_home,
+    (team->>'strength_defence_away')::int as strength_defence_away
     
 from source_data
 

@@ -104,3 +104,34 @@ def extract_fixture_data() -> None:
         except Exception as e:
             logger.error(f'Failed to retrieve fixture data: {e}')
             raise
+
+
+def extract_team_data() -> None:
+    """Extracts raw team csv files from GitHub and saves as parquet files"""
+
+    logger.info('Extracting team data from GitHub...')
+
+    for season_string, season in seasons:
+        base_path = RAW_DATA_DIR / 'teams' / f'season={season}'
+
+        # Raw team data
+        team_url = base_url + f'{season_string}/teams.csv'
+
+        try:
+            df_team = pd.read_csv(team_url)
+
+            file_path = base_path / f'{CURRENT_DATE}.parquet'
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            df_team.to_parquet(file_path, index=False)
+
+            logger.info(f'Team data for season {season} extracted and saved to {file_path}')
+
+        except HTTPError as e:
+            if e.code == 404:
+                logger.warning(f'Team data not available for {season} season')
+            else:
+                logger.error(f'Failed to retrieve team data: {e}')
+                raise
+        except Exception as e:
+            logger.error(f'Failed to retrieve team data: {e}')
+            raise
