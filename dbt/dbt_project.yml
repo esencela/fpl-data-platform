@@ -29,4 +29,5 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   fpl_dbt:
     staging:
+      +schema: staging
       +materialized: view

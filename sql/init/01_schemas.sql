@@ -1,7 +1,5 @@
 -- Create schema layers
 CREATE SCHEMA IF NOT EXISTS raw;
-CREATE SCHEMA IF NOT EXISTS staging;
-CREATE SCHEMA IF NOT EXISTS serving;
 
 -- Create raw tables for fpl api data
 CREATE TABLE IF NOT EXISTS raw.fpl_bootstrap_static (
