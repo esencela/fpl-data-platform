@@ -1,0 +1,226 @@
+version: 2
+
+models:
+  - name: stg_vaastav__player_game
+    description: 'Staging model of player stats for each fixture from the element-summary endpoint of the FPL API'
+    columns:
+      - name: player_season_id
+        description: 'Unique identifier of player within a season'
+        tests:
+          - not_null
+      - name: season
+        description: 'Season for which the player data is relevant - e.g. 2026 for the 2025/2026 season'
+        tests:
+          - not_null
+      - name: fixture_season_id
+        description: 'Unique identifier for each fixture within a season'
+        tests:
+          - not_null
+      - name: gameweek_id
+        description: 'Gameweek match was played in'
+      - name: minutes
+        description: 'Minutes played'
+        tests:
+        - not_null
+      - name: starts
+        description: 'Amount of starts'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or starts is null"
+      - name: goals_scored
+        description: 'Goals scored'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: assists
+        description: 'Assists'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: clean_sheets
+        description: 'Clean sheets'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: goals_conceded
+        description: 'Goals conceded'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: own_goals
+        description: 'Own goals'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: penalties_saved
+        description: 'Penalties saved (for goalkeepers)'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: penalties_missed
+        description: 'Penalties taken and missed'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: yellow_cards
+        description: 'Yellow cards received'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: red_cards
+        description: 'Red cards received'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: clearances_blocks_interceptions
+        description: 'Combined total of clearances, blocks, and interceptions'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or clearances_blocks_interceptions is null"
+      - name: recoveries
+        description: 'Recoveries made'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or recoveries is null"
+      - name: tackles
+        description: 'Tackles made'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or tackles is null"
+      - name: defensive_contributions
+        description: 'Combined total of defensive actions - clearances, blocks, interceptions, recoveries, and tackles'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or defensive_contributions is null"
+      - name: saves
+        description: 'Saves made (for goalkeepers)'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: total_points
+        description: 'Total fantasy points scored for the gameweek'
+        tests:
+          - not_null
+      - name: bonus
+        description: 'Bonus fantasy points awarded by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: bps
+        description: 'Bonus points system (BPS) score awarded by FPL'
+        tests:
+          - not_null
+      - name: influence
+        description: 'Influence score provided by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: creativity
+        description: 'Creativity score provided by FPL' 
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: threat
+        description: 'Threat score provided by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: ict_index
+        description: 'Overall index score combining influence, creativity, and threat provided by FPL'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: expected_goals
+        description: 'Expected goals (xG) metric provided by FPL'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or expected_goals is null"
+      - name: expected_assists
+        description: 'Expected assists (xA) metric provided by FPL'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or expected_assists is null"
+      - name: expected_goal_involvements
+        description: 'Expected goal involvements (xGI) metric provided by FPL - sum of xG and xA'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or expected_goal_involvements is null"
+      - name: expected_goals_conceded
+        description: 'Expected goals conceded (xGC) metric provided by FPL'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0 or expected_goals_conceded is null"
+      - name: cost
+        description: 'Cost of the player in FPL at the time of the fixture'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: selected
+        description: 'Number of FPL teams that had the player in their squad at the time of the fixture'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: transfers_in
+        description: 'Number of FPL teams that transferred in the player in the gameweek before the fixture'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: transfers_out
+        description: 'Number of FPL teams that transferred out the player in the gameweek before the fixture'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: transfers_balance
+        description: 'Net transfers for the player in the gameweek before the fixture'
+        tests:
+          - not_null
+#          - dbt_utils.expression_is_true:
+#              arguments:
+#                expression: "= transfers_in - transfers_out"
