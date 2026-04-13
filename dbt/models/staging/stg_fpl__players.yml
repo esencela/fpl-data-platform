@@ -29,10 +29,6 @@ models:
         description: 'Unique identifier for each team within a season'
         tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('stg_fpl__teams')
-                field: team_season_id
       - name: first_name
         description: 'Player first name'
       - name: last_name

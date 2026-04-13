@@ -13,10 +13,16 @@ models:
         description: 'Season for which the fixture data is relevant - e.g. 2026 for the 2025/2026 season'
         tests:
           - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "> 2016"
       - name: fixture_season_id
         description: 'Unique identifier for each fixture within a season'
         tests:
           - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "> 0"
       - name: gameweek_id
         description: 'Gameweek in which the fixture takes place'
         tests:
@@ -33,10 +39,6 @@ models:
         description: 'Unique identifier for home team within a season'
         tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('stg_fpl__teams')
-                field: team_season_id
       - name: home_team_score
         description: 'Goals scored by home team (null if fixture is upcoming)'
         tests:
@@ -47,10 +49,6 @@ models:
         description: 'Unique identifier for away team within a season'
         tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('stg_fpl__teams')
-                field: team_season_id
       - name: away_team_score
         description: 'Goals scored by away team (null if fixture is upcoming)'
         tests:

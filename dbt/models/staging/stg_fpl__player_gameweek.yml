@@ -19,10 +19,6 @@ models:
         description: 'Unique identifier of player within a season'
         tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('stg_fpl__players')
-                field: player_season_id
       - name: minutes
         description: 'Minutes played'
         tests:

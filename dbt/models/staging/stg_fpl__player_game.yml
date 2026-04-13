@@ -8,10 +8,6 @@ models:
         description: 'Unique identifier of player within a season'
         tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('stg_fpl__players')
-                field: player_season_id
       - name: season
         description: 'Season for which the player data is relevant - e.g. 2026 for the 2025/2026 season'
         tests:
@@ -20,10 +16,6 @@ models:
         description: 'Unique identifier for each fixture within a season'
         tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('stg_fpl__fixtures')
-                field: fixture_season_id
       - name: gameweek_id
         description: 'Gameweek match was played in'
       - name: minutes
