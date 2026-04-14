@@ -1,7 +1,7 @@
 {{ config(
     materialized='incremental',
     incremental_strategy='delete+insert',
-    unique_key=['player_season_pk']
+    unique_key=['player_season_key']
 ) }}
 
 with combined as (
@@ -18,7 +18,8 @@ with combined as (
     from {{ ref('stg_vaastav__player_season') }})
 ),
 
-sourced as (
+-- If two rows clash, prioritise fpl source
+prioritised as (
     select
         *,
         row_number() over (
@@ -33,10 +34,10 @@ sourced as (
 
 select
     -- Identifiers
-    concat(season, '_', player_season_id) as player_season_pk,    
+    concat(season, '_', player_season_id) as player_season_key,    
     season,
     player_id,
-    player_season_id,
+    player_season_id as fpl_player_season_id,
     team_id,
 
     -- Personal info
@@ -51,5 +52,5 @@ select
     position,
     now_cost
 
-from sourced
+from prioritised
 where r = 1
