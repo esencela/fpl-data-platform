@@ -10,7 +10,7 @@ with latest_snapshot as (
         gameweek_id
     from {{ source('raw', 'vaastav_gws') }}
     where fetched_at = (select max(fetched_at) from {{ source('raw', 'vaastav_gws') }})
-        and season < 2019
+        and season < 2019 -- Seasons before 2019 are missing fixture data
 ),
 
 base as (
@@ -20,7 +20,7 @@ base as (
         gameweek_id::int as gameweek_id,
         (raw_data->>'kickoff_time')::timestamptz as kickoff_time,
         (raw_data->>'was_home')::boolean as was_home,
-        (raw_data->>'opponent_team') as opponent_team,
+        (raw_data->>'opponent_team')::int as opponent_team,
         ((raw_data->>'team_h_score')::numeric)::int as home_team_score,
         ((raw_data->>'team_a_score')::numeric)::int as away_team_score,
         (raw_data->>'team_h_difficulty')::int as home_team_difficulty,
@@ -32,7 +32,7 @@ from latest_snapshot
 fixtures as (
     select
         -- Identifiers
-        null as fixture_id,
+        null::int as fixture_id,
         season,
         fixture_season_id,
 
@@ -43,11 +43,11 @@ fixtures as (
 
         -- Team info
         max(case when not was_home then opponent_team end) as home_team_season_id,
-        max(case when was_home then opponent_team end) as away_team_season_id,
         max(home_team_score) as home_team_score,
+        max(case when was_home then opponent_team end) as away_team_season_id,
         max(away_team_score) as away_team_score,
-        null as home_team_difficulty,
-        null as away_team_difficulty
+        max(home_team_difficulty) as home_team_difficulty,
+        max(away_team_difficulty) as away_team_difficulty 
     
     from base
     group by 2,3,4,5

@@ -36,9 +36,9 @@ select
     -- Identifiers
     concat(season, '_', player_season_id) as player_season_key,    
     season,
-    player_id,
+    player_id as fpl_player_id,
     player_season_id as fpl_player_season_id,
-    team_id,
+    team_id as fpl_team_id,
 
     -- Personal info
     first_name,
