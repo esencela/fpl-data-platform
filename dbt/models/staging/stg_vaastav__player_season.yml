@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_vaastav__players
+  - name: stg_vaastav__player_season
     description: 'Staging model for player data from the bootstrap-static endpoint of the FPL API'
     tests:
       - dbt_utils.unique_combination_of_columns:
