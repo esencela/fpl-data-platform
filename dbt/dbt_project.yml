@@ -31,6 +31,9 @@ models:
     staging:
       +schema: staging
       +materialized: view
+    intermediate:
+      +schema: intermediate
+      +materialized: incremental
 
 seeds:
   fpl_dbt:

@@ -35,7 +35,7 @@ select
         WHEN (raw_data->>'element_type')::int = 2 THEN 'DEF'
         WHEN (raw_data->>'element_type')::int = 3 THEN 'MID'
         WHEN (raw_data->>'element_type')::int = 4 THEN 'FWD'
-    END as position_id,
+    END as position,
     (round((raw_data->>'now_cost')::decimal / 10, 1)) as now_cost
 
 from latest

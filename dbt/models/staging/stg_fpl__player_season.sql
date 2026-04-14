@@ -42,7 +42,7 @@ select
         WHEN (element->>'element_type')::int = 2 THEN 'DEF'
         WHEN (element->>'element_type')::int = 3 THEN 'MID'
         WHEN (element->>'element_type')::int = 4 THEN 'FWD'
-    END as position_id,
+    END as position,
     (round((element->>'now_cost')::decimal / 10, 1)) as now_cost
     
 from source_data
