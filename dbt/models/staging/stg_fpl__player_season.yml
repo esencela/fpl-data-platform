@@ -41,7 +41,7 @@ models:
         description: 'Unique identifier for the players country of origin'
       - name: birth_date
         description: 'Player birth date'
-      - name: position_id
+      - name: position
         description: 'Unique identifier for the players position'
         tests:
           - not_null
