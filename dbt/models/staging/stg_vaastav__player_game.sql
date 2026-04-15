@@ -18,6 +18,7 @@ select
     season::int as season,
     fixture_season_id::int as fixture_season_id,
     gameweek_id::int as gameweek_id,
+    (raw_data->>'was_home')::boolean as was_home,
 
     -- Core stats
     (raw_data->>'minutes')::int as minutes,

@@ -18,6 +18,10 @@ models:
           - not_null
       - name: gameweek_id
         description: 'Gameweek match was played in'
+      - name: was_home
+        description: 'Whether player was on home team'
+        tests:
+        - not_null
       - name: minutes
         description: 'Minutes played'
         tests:

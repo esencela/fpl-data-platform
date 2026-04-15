@@ -21,6 +21,7 @@ select
     season::int as season,
     (player_game->>'fixture')::int as fixture_season_id,
     (player_game->>'round')::int as gameweek_id,
+    (player_game->>'was_home')::boolean as was_home,
     
     -- Core stats
     (player_game->>'minutes')::int as minutes,
