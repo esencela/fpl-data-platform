@@ -1,6 +1,6 @@
 {{ config(
     alias='vaastav_inferred_fixtures',
-    materialized='view'
+    materialized='table'
 ) }}
 
 -- Only get data from latest fetch

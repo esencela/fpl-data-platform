@@ -1,6 +1,6 @@
 {{ config(
     alias='vaastav_player_season',
-    materialized='view'
+    materialized='table'
 ) }}
 
 -- Only get data from most recent fetch

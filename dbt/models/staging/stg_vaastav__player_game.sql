@@ -1,6 +1,6 @@
 {{ config(
     alias='vaastav_player_game',
-    materialized='view'
+    materialized='table'
 ) }}
 
 -- Only get data from most recent fetch
