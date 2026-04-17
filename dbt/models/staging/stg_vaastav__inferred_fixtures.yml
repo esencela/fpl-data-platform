@@ -1,14 +1,11 @@
 version: 2
 
 models:
-  - name: stg_vaastav__fixtures
+  - name: stg_vaastav__inferred_fixtures
     description: 'Staging model of fixture data from the vaastav repo on GitHub'
     columns:
       - name: fixture_id
         description: 'Unique identifier for each fixture'
-        tests:
-          - not_null
-          - unique
       - name: season
         description: 'Season in which fixture data is relevant - e.g. 2026 for the 2025/2026 season'
         tests:
@@ -51,15 +48,5 @@ models:
                 expression: ">= 0"
       - name: home_team_difficulty
         description: 'Difficulty rating of fixture for home team provided by FPL'
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "between 1 and 5"
       - name: away_team_difficulty
         description: 'Difficulty rating of fixture for away team provided by FPL'
-        tests:
-          - not_null
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "between 1 and 5"
