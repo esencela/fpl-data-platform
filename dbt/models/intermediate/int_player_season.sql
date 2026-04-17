@@ -1,4 +1,5 @@
 {{ config(
+    alias='player_season',
     materialized='incremental',
     incremental_strategy='delete+insert',
     unique_key=['player_season_key']

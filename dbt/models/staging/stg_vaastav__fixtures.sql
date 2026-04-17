@@ -1,4 +1,7 @@
-{{ config(materialized='view') }}
+{{ config(
+    alias='vaastav_fixtures',
+    materialized='view'
+) }}
 
 -- Only get data from latest fetch
 with latest_snapshot as (

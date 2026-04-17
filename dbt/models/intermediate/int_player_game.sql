@@ -1,4 +1,5 @@
 {{ config(
+    alias='player_game',
     materialized='incremental',
     incremental_strategy='delete+insert',
     unique_key=['player_game_key']

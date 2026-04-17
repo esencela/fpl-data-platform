@@ -1,4 +1,5 @@
 {{ config(
+    alias='fixtures',
     materialized='incremental',
     incremental_strategy='delete+insert',
     unique_key=['fixture_key']

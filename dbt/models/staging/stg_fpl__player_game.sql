@@ -1,4 +1,7 @@
-{{ config(materialized='view') }}
+{{ config(
+    alias='fpl_player_game',
+    materialized='view'
+) }}
 
 -- Only get data from most recent fetch
 with latest_snapshot as (
