@@ -3,52 +3,63 @@ version: 2
 models:
   - name: stg_vaastav__fixtures
     description: 'Staging model of fixture data from the vaastav repo on GitHub'
+
     columns:
       - name: fixture_id
         description: 'Unique identifier for each fixture'
         tests:
           - not_null
           - unique
+      
       - name: season
         description: 'Season in which fixture data is relevant - e.g. 2026 for the 2025/2026 season'
         tests:
           - not_null
+      
       - name: fixture_season_id
         description: 'Unique identifier for each fixture within a season'
         tests:
           - not_null
+      
       - name: gameweek_id
         description: 'Gameweek in which the fixture takes place'
         tests:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "> 0"
+      
       - name: kickoff_time
         description: 'Date and time of fixture kickoff'
+      
       - name: finished
         description: 'Whether fixture has been played (true) or is upcoming (false)'
         tests: 
           - not_null
+      
       - name: home_team_season_id
         description: 'Unique identifier for home team within a season'
         tests:
           - not_null
+      
       - name: home_team_score
         description: 'Goals scored by home team'
         tests:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: ">= 0"
+      
       - name: away_team_season_id
         description: 'Unique identifier for away team within a season'
         tests:
           - not_null
+      
       - name: away_team_score
         description: 'Goals scored by away team'
         tests:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: ">= 0"
+      
       - name: home_team_difficulty
         description: 'Difficulty rating of fixture for home team provided by FPL'
         tests:
@@ -56,6 +67,7 @@ models:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "between 1 and 5"
+      
       - name: away_team_difficulty
         description: 'Difficulty rating of fixture for away team provided by FPL'
         tests:

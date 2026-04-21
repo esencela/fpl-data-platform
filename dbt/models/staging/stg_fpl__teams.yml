@@ -7,48 +7,59 @@ models:
       - dbt_utils.expression_is_true:
           arguments:
             expression: "length(short_name) = 3"
+    
     columns:
       - name: team_id
         description: 'Unique identifier for each team'
         tests:
           - unique
           - not_null
+      
       - name: season
         description: 'Season for which the team data is relevant - e.g. 2026 for the 2025/2026 season'
         tests:
           - not_null
+      
       - name: team_season_id
         description: 'Unique identifier for each team within a season'
         tests:
           - not_null
+      
       - name: name
         description: 'Team name'
         tests:
           - not_null
+      
       - name: short_name
         description: 'Abbreviated 3-letter team name used in FPL'
         tests:
           - not_null
+      
       - name: strength_overall_home
         description: 'Overall team strength rating for home matches provided by FPL'
         tests:
           - not_null
+      
       - name: strength_overall_away
         description: 'Overall team strength rating for away matches provided by FPL'
         tests:
           - not_null
+      
       - name: strength_attack_home
         description: 'Attacking strength rating for home matches provided by FPL'
         tests:
           - not_null
+      
       - name: strength_attack_away
         description: 'Attacking strength rating for away matches provided by FPL'
         tests:
           - not_null
+      
       - name: strength_defence_home
         description: 'Defensive strength rating for home matches provided by FPL'
         tests:
           - not_null
+      
       - name: strength_defence_away
         description: 'Defensive strength rating for away matches provided by FPL'
         tests:
