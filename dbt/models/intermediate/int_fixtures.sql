@@ -35,6 +35,16 @@ prioritised as (
             end
         ) as r
     from combined
+),
+
+-- Gameweek numbers are disrupted in 2020 season due to pandemic - gw 30-38 becomes 39-47
+gameweeks_corrected as (
+    select
+        *,
+        case 
+            when season = 2020 and gameweek_id > 38 then gameweek_id - 9
+            else gameweek_id
+        end as corrected_gameweek
 )
 
 select
@@ -45,7 +55,8 @@ select
     fixture_season_id as fpl_fixture_season_id,
 
     -- Fixture info
-    gameweek_id as gameweek,
+    gameweek_id,
+    corrected_gameweek as gameweek,
     kickoff_time,
     finished,
 

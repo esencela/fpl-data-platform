@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: int_fixtures
+    description: 'Intermediate model for joined fixture data from both fpl api and historic sources.'
+    columns:
+      - name: fixture_key
+        description: 'Composite key uniquely identifying a fixture - "<season>_<fixture_season_id>"'
+        tests:
+          - unique
+          - not_null
+      - name: season
+      - name: fpl_fixture_id
+        description: 'Unique identifier for fixture - used by FPL API'
+      - name: fpl_fixture_season_id
+        description: 'Unique identifier for fixture within a season - used by FPL API'
+      - name: gameweek_id
+        description: 'Gameweek identifier used by FPL API'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "between 1 and 38 where season <> 2020"
+      - name: gameweek
+        description: 'Corrected gameweek number for gameweeks affected by pandemic in 2020 season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "between 1 and 38"
+      - name: kickoff_time
+        tests:
+          - not_null
+      - name: finished
+        tests:
+          - not_null
+      - name: home_team_season_key
+        description: 'Composite key uniquely identifying a team within a season for home team - "<season>_<team_season_id>"'
+        tests:
+          - not_null
+          - unique
+      - name: home_fpl_team_season_id
+        description: 'Unique identifier for home team within season - used by FPL API'
+        tests:
+          - not_null
+      - name: away_team_season_key
+        description: 'Composite key uniquely identifying a team within a season for away team - "<season>_<team_season_id>"'
+        tests:
+          - not_null
+          - unique
+      - name: away_fpl_team_season_id
+        description: 'Unique identifier for away team within season - used by FPL API'
+        tests:
+          - not_null
+      - name: home_team_score
+      - name: away_team_score
+      - name: home_team_difficulty
+      - name: away_team_difficulty
