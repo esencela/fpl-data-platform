@@ -25,10 +25,7 @@ select
     raw_data->>'first_name' as first_name,
     raw_data->>'second_name' as second_name,
     raw_data->>'web_name' as web_name,
-    CASE
-        WHEN raw_data->>'known_name' = '' THEN NULL
-        ELSE raw_data->>'known_name'
-    END as known_name,
+    raw_data->>'known_name' as known_name,
     ((raw_data->>'region')::numeric)::int as country_id,
     (raw_data->>'birth_date')::date as birth_date,
 

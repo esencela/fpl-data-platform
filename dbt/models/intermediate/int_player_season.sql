@@ -57,7 +57,10 @@ select
     -- Personal info
     first_name,
     second_name,
-    known_name,
+    case
+        when known_name = '' then null
+        else known_name
+    end as known_name,
     web_name,
     country_id,
     birth_date,

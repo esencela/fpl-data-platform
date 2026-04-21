@@ -32,10 +32,7 @@ select
     element->>'first_name' as first_name,
     element->>'second_name' as second_name,
     element->>'web_name' as web_name,
-    CASE
-        WHEN element->>'known_name' = '' THEN null
-        ELSE element->>'known_name'
-    END as known_name,
+    element->>'known_name' as known_name,
     (element->>'region')::int as country_id,
     (element->>'birth_date')::date as birth_date,
 
