@@ -33,12 +33,7 @@ select
     (raw_data->>'birth_date')::date as birth_date,
 
     -- FPL info
-    CASE
-        WHEN (raw_data->>'element_type')::int = 1 THEN 'GKP'
-        WHEN (raw_data->>'element_type')::int = 2 THEN 'DEF'
-        WHEN (raw_data->>'element_type')::int = 3 THEN 'MID'
-        WHEN (raw_data->>'element_type')::int = 4 THEN 'FWD'
-    END as position,
+    (raw_data->>'element_type')::int as position,
     (round((raw_data->>'now_cost')::decimal / 10, 1)) as now_cost
 
 from latest

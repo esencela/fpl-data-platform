@@ -31,6 +31,19 @@ prioritised as (
             end
         ) as r
     from combined
+),
+
+-- Replace position numbers with strings, do not select managers (position=5)
+position_strings as (
+    select 
+        *,
+        case
+            when position = 1 then 'GKP'
+            when position = 2 then 'DEF'
+            when position = 3 then 'MID'
+            when position = 4 then 'FWD'
+        end as position_str
+    from prioritised
 )
 
 select
@@ -50,8 +63,8 @@ select
     birth_date,
 
     -- FPL info
-    position,
+    position_str as position,
     now_cost
 
-from prioritised
+from position_strings
 where r = 1

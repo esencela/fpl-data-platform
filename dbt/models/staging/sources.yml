@@ -6,17 +6,24 @@ sources:
     tables:
       - name: fpl_bootstrap_static
         description: 'Raw data from bootstrap-static endpoint of the FPL API'
+      
       - name: fpl_element_summary
         description: 'Raw data from element-summary endpoint of the FPL API'
+      
       - name: fpl_fixtures
         description: 'Raw data from fixtures endpoint of the FPL API'
+      
       - name: fpl_events
         description: 'Raw data from event endpoint of the FPL API'
+      
       - name: vaastav_players
         description: 'Raw player data from vaastav repo'
+      
       - name: vaastav_gws
         description: 'Raw player-game data from vaastav repo'
+      
       - name: vaastav_fixtures
         description: 'Raw fixture data from vaastav repo'
+      
       - name: vaastav_teams
         description: 'Raw team data from vaastav repo'
