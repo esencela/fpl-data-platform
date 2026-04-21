@@ -45,6 +45,7 @@ gameweeks_corrected as (
             when season = 2020 and gameweek_id > 38 then gameweek_id - 9
             else gameweek_id
         end as corrected_gameweek
+    from prioritised
 )
 
 select
@@ -70,5 +71,5 @@ select
     home_team_difficulty,
     away_team_difficulty
 
-from prioritised
+from gameweeks_corrected
 where r = 1

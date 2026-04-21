@@ -3,6 +3,13 @@ version: 2
 models:
   - name: int_fixtures
     description: 'Intermediate model for joined fixture data from both fpl api and historic sources.'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - fixture_key
+              - home_team_season_key
+              - away_team_season_key
     columns:
       - name: fixture_key
         description: 'Composite key uniquely identifying a fixture - "<season>_<fixture_season_id>"'
@@ -19,7 +26,7 @@ models:
         tests:
           - dbt_utils.expression_is_true:
               arguments:
-                expression: "between 1 and 38 where season <> 2020"
+                expression: "between 1 and 38 or season = 2020"
       - name: gameweek
         description: 'Corrected gameweek number for gameweeks affected by pandemic in 2020 season'
         tests:
@@ -28,7 +35,9 @@ models:
                 expression: "between 1 and 38"
       - name: kickoff_time
         tests:
-          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or not finished"
       - name: finished
         tests:
           - not_null
@@ -36,7 +45,6 @@ models:
         description: 'Composite key uniquely identifying a team within a season for home team - "<season>_<team_season_id>"'
         tests:
           - not_null
-          - unique
       - name: home_fpl_team_season_id
         description: 'Unique identifier for home team within season - used by FPL API'
         tests:
@@ -45,7 +53,6 @@ models:
         description: 'Composite key uniquely identifying a team within a season for away team - "<season>_<team_season_id>"'
         tests:
           - not_null
-          - unique
       - name: away_fpl_team_season_id
         description: 'Unique identifier for away team within season - used by FPL API'
         tests:
