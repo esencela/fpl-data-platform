@@ -41,3 +41,4 @@ select
     (round((element->>'now_cost')::decimal / 10, 1)) as now_cost
     
 from source_data
+where (element->>'element_type')::int != 5

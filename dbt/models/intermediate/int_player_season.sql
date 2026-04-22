@@ -33,7 +33,7 @@ prioritised as (
     from combined
 ),
 
--- Replace position numbers with strings, do not select managers (position=5)
+-- Replace position numbers with strings
 position_strings as (
     select 
         *,
@@ -44,7 +44,6 @@ position_strings as (
             when position = 4 then 'FWD'
         end as position_str
     from prioritised
-    where position != 5
 )
 
 select

@@ -1,0 +1,125 @@
+version: 2
+
+models:
+  - name: int_player_game
+    description: 'Intermediate model containing joined player_game data'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - fpl_player_season_id
+              - season
+              - fpl_fixture_season_id
+      
+    columns:
+      - name: player_game_key
+        description: 'Composite key uniquely identifying a player_game - <season>_<fpl_fixture_season_id>_<fpl_player_season_id>'
+        tests:
+          - not_null
+          - unique
+      
+      - name: fixture_key
+        description: 'Composite key uniquely identifying a fixture - <season>_<fpl_fixture_season_id>'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_fixtures')
+                field: fixture_key
+      
+      - name: player_season_key
+        description: 'Composite key uniquely identifying a player_season - <season>_<fpl_player_season_id>'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_player_season')
+                field: player_season_key
+
+      - name: fpl_player_season_id
+        description: 'Unique identifier of each player_season - used by FPL API'
+
+      - name: season
+
+      - name: fpl_fixture_season_id
+        description: 'Unique identifier of each fixture within a season - used by FPL API'
+
+      - name: gameweek_id
+
+      - name: at_home
+        description: 'Whether the player was on the home team in this game'
+
+      - name: minutes
+
+      - name: starts
+        description: 'For seasons missing data, starts is imputed using the 11 players with the most minutes on each team'
+        tests:
+          - not_null
+        # TEST FOR 11 PLAYERS
+
+      - name: goals_scored
+
+      - name: assists
+
+      - name: clean_sheets
+
+      - name: goals_conceded
+
+      - name: own_goals
+
+      - name: penalties_saved
+
+      - name: penalties_missed
+
+      - name: yellow_cards
+
+      - name: red_cards
+
+      - name: clearances_blocks_interceptions
+
+      - name: recoveries
+
+      - name: tackles
+
+      - name: defensive_contributions
+
+      - name: saves
+
+      - name: total_points
+
+      - name: bonus
+
+      - name: bps
+
+      - name: influence
+
+      - name: creativity
+
+      - name: threat
+
+      - name: ict_index
+
+      - name: expected_goals
+
+      - name: expected_assists
+
+      - name: expected_goal_involvements
+
+      - name: expected_goals_conceded
+
+      - name: cost
+
+      - name: selected
+
+      - name: transfers_in
+
+      - name: transfers_out
+
+      - name: transfers_balance
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "= transfers_in - transfers_out"
+
+      - name: missing_starts_flag
+        description: 'Flags whether the "starts" column has an imputed value - 1 for imputed, 0 for raw'

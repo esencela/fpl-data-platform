@@ -59,7 +59,7 @@ models:
           - not_null
           - accepted_values:
               arguments:
-                values: [1, 2, 3, 4, 5]
+                values: [1, 2, 3, 4]
       
       - name: now_cost
         description: 'Current cost of the player in the FPL game'

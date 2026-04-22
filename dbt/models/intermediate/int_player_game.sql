@@ -41,14 +41,33 @@ keys_added as (
     from prioritised
 ),
 
+-- A fixture in the 2020 season has duplicated player_game data, only select data from max gameweek_id
+fixture_deduped as (
+    select
+        g.*
+    from keys_added as g
+    inner join {{ ref('int_fixtures') }} as f
+        on g.season = f.season
+        and g.fixture_season_id = f.fpl_fixture_season_id
+        and g.gameweek_id = f.gameweek_id
+),
+
 -- Join player_season table and add position for reconstructing defensive contributions
 position_added as (
     select
         game.*,
         player.position
-    from keys_added as game
+    from fixture_deduped as game
     left join {{ ref('int_player_season') }} as player
         on game.player_season_key = player.player_season_key
+),
+
+-- Remove managers included in raw data
+managers_removed as (
+    select
+        *
+    from position_added
+    where position is not null
 ),
 
 -- Reconstruct defensive contributions for historic seasons that contain defensive features, else null
@@ -72,7 +91,7 @@ defcons_reconstructed as (
                     end
             else null
         end as defcons_reconstructed
-    from position_added
+    from managers_removed
 ),
 
 -- Join fixtures table and add team_season_key for imputing whether a player started
@@ -177,17 +196,20 @@ select
     player_game_key,
     fixture_key,
     player_season_key,
-    player_season_id,
+    player_season_id as fpl_player_season_id,
     season,
-    fixture_season_id,
+    fixture_season_id as fpl_fixture_season_id,
 
     -- Fixture info
-    gameweek_id as gameweek,
+    gameweek_id,
     was_home as at_home,
     
     -- Core stats
     minutes,
-    starts_imputed as starts,
+    case
+        when missing_starts_flag = 1 then starts_imputed
+        else starts_cleaned
+    end as starts,
     goals_scored,
     assists,
     clean_sheets,
@@ -232,6 +254,7 @@ select
     transfers_in - transfers_out as transfers_balance,
 
     -- Metadata
-    missing_starts_flag
+    missing_starts_flag,
+    position
 
 from expected_cleaned

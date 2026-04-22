@@ -34,3 +34,4 @@ select
     (round((raw_data->>'now_cost')::decimal / 10, 1)) as now_cost
 
 from latest
+where (raw_data->>'element_type')::int != 5
