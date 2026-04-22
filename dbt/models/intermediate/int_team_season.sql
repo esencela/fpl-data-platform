@@ -45,7 +45,7 @@ select
     team_season_id,
 
     -- Team names
-    name,
+    name as team_name,
     short_name,
 
     -- Team strength metrics

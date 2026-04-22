@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: int_team_season
+    description: 'Intermediate model for joined team_season data'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - season
+              - team_id
+              - team_season_id
+
+    columns:
+      - name: team_season_key
+        description: 'Composite key uniquely identifying team_season - "<season>_<team_season_id>"'
+        tests:
+          - not_null
+          - unique
+
+      - name: season
+
+      - name: team_id
+
+      - name: team_season_id
+
+      - name: team_name
+        description: 'Team name used in FPL API'
+
+      - name: short_name
+        description: '3 letter unique code for each team - ARS for Arsenal'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null and length(short_name) = 3"
+
+      - name: strength_overall_home
+
+      - name: strength_overall_away
+
+      - name: strength_attack_home
+
+      - name: strength_attack_away
+
+      - name: strength_defence_home
+
+      - name: strength_defence_away
