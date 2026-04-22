@@ -55,7 +55,6 @@ models:
         description: 'For seasons missing data, starts is imputed using the 11 players with the most minutes on each team'
         tests:
           - not_null
-        # TEST FOR 11 PLAYERS
 
       - name: goals_scored
 
