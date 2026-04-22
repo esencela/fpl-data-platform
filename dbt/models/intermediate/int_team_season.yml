@@ -19,17 +19,26 @@ models:
           - unique
 
       - name: season
+        tests:
+          - not_null
 
       - name: team_id
+        tests:
+          - not_null
 
       - name: team_season_id
+        tests:
+          - not_null
 
       - name: team_name
         description: 'Team name used in FPL API'
+        tests:
+          - not_null
 
       - name: short_name
         description: '3 letter unique code for each team - ARS for Arsenal'
         tests:
+          - not_null
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "is not null and length(short_name) = 3"

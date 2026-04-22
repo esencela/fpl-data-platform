@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: int_player_season
+    description: 'Intermediate model of joined player_season data'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - season
+              - fpl_player_id
+              - fpl_player_season_id
+
+    columns:
+      - name: player_season_key
+        description: 'Composite key uniquely identifying player_season - <season>_<player_season_id>'
+        tests:
+          - not_null
+          - unique
+        
+      - name: season
+
+      - name: fpl_player_id
+        description: 'Unique identifier for player - used by FPL API'
+
+      - name: fpl_player_season_id
+        description: 'Unique identifier for each player within a season - used by FPL API'
+
+      - name: fpl_team_id
+        description: 'Unique identifier for each team - used by FPL API'
+
+      - name: first_name
+
+      - name: second_name
+        
+      - name: known_name
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is null or known_name != ''"
+      
+      - name: web_name
+
+      - name: country_id
+
+      - name: birth_date
+
+      - name: position
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['GKP', 'DEF', 'MID', 'FWD']
+
+      - name: now_cost

@@ -44,6 +44,7 @@ position_strings as (
             when position = 4 then 'FWD'
         end as position_str
     from prioritised
+    where position != 5
 )
 
 select
