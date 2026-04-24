@@ -80,12 +80,12 @@ defcons_reconstructed as (
                 or recoveries is not null
             then
                 case
-                    when position = 'FWD' or position = 'GKP' then 0
+                    when position = 'GKP' then 0
                     else
                         tackles +
                         clearances_blocks_interceptions +
                         case 
-                            when position = 'MID' then recoveries
+                            when position = 'MID' or position = 'FWD' then recoveries
                             else 0
                         end
                     end
