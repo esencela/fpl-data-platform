@@ -1,11 +1,14 @@
 with players_per_team_per_fixture as (
     select 
-        fixture_key,
-        at_home,
+        pg.fixture_key,
+        pg.at_home,
         sum(starts) as total_starting
-    from {{ ref('int_player_game') }}
+    from {{ ref('int_player_game') }} pg
+    join {{ ref('int_fixtures') }} f
+        on pg.fixture_key = f.fixture_key
+    where f.finished = true
     group by 
-        fixture_key, at_home
+        pg.fixture_key, pg.at_home
 )
 
 select
