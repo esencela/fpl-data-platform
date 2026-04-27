@@ -1,5 +1,6 @@
 {{ config(materialized='table')}}
 
+-- Only collect player information from most recent season
 with season_ranked as (
     select
         fpl_player_id,
@@ -16,7 +17,7 @@ with season_ranked as (
 )
 
 select
-    fpl_player_id,
+    fpl_player_id as player_id,
     first_name,
     second_name,
     known_name,
