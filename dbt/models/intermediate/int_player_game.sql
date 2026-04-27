@@ -254,7 +254,6 @@ select
     transfers_in - transfers_out as transfers_balance,
 
     -- Metadata
-    missing_starts_flag,
-    position
+    missing_starts_flag
 
 from expected_cleaned
