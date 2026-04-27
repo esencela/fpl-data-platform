@@ -34,6 +34,9 @@ models:
     intermediate:
       +schema: intermediate
       +materialized: incremental
+    serving:
+      +schema: serving
+      +materialized: table
 
 seeds:
   fpl_dbt:
