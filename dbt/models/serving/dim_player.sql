@@ -9,6 +9,7 @@ with season_ranked as (
         known_name,
         web_name,
         birth_date,
+        country_id,
         row_number() over (
             partition by fpl_player_id
             order by season desc
