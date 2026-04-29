@@ -10,7 +10,7 @@ select
         else fixture.away_team_id
     end as team_id,
     player_game.fixture_key,
-    extract(date from fixture.kickoff_time) as date_key,
+    cast(fixture.kickoff_time AT TIME ZONE 'Europe/London' as date) as date_key,
 
     -- Game details
     case -- Some players have zero minutes but have still played
