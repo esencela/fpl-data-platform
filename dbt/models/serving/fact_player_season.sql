@@ -79,7 +79,5 @@ select
 
 from
     {{ ref('int_player_season') }} as player_season
-    join {{ ref('dim_player') }} as player
-        on player_season.fpl_player_id = player.player_id
     join player_season_totals as totals
         on player_season.player_season_key = totals.player_season_key
