@@ -27,3 +27,6 @@ sources:
       
       - name: vaastav_teams
         description: 'Raw team data from vaastav repo'
+
+      - name: understat_season_data
+        description: 'Raw season data from Understat'
