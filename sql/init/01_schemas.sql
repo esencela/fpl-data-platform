@@ -119,7 +119,7 @@ CREATE INDEX IF NOT EXISTS idx_vaastav_teams_jsonb
 ON raw.vaastav_teams USING GIN(raw_data);
 
 -- Create raw tables for understat data
-CREATE TABLE IF NOT EXISTS raw.understat_team_data (
+CREATE TABLE IF NOT EXISTS raw.understat_season_data (
     season INT NOT NULL,
     raw_data JSONB NOT NULL,
     fetched_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -127,8 +127,8 @@ CREATE TABLE IF NOT EXISTS raw.understat_team_data (
 );
 
 -- Create indexes for raw understat tables
-CREATE INDEX IF NOT EXISTS idx_understat_team_data_season
-ON raw.understat_team_data(season);
+CREATE INDEX IF NOT EXISTS idx_understat_season_data_season
+ON raw.understat_season_data(season);
 
-CREATE INDEX IF NOT EXISTS idx_understat_team_data_jsonb
-ON raw.understat_team_data USING GIN(raw_data);
+CREATE INDEX IF NOT EXISTS idx_understat_season_data_jsonb
+ON raw.understat_season_data USING GIN(raw_data);
