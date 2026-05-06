@@ -1,8 +1,12 @@
 import psycopg2
+from psycopg2.extras import execute_values
 import json
 import logging
 from datetime import datetime
-from src.utils.understat_file_helper import get_latest_season_files
+from src.utils.understat_file_helper import (
+    get_latest_season_files,
+    get_shot_data_files
+)
 
 logger = logging.getLogger(__name__)
 
@@ -47,3 +51,32 @@ def load_season_data_to_postgres() -> None:
 
     cursor.close()
     conn.close()
+
+
+def load_shot_data_to_postgres() -> None:
+    """Loads raw shot data JSON files into PostgreSQL database."""
+
+    try:
+        conn = psycopg2.connect(**DB_PARAMS)
+        cursor = conn.cursor()
+        logger.info('Connected to PostgreSQL database successfully.')
+    except Exception as e:
+        logger.error(f'Failed to connect to PostgreSQL database: {e}')
+        return
+    
+    values = get_shot_data_files()
+
+    query = """
+        INSERT INTO raw.understat_shot_data (match_id, raw_data)
+        VALUES %s
+        ON CONFLICT (match_id) DO UPDATE
+        SET raw_data = EXCLUDED.raw_data
+    """
+
+    execute_values(cursor, query, values)
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    logger.info(f'Shot data for {len(values)} matches loaded into PostgreSQL database successfully.')
