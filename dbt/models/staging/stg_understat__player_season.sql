@@ -1,5 +1,5 @@
 {{ config(
-    alias='understat_players',
+    alias='understat_player_season',
     materialized='view'
 ) }}
 
