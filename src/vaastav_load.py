@@ -98,9 +98,12 @@ def load_fixtures_to_postgres() -> None:
 
         df = df.rename(columns={'id': 'fixture_season_id'})
 
+        # Schema drifts across season, 
+        # to handle this keep only essential columns and hold extra columns as JSONB
         known_cols = ['season', 'fetched_at', 'fixture_season_id']
         extra_cols = [col for col in df.columns if col not in known_cols]
 
+        # Convert extra columns to JSON and store in 'raw_data' column
         df['raw_data'] = df[extra_cols].apply(lambda row: row.to_json(default_handler=str), axis=1)
         df = df[known_cols + ['raw_data']]
 
@@ -128,9 +131,12 @@ def load_teams_to_postgres() -> None:
 
         df = df.rename(columns={'id': 'team_season_id'})
 
+        # Schema drifts across season,
+        # to handle this keep only essential columns and hold extra columns as JSONB
         known_cols = ['season', 'team_season_id', 'fetched_at']
         extra_cols = [col for col in df.columns if col not in known_cols]
 
+        # Convert extra columns to JSON and store in 'raw_data' column
         df['raw_data'] = df[extra_cols].apply(lambda row: row.to_json(default_handler=str), axis=1)
         df = df[known_cols + ['raw_data']]
 

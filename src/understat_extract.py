@@ -1,6 +1,7 @@
 import understatapi
 from datetime import datetime
 from pathlib import Path
+import pandas as pd
 import time
 import logging
 import json
@@ -121,3 +122,25 @@ def fetch_shot_data(match_id: int, base_path: Path) -> None:
 
     except Exception as e:
         logger.error(f'Error fetching shot data for match ID {match_id}: {e}')
+
+
+def extract_id_mappings() -> None:
+    """Extracts ID mapping for various player ids and saves as parquet file."""
+
+    url = "https://raw.githubusercontent.com/ChrisMusson/FPL-ID-Map/refs/heads/main/Master.csv"
+
+    logger.info('Extracting ID mappings from GitHub...')
+
+    try:
+        df = pd.read_csv(url)
+
+        file_path = RAW_DATA_DIR / 'id_mappings' / f'{CURRENT_DATE}.parquet'
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+
+        df.to_parquet(file_path, index=False)
+
+        logger.info(f'Saved ID mappings to {file_path}')
+    
+    except Exception as e:
+        logger.error(f'Failed to retrieve ID mappings: {e}')
+        raise

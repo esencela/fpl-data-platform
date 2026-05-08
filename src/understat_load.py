@@ -1,11 +1,14 @@
 import psycopg2
 from psycopg2.extras import execute_values
+from sqlalchemy import create_engine
+import pandas as pd
 import json
 import logging
 from datetime import datetime
 from src.utils.understat_file_helper import (
     get_latest_season_files,
-    get_shot_data_files
+    get_shot_data_files,
+    get_latest_id_mappings_file
 )
 
 logger = logging.getLogger(__name__)
@@ -80,3 +83,26 @@ def load_shot_data_to_postgres() -> None:
     conn.close()
 
     logger.info(f'Shot data for {len(values)} matches loaded into PostgreSQL database successfully.')
+
+
+def load_id_mappings_to_postgres() -> None:
+    """Loads player and team ID mapping data into PostgreSQL database."""
+
+    file = get_latest_id_mappings_file()
+
+    df = pd.read_parquet(file)
+    fetch_date = datetime.strptime(file.stem, '%Y-%m-%d')
+    df['fetched_at'] = fetch_date
+
+    # Convert all other columns to JSON and store in 'raw_data' column
+    known_cols = ['fetched_at']
+    extra_cols = [col for col in df.columns if col not in known_cols]
+
+    df['raw_data'] = df[extra_cols].apply(lambda row: row.to_json(default_handler=str), axis=1)
+    df = df[known_cols + ['raw_data']]
+
+    engine = create_engine('postgresql://fpl_user:fpl_password@localhost:5433/fpl_db')
+
+    df.to_sql('id_mappings', engine, schema='raw', if_exists='append', index=False)
+
+    logger.info(f'ID mappings data loaded into PostgreSQL database successfully.')

@@ -1,7 +1,7 @@
 from pathlib import Path
 from datetime import datetime
 import json
-from src.utils.file_utils import get_latest_file_for_each_season
+from src.utils.file_utils import get_latest_file_for_each_season, get_latest_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw' / 'understat'
@@ -30,3 +30,16 @@ def get_shot_data_files() -> list[tuple[str, str]]:
             match_files.append((match_id, json.dumps(data)))
 
     return match_files
+
+
+def get_latest_id_mappings_file() -> Path:
+    """Returns the path to the most recent player and team ID mappings Parquet file."""
+
+    id_mappings_dir = RAW_DATA_DIR / 'id_mappings'
+
+    files = list(id_mappings_dir.glob('*.parquet'))
+
+    if not files:
+        raise FileNotFoundError(f'No ID mappings files found in {id_mappings_dir}')
+
+    return max(files)
