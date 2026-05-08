@@ -30,3 +30,6 @@ sources:
 
       - name: understat_season_data
         description: 'Raw season data from Understat'
+
+      - name: understat_shot_data
+        description: 'Raw shot data from Understat'
