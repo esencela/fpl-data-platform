@@ -103,6 +103,6 @@ def load_id_mappings_to_postgres() -> None:
 
     engine = create_engine('postgresql://fpl_user:fpl_password@localhost:5433/fpl_db')
 
-    df.to_sql('id_mappings', engine, schema='raw', if_exists='append', index=False)
+    df.to_sql('id_mappings', engine, schema='raw', if_exists='replace', index=False)
 
     logger.info(f'ID mappings data loaded into PostgreSQL database successfully.')
