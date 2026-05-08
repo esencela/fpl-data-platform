@@ -94,8 +94,8 @@ def load_id_mappings_to_postgres() -> None:
     fetch_date = datetime.strptime(file.stem, '%Y-%m-%d')
     df['fetched_at'] = fetch_date
 
-    # Convert all other columns to JSON and store in 'raw_data' column
-    known_cols = ['fetched_at']
+    # Store extra columns as JSONB to handle upstream schema changes without breaking the load process
+    known_cols = ['code', 'fetched_at']
     extra_cols = [col for col in df.columns if col not in known_cols]
 
     df['raw_data'] = df[extra_cols].apply(lambda row: row.to_json(default_handler=str), axis=1)
@@ -103,6 +103,6 @@ def load_id_mappings_to_postgres() -> None:
 
     engine = create_engine('postgresql://fpl_user:fpl_password@localhost:5433/fpl_db')
 
-    df.to_sql('id_mappings', engine, schema='raw', if_exists='replace', index=False)
+    df.to_sql('id_mappings', engine, schema='raw', if_exists='append', index=False)
 
     logger.info(f'ID mappings data loaded into PostgreSQL database successfully.')

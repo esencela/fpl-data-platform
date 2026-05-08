@@ -133,9 +133,10 @@ CREATE TABLE IF NOT EXISTS raw.understat_shot_data (
 );
 
 CREATE TABLE IF NOT EXISTS raw.id_mappings (
+    code INT NOT NULL,
     raw_data JSONB NOT NULL,
     fetched_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    PRIMARY KEY (fetched_at)
+    PRIMARY KEY (code, fetched_at)
 );
 
 -- Create indexes for raw understat tables
@@ -151,8 +152,8 @@ ON raw.understat_shot_data(match_id);
 CREATE INDEX IF NOT EXISTS idx_understat_shot_data_jsonb
 ON raw.understat_shot_data USING GIN(raw_data);
 
-CREATE INDEX IF NOT EXISTS idx_id_mappings_fetched_at
-ON raw.id_mappings(fetched_at);
+CREATE INDEX IF NOT EXISTS idx_id_mappings_code
+ON raw.id_mappings(code);
 
 CREATE INDEX IF NOT EXISTS idx_id_mappings_jsonb
 ON raw.id_mappings USING GIN(raw_data);

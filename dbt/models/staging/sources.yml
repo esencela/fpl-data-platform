@@ -33,3 +33,6 @@ sources:
 
       - name: understat_shot_data
         description: 'Raw shot data from Understat'
+
+      - name: id_mappings
+        description: 'Raw player ID mappings data extracted from GitHub repo'
