@@ -34,6 +34,10 @@ select
     (shot_data->>'match_id')::int as match_id,
     (shot_data->>'player_id')::int as player_id,
     replace(shot_data->>'player', '&#039;', '''') as player_name,
+    case
+        when shot_data->>'h_a' = 'h' then (shot_data->>'h_team')
+        else (shot_data->>'a_team')
+    end as team_name,
     case 
         when shot_data->>'h_a' = 'h' then true
         else false
