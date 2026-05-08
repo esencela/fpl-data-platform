@@ -23,13 +23,15 @@ players as (
     select
         season::int as season,
         (player_data->>'id')::int as player_id,
-        replace(player_data->>'player_name', '&#039;', '''') as player_name -- Replace html escape for apostrophe
-    
+        replace(player_data->>'player_name', '&#039;', '''') as player_name, -- Replace html escape for apostrophe
+        player_data->>'team_title' as team_name
     from source_data
 )
 
 select
-    distinct player_id,
-    player_name
+    season,
+    player_id,
+    player_name,
+    team_name
     
 from players
