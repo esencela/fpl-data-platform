@@ -41,4 +41,8 @@ models:
 seeds:
   fpl_dbt:
     missing_teams:
-      +alias: seed_missing_teams
+      +schema: seed
+      +alias: missing_teams
+    team_id_mapping:
+      +schema: seed
+      +alias: team_id_mapping
