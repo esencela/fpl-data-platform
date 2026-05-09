@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 from src.utils.understat_file_helper import (
     get_latest_season_files,
-    get_shot_data_files,
+    get_latest_match_files,
     get_latest_id_mappings_file
 )
 
@@ -56,8 +56,8 @@ def load_season_data_to_postgres() -> None:
     conn.close()
 
 
-def load_shot_data_to_postgres() -> None:
-    """Loads raw shot data JSON files into PostgreSQL database."""
+def load_match_data_to_postgres() -> None:
+    """Loads raw match data JSON files into PostgreSQL database."""
 
     try:
         conn = psycopg2.connect(**DB_PARAMS)
@@ -67,10 +67,10 @@ def load_shot_data_to_postgres() -> None:
         logger.error(f'Failed to connect to PostgreSQL database: {e}')
         return
     
-    values = get_shot_data_files()
+    values = get_latest_match_files()
 
     query = """
-        INSERT INTO raw.understat_shot_data (match_id, raw_data)
+        INSERT INTO raw.understat_match_data (match_id, raw_data)
         VALUES %s
         ON CONFLICT (match_id) DO UPDATE
         SET raw_data = EXCLUDED.raw_data
@@ -82,7 +82,7 @@ def load_shot_data_to_postgres() -> None:
     cursor.close()
     conn.close()
 
-    logger.info(f'Shot data for {len(values)} matches loaded into PostgreSQL database successfully.')
+    logger.info(f'Match data for {len(values)} matches loaded into PostgreSQL database successfully.')
 
 
 def load_id_mappings_to_postgres() -> None:

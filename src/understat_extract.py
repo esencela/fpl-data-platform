@@ -15,7 +15,7 @@ CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
 MIN_SEASON = 2017
 CURRENT_SEASON = 2026
 
-RATE_LIMIT = 0.3 # seconds between requests to avoid hitting API rate limits
+RATE_LIMIT = 0.2 # seconds between requests to avoid hitting API rate limits
 
 logger = logging.getLogger(__name__)
 
@@ -80,14 +80,14 @@ def fetch_match_ids() -> set[str]:
     return match_ids
 
 
-def extract_shot_data() -> None:
-    """Extracts shot data for all matches pulled in season data and saves to JSON file."""
+def extract_match_data() -> None:
+    """Extracts match data for all matches pulled in season data and saves to JSON file."""
 
     match_ids = fetch_match_ids()
 
-    logger.info(f'Extracting shot data for {len(match_ids)} matches...')
+    logger.info(f'Extracting match data for {len(match_ids)} matches...')
 
-    base_path = RAW_DATA_DIR / 'shot_data'
+    base_path = RAW_DATA_DIR / 'matches' / f'{CURRENT_DATE}'
     base_path.mkdir(parents=True, exist_ok=True)
     
     for match_id in match_ids:
@@ -95,33 +95,33 @@ def extract_shot_data() -> None:
         file_path = base_path / f'match_id={match_id}.json'
         
         if file_path.exists():
-            logger.info(f'Shot data for match ID {match_id} already exists. Skipping...')
+            logger.info(f'Match data for match ID {match_id} already exists. Skipping...')
             continue
 
-        fetch_shot_data(match_id, base_path)
+        fetch_match_data(match_id, base_path)
 
         time.sleep(RATE_LIMIT)
 
-    logger.info('Completed extraction of shot data for all matches.')
+    logger.info('Completed extraction of match data for all matches.')
 
 
 
-def fetch_shot_data(match_id: int, base_path: Path) -> None:
-    """Fetches shot data for a given match ID and saves to JSON file."""
+def fetch_match_data(match_id: int, base_path: Path) -> None:
+    """Fetches match data for a given match ID and saves to JSON file."""
 
     try:
-        shot_data = client.match(match_id).get_shot_data()
+        match_data = client.match(match_id)._get_data()
 
         file_path = base_path / f'match_id={match_id}.json'
         file_path.parent.mkdir(parents=True, exist_ok=True)
 
         with open(file_path, 'w', encoding='utf-8') as file:
-            json.dump(shot_data, file, indent=4, ensure_ascii=False)
+            json.dump(match_data, file, indent=4, ensure_ascii=False)
 
-        logger.info(f'Saved shot data for match ID {match_id}')
+        logger.info(f'Saved match data for match ID {match_id}')
 
     except Exception as e:
-        logger.error(f'Error fetching shot data for match ID {match_id}: {e}')
+        logger.error(f'Error fetching match data for match ID {match_id}: {e}')
 
 
 def extract_id_mappings() -> None:

@@ -6,15 +6,15 @@
 with home_shots as (
     select
         match_id,
-        jsonb_array_elements(raw_data->'h') as shot_data
-    from {{ source('raw', 'understat_shot_data') }}
+        jsonb_array_elements(raw_data->'shots'->'h') as shot_data
+    from {{ source('raw', 'understat_match_data') }}
 ),
 
 away_shots as (
     select
         match_id,
-        jsonb_array_elements(raw_data->'a') as shot_data
-    from {{ source('raw', 'understat_shot_data') }}
+        jsonb_array_elements(raw_data->'shots'->'a') as shot_data
+    from {{ source('raw', 'understat_match_data') }}
 ),
 
 source_data as (

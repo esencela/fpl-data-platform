@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS raw.understat_season_data (
     PRIMARY KEY (season, fetched_at)
 );
 
-CREATE TABLE IF NOT EXISTS raw.understat_shot_data (
+CREATE TABLE IF NOT EXISTS raw.understat_match_data (
     match_id INT NOT NULL,
     raw_data JSONB NOT NULL,
     PRIMARY KEY (match_id)
@@ -146,11 +146,11 @@ ON raw.understat_season_data(season);
 CREATE INDEX IF NOT EXISTS idx_understat_season_data_jsonb
 ON raw.understat_season_data USING GIN(raw_data);
 
-CREATE INDEX IF NOT EXISTS idx_understat_shot_data_match_id
-ON raw.understat_shot_data(match_id);
+CREATE INDEX IF NOT EXISTS idx_understat_match_data_match_id
+ON raw.understat_match_data(match_id);
 
-CREATE INDEX IF NOT EXISTS idx_understat_shot_data_jsonb
-ON raw.understat_shot_data USING GIN(raw_data);
+CREATE INDEX IF NOT EXISTS idx_understat_match_data_jsonb
+ON raw.understat_match_data USING GIN(raw_data);
 
 CREATE INDEX IF NOT EXISTS idx_id_mappings_code
 ON raw.id_mappings(code);

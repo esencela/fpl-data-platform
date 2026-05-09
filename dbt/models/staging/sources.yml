@@ -31,8 +31,8 @@ sources:
       - name: understat_season_data
         description: 'Raw season data from Understat'
 
-      - name: understat_shot_data
-        description: 'Raw shot data from Understat'
+      - name: understat_match_data
+        description: 'Raw match data from Understat'
 
       - name: id_mappings
         description: 'Raw player ID mappings data extracted from GitHub repo'

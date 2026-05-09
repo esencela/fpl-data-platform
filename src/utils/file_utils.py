@@ -14,7 +14,7 @@ def get_latest_season_folder(dir: Path) -> Path:
 
 def get_latest_path(dir: Path, file_type: str = None) -> Path:
     """
-        Returns the latest path in a given directory.
+        Returns the latest path for the latest season in a given directory.
 
         Files should follow naming convention: dir/season=YYYY/YYYY-MM-DD where file name is date fetched.
 

@@ -15,14 +15,16 @@ def get_latest_season_files() -> list[Path]:
     return get_latest_file_for_each_season(season_dir, '.json')
 
 
-def get_shot_data_files() -> list[tuple[str, str]]:
-    """Returns a list of tuples containing match IDs and JSON data for all shot data files."""
+def get_latest_match_files() -> list[tuple[str, str]]:
+    """Returns a list of tuples containing match IDs and JSON data for all match data files."""
 
-    shot_data_dir = RAW_DATA_DIR / 'shot_data'
+    match_data_dir = RAW_DATA_DIR / 'matches'
+
+    latest_fetch = max(list(match_data_dir.glob('*')))
 
     match_files = []
 
-    for file in shot_data_dir.glob('match_id=*.json'):
+    for file in latest_fetch.glob('match_id=*.json'):
         match_id = file.stem.split('=')[1]
 
         with open(file, 'r', encoding='utf-8') as f:
