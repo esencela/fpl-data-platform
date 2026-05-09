@@ -20,11 +20,9 @@ def get_latest_match_files() -> list[tuple[str, str]]:
 
     match_data_dir = RAW_DATA_DIR / 'matches'
 
-    latest_fetch = max(list(match_data_dir.glob('*')))
-
     match_files = []
 
-    for file in latest_fetch.glob('match_id=*.json'):
+    for file in match_data_dir.glob('match_id=*.json'):
         match_id = file.stem.split('=')[1]
 
         with open(file, 'r', encoding='utf-8') as f:

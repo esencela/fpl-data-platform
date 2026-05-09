@@ -15,7 +15,7 @@ CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
 MIN_SEASON = 2017
 CURRENT_SEASON = 2026
 
-RATE_LIMIT = 0.2 # seconds between requests to avoid hitting API rate limits
+RATE_LIMIT = 0.1 # seconds between requests to avoid hitting API rate limits
 
 logger = logging.getLogger(__name__)
 
@@ -87,7 +87,7 @@ def extract_match_data() -> None:
 
     logger.info(f'Extracting match data for {len(match_ids)} matches...')
 
-    base_path = RAW_DATA_DIR / 'matches' / f'{CURRENT_DATE}'
+    base_path = RAW_DATA_DIR / 'matches' 
     base_path.mkdir(parents=True, exist_ok=True)
     
     for match_id in match_ids:
