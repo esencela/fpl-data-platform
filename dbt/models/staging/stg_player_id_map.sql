@@ -1,6 +1,6 @@
 {{ config(
     materialized='view',
-    alias='id_mappings'
+    alias='player_id_map'
 ) }}
 
 with latest_snapshot as (

@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: stg_player_id_map
+    description: 'Player id mapping table for various football data sources'
+
+    columns:
+      - name: fpl_player_id
+        description: 'Unique player identifier in fpl data'
+        tests:
+          - unique
+          - not_null
+        
+      - name: understat_id
+        description: 'Unique player identifier in understat data - is null for players who have never appeared in starting eleven or as a sub'
+
+      - name: fbref_id
+        description: 'Unique player identifier for fbref data - not currently used'
+
+      - name: transfermarkt_id
+        description: 'Unique player identifier for transfermarkt data - not currently used'
+
+      - name: whoscored_id
+        description: 'Unique player identifier for whoscored data - not currently used' 

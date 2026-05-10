@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg_understat__teams
+    description: 'Staging model for team info data from extracted from understat'
+
+    columns:
+      - name: team_id
+        description: 'Unique identifier for each team provided by understat'
+        tests:
+          - unique
+          - not_null
+      
+      - name: team_name
+        description: 'Team name'
+        tests:
+          - not_null
+
+      - name: short_name
+        description: '3 Letter code identifying each team'
+        tests:
+          - unique
+          - not_null
