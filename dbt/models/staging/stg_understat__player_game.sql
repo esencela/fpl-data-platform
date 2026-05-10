@@ -1,6 +1,6 @@
 {{ config(
     materialized='view',
-    alias='understat_player_match'
+    alias='understat_player_game'
 ) }}
 
 with home_players as (

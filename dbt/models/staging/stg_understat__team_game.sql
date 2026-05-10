@@ -1,5 +1,5 @@
 {{ config(
-    alias='understat_team_match',
+    alias='understat_team_game',
     materialized='view'
 ) }}
 
