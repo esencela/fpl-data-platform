@@ -1,0 +1,158 @@
+version: 2
+
+models:
+  - name: stg_understat__player_game
+    description: 'Staging model for player-game understat data'
+    
+    columns:
+      - name: roster_id
+        description: 'Unique identifier for understat player_game'
+        tests:
+          - unique
+          - not_null
+      
+      - name: match_id
+        description: 'Unique identifier for understat match'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_understat__fixtures')
+                field: fixture_id
+
+      - name: player_id
+        description: 'Unique identifier for understat players'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_understat__player_season')
+                field: player_id
+
+      - name: team_id
+        description: 'Unique identifier for understat teams'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_understat__teams')
+                field: team_id
+
+      - name: player_name
+        description: 'Full player name'
+
+      - name: is_home
+        description: 'Whether game was a home fixture'
+        tests:
+          - not_null
+
+      - name: position
+        description: 'Position player played during match - "Sub" for substitutes'
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['GK', 'DR', 'DC', 'DL', 'DMR', 'DMC', 'DML', 'MR', 'MC', 'ML', 'AMR', 'AMC', 'AML', 'FWR', 'FW', 'FWL', 'Sub']
+
+      - name: position_order
+        description: 'Integer representation of player position'
+
+      - name: replaced_by_roster_id
+        description: 'Roster id of substitute who replaced player'
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_understat__player_game')
+                field: roster_id
+
+      - name: replaced_roster_id
+        description: 'Roster id of player who substitute replaced'
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_understat__player_game')
+                field: roster_id
+
+      - name: minutes
+        description: 'Minutes played by player in game'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "<= 90"
+
+      - name: goals
+        description: 'Goals scored by player'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: assists
+        description: 'Goals assisted by player'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: shots
+        description: 'Shots taken by player'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: key_passes
+        description: 'Key passes made by player'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: own_goals
+        description: 'Own goals scored by player'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: yellow_cards
+        description: 'Yellow cards received by player'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: red_cards
+        description: 'Goals scored by player'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "between 0 and 1"
+
+      - name: expected_goals
+        description: 'Expected goals accumulated by player during game'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: expected_assists
+        description: 'Expected assists accumulated by player during game'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: expected_goal_chain
+        description: 'Measures players total involvement in possessions that end in a shot'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: expected_goal_buildup
+        description: 'Measures players total involvement in possessions that end in a shot, excluding shot and key pass'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
