@@ -1,0 +1,110 @@
+version: 2
+
+models:
+  - name: stg_understat__team_game
+    description: 'Staging model for understat team game data'
+
+    columns:
+      - name: season
+        description: 'Season in which game takes place - e.g. 2026 for 2025/26 season'
+        tests:
+          - not_null
+
+      - name: team_id
+        description: 'Unique identifier for understat team'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_understat__teams')
+                field: team_id
+
+      - name: kickoff_time
+        description: 'Kickoff time of game'
+        tests:
+          - not_null
+      
+      - name: at_home
+        description: 'Whether match was a home fixture'
+        tests:
+          - not_null
+
+      - name: goals_scored
+        description: 'Goals scored by team'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: goals_conceded
+        description: 'Goals conceded by team'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: expected_goals
+        description: 'Expected goals accumulated by team'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: expected_goals_conceded
+        description: 'Expected goals accumulated by opposing team'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: non_penalty_expected_goals
+        description: 'Expected goals accumulated by team - not including penalties'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: non_penalty_expected_goals_conceded
+        description: 'Expected goals accumulated by opposing team - not including penalties'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: passes_per_defensive_action
+        description: 'Metric calculating how many passes opposing team is allowed before defense attempts to win the ball - measures pressing intensity'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: opponent_passes_per_defensive_action
+        description: 'Metric calculating how many passes team is allowed before opponent attempts to win the ball - measures opposition pressing intensity'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: deep_completions
+        description: 'Non cross passes completed that reach within 20 meters of the opponents goal'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: deep_completions_allowed
+        description: 'Non cross passes allowed that reach within 20 meters of the teams goal'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"

@@ -35,7 +35,7 @@ select
     team_id::int as team_id,
 
     -- Match info
-    (match_data->>'date')::timestamp as match_date,
+    (match_data->>'date')::timestamp as kickoff_time,
     case
         when match_data->>'h_a' = 'h' then true
         when match_data->>'h_a' = 'a' then false
@@ -51,8 +51,8 @@ select
     (match_data->>'npxGA')::decimal as non_penalty_expected_goals_conceded,
 
     -- Passing stats
-    (match_data->'ppda'->>'att')::int / (match_data->'ppda'->>'def')::int as passes_per_defensive_action,
-    (match_data->'ppda_allowed'->>'att')::int / (match_data->'ppda_allowed'->>'def')::int as opponent_passes_per_defensive_action,
+    (match_data->'ppda'->>'att')::decimal / (match_data->'ppda'->>'def')::decimal as passes_per_defensive_action,
+    (match_data->'ppda_allowed'->>'att')::decimal / (match_data->'ppda_allowed'->>'def')::decimal as opponent_passes_per_defensive_action,
     (match_data->>'deep')::int as deep_completions,
     (match_data->>'deep_allowed')::int as deep_completions_allowed
         
