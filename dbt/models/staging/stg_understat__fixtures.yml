@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: stg_understat__fixtures
+    description: 'Staging model for raw understat fixture data'
+
+    columns:
+      - name: fixture_id
+        description: 'Unique identifier for understat fixture'
+        tests: 
+         - unique
+         - not_null
+
+      - name: season
+        description: 'Season in which fixture takes place e.g. 2026 for 2025/26 season'
+        tests:
+          - not_null
+
+      - name: kickoff_time
+        description: 'Kickoff time of fixture'
+
+      - name: finished
+        description: 'Whether fixture has been completed'
+        tests:
+          - not_null
+
+      - name: home_team_id
+        description: 'Unique understat identifier for home team'
+        tests:
+          - not_null
+
+      - name: home_team_score
+        description: 'Amount of goals scored by home team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments: 
+                expression: ">= 0 or home_team_score is null"
+
+      - name: away_team_id
+        description: 'Unique understat identifier for away team'
+        tests:
+          - not_null
+
+      - name: away_team_score
+        description: 'Amount of goals scored by home team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments: 
+                expression: ">= 0 or away_team_score is null"
+
+      - name: home_expected_goals
+        description: 'Expected goals accumulated by home team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments: 
+                expression: ">= 0 or home_expected_goals is null"
+
+      - name: away_expected_goals
+        description: 'Expected goals accumulated by away team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments: 
+                expression: ">= 0 or away_expected_goals is null"
