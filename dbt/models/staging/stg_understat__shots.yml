@@ -1,0 +1,112 @@
+version: 2
+
+models:
+  - name: stg_understat__shots
+    description: 'Staging model for understat shot data'
+
+    columns:
+      - name: shot_id
+        description: 'Unique identifier for shots'
+        tests:
+          - unique
+          - not_null
+
+      - name: season
+        description: 'Season in which shot took place - e.g. 2026 for 2025/26 season'
+        tests:
+          - not_null
+
+      - name: match_id
+        description: 'Unique identifier of understat match'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_understat__fixtures')
+                field: fixture_id
+
+      - name: player_id
+        description: 'Unique identifier of understat player who took shot'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_understat__player_season')
+                field: player_id
+
+      - name: player_name
+        description: 'Full name of player who took shot'
+        tests:
+          - not_null
+
+      - name: team_name
+        description: 'Team of shot taking player'
+        tests:
+          - not_null
+
+      - name: is_home
+        description: 'Whether shot was taken for home team'
+        tests:
+          - not_null
+      
+      - name: minute
+        description: 'Minute of game that shot was taken in'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "< 120"
+
+      - name: situation
+        description: 'Situation where shot took place'
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['OpenPlay', 'SetPiece', 'DirectFreekick', 'FromCorner', 'Penalty']
+      
+      - name: shot_type
+        description: 'Type of shot taken'
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['RightFoot', 'LeftFoot', 'Head', 'OtherBodyPart']
+
+      - name: outcome
+        description: 'Result of shot'
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Goal', 'MissedShots', 'BlockedShot', 'SavedShot', 'ShotOnPost', 'OwnGoal']
+
+      - name: player_assisted
+        description: 'Full name of player who assisted shot'
+
+      - name: last_action
+        description: 'Action preceding shot'
+
+      - name: expected_goals
+        description: 'Metric measuring the probability of a shot being scored'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "between 0 and 1"
+
+      - name: x
+        description: 'Longitudinal position where shot was taken, 0 = own goal, 1 = opponents goal'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "between 0 and 1"
+
+      - name: y 
+        description: 'Lateral position where shot was taken, 0 = right wing, 1 = left wing'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "between 0 and 1"
