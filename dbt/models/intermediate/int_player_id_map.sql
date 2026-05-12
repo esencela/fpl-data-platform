@@ -3,11 +3,19 @@
     alias='player_id_map'
 ) }}
 
+-- Remove inconsistent fpl player ids
+with cleaned_fpl as (
+    select
+        *
+    from {{ ref('stg_player_id_map') }}
+    where fpl_player_id not in (select from_player_id from {{ ref('fpl_player_id_map') }})
+),
+
 -- Raw id mapping duplicates understat id across correct player and players who have similar names with no minutes
-with duplicates as (
+duplicates as (
     select
         understat_id
-    from {{ ref('stg_player_id_map') }}
+    from cleaned_fpl
     where understat_id is not null
     group by understat_id
     having count(*) > 1
@@ -17,7 +25,7 @@ player_ids as (
     select
         fpl_player_id,
         understat_id
-    from {{ ref('stg_player_id_map') }}
+    from cleaned_fpl
     where understat_id in (select understat_id from duplicates)
 ),
 
@@ -50,9 +58,9 @@ cleaned_understat as (
         fpl_player_id,
         case 
             when cleaned = 1 then clean.understat_id
-            else raw.understat_id
+            else initial.understat_id
         end as understat_id
-    from {{ ref('stg_player_id_map') }} as raw
+    from cleaned_fpl as initial
     left join removed_duplicates as clean
         using (fpl_player_id)
 ),
