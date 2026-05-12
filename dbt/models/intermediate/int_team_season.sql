@@ -35,6 +35,16 @@ prioritised as (
             end
         ) as r
     from combined
+),
+
+understat_ids_added as (
+    select
+        p.*,
+        map.understat_team_id
+    from prioritised p
+    join {{ ref('team_id_map') }} map
+        on p.team_id = map.fpl_team_id
+    where r = 1
 )
 
 select 
@@ -42,6 +52,7 @@ select
     concat(season, '_', team_season_id) as team_season_key,
     season,
     team_id,
+    understat_team_id,
     team_season_id,
 
     -- Team names
@@ -56,5 +67,4 @@ select
     strength_defence_home,
     strength_defence_away
 
-from prioritised
-where r = 1
+from understat_ids_added

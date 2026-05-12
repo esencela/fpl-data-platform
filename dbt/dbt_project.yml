@@ -43,9 +43,9 @@ seeds:
     missing_teams:
       +schema: seed
       +alias: missing_teams
-    team_id_mapping:
+    team_id_map:
       +schema: seed
-      +alias: team_id_mapping
+      +alias: team_id_map
     fpl_player_id_map:
       +schema: seed
       +alias: fpl_player_id_map
