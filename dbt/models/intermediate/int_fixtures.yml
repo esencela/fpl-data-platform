@@ -8,8 +8,11 @@ models:
           arguments:
             combination_of_columns:
               - fixture_key
+              - understat_fixture_id
               - home_team_season_key
+              - home_understat_team_id
               - away_team_season_key
+              - away_understat_team_id
     
     columns:
       - name: fixture_key
@@ -25,6 +28,9 @@ models:
       
       - name: fpl_fixture_season_id
         description: 'Unique identifier for fixture within a season - used by FPL API'
+
+      - name: understat_fixture_id
+        description: 'Unique identifier for fixture used by understat'
       
       - name: gameweek_id
         description: 'Gameweek identifier used by FPL API'
@@ -73,6 +79,10 @@ models:
       - name: home_team_score
       
       - name: away_team_score
+
+      - name: home_expected_goals
+
+      - name: away_expected_goals
       
       - name: home_team_difficulty
       

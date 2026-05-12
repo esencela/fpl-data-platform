@@ -46,6 +46,42 @@ gameweeks_corrected as (
             else gameweek_id
         end as corrected_gameweek
     from prioritised
+    where r = 1
+),
+
+-- Create composite keys to join understat data
+keys_added as (
+    select
+        *,
+        concat(season, '_', home_team_season_id) as home_team_season_key,
+        concat(season, '_', away_team_season_id) as away_team_season_key
+    from gameweeks_corrected
+),
+
+add_understat_ids as (
+    select
+        fixture.*,
+        home.understat_team_id as home_understat_team_id,
+        away.understat_team_id as away_understat_team_id
+    from keys_added fixture
+    join {{ ref('int_team_season') }} home
+        on fixture.home_team_season_key = home.team_season_key
+    join {{ ref('int_team_season') }} away
+        on fixture.away_team_season_key = away.team_season_key
+),
+
+-- Join understat data on home and away team season keys
+understat_joined as (
+    select
+        f.*,
+        u.fixture_id as understat_fixture_id,
+        u.home_expected_goals,
+        u.away_expected_goals
+    from add_understat_ids f
+    join {{ ref('stg_understat__fixtures') }} u
+        on f.season = u.season
+        and f.home_understat_team_id = u.home_team_id
+	    and f.away_understat_team_id = u.away_team_id
 )
 
 select
@@ -54,6 +90,7 @@ select
     season,
     fixture_id as fpl_fixture_id,
     fixture_season_id as fpl_fixture_season_id,
+    understat_fixture_id,
 
     -- Fixture info
     gameweek_id,
@@ -62,14 +99,18 @@ select
     finished,
 
     -- Team info
-    concat(season, '_', home_team_season_id) as home_team_season_key,
+    home_team_season_key,
     home_team_season_id as home_fpl_team_season_id,
-    concat(season, '_', away_team_season_id) as away_team_season_key,
+    home_understat_team_id,
+    away_team_season_key,
     away_team_season_id as away_fpl_team_season_id,
+    away_understat_team_id,
+
     home_team_score,
     away_team_score,
+    home_expected_goals,
+    away_expected_goals,
     home_team_difficulty,
     away_team_difficulty
 
-from gameweeks_corrected
-where r = 1
+from understat_joined
