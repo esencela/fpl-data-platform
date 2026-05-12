@@ -77,7 +77,7 @@ select
 
 from
     {{ ref('int_player_game') }} as player_game
-    join {{ ref('int_player_season') }} as player
+    join {{ ref('int_player_season_enriched') }} as player
         on player_game.player_season_key = player.player_season_key
     join {{ ref('dim_fixture') }} as fixture
         on player_game.fixture_key = fixture.fixture_key

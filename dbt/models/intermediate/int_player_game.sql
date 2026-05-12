@@ -58,7 +58,7 @@ position_added as (
         game.*,
         player.position
     from fixture_deduped as game
-    left join {{ ref('int_player_season') }} as player
+    left join {{ ref('int_player_season_base') }} as player
         on game.player_season_key = player.player_season_key
 ),
 

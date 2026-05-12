@@ -78,6 +78,6 @@ select
     totals.expected_goal_involvements
 
 from
-    {{ ref('int_player_season') }} as player_season
+    {{ ref('int_player_season_enriched') }} as player_season
     join player_season_totals as totals
         on player_season.player_season_key = totals.player_season_key

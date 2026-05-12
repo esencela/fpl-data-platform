@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: int_player_season
+  - name: int_player_season_enriched
     description: 'Intermediate model of joined player_season data'
     tests:
       - dbt_utils.unique_combination_of_columns:
@@ -10,6 +10,7 @@ models:
               - season
               - fpl_player_id
               - fpl_player_season_id
+              - understat_player_id
 
     columns:
       - name: player_season_key
@@ -22,6 +23,9 @@ models:
 
       - name: fpl_player_id
         description: 'Unique identifier for player - used by FPL API'
+
+      - name: understat_player_id
+        description: 'Unique identifier for player - used by understat'
 
       - name: fpl_player_season_id
         description: 'Unique identifier for each player within a season - used by FPL API'

@@ -14,7 +14,7 @@ with season_ranked as (
             partition by fpl_player_id
             order by season desc
         ) as rn
-    from {{ ref('int_player_season')}}
+    from {{ ref('int_player_season_enriched')}}
 )
 
 select

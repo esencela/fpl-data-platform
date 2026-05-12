@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: int_player_game
-    description: 'Intermediate model containing joined player_game data'
+    description: 'Intermediate model containing joined fpl only player_game data'
     tests:
       - dbt_utils.unique_combination_of_columns:
           arguments:
@@ -33,7 +33,7 @@ models:
           - not_null
           - relationships:
               arguments:
-                to: ref('int_player_season')
+                to: ref('int_player_season_base')
                 field: player_season_key
 
       - name: fpl_player_season_id
