@@ -9,6 +9,7 @@ models:
             combination_of_columns:
               - season
               - team_id
+              - understat_team_id
               - team_season_id
 
     columns:
@@ -23,6 +24,10 @@ models:
           - not_null
 
       - name: team_id
+        tests:
+          - not_null
+      
+      - name: understat_team_id
         tests:
           - not_null
 
