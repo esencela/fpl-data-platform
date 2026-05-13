@@ -1,5 +1,5 @@
 {{ config(
-    alias='player_game',
+    alias='player_game_base',
     materialized='incremental',
     incremental_strategy='delete+insert',
     unique_key=['player_game_key']
@@ -56,7 +56,7 @@ fixture_deduped as (
 position_added as (
     select
         game.*,
-        player.position
+        player.position as fpl_position
     from fixture_deduped as game
     left join {{ ref('int_player_season_base') }} as player
         on game.player_season_key = player.player_season_key
@@ -67,7 +67,7 @@ managers_removed as (
     select
         *
     from position_added
-    where position is not null
+    where fpl_position is not null
 ),
 
 -- Reconstruct defensive contributions for historic seasons that contain defensive features, else null
@@ -80,12 +80,12 @@ defcons_reconstructed as (
                 or recoveries is not null
             then
                 case
-                    when position = 'GKP' then 0
+                    when fpl_position = 'GKP' then 0
                     else
                         tackles +
                         clearances_blocks_interceptions +
                         case 
-                            when position = 'MID' or position = 'FWD' then recoveries
+                            when fpl_position = 'MID' or fpl_position = 'FWD' then recoveries
                             else 0
                         end
                     end
@@ -241,10 +241,10 @@ select
     ict_index,
     
     -- Expected metrics
-    xg_clean as expected_goals,
-    xa_clean as expected_assists,
-    xgi_clean as expected_goal_involvements,
-    xgc_clean as expected_goals_conceded, 
+    xg_clean as fpl_expected_goals,
+    xa_clean as fpl_expected_assists,
+    xgi_clean as fpl_expected_goal_involvements,
+    xgc_clean as fpl_expected_goals_conceded, 
 
     -- Transfer and cost info
     cost,

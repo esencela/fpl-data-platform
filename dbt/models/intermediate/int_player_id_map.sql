@@ -33,7 +33,7 @@ total_minutes as (
     select
         ps.fpl_player_id,
         sum(pg.minutes) as sum_minutes
-    from {{ ref('int_player_game') }} pg
+    from {{ ref('int_player_game_base') }} pg
     join {{ ref('int_player_season_base')}} ps
         on pg.player_season_key = ps.player_season_key
     where ps.fpl_player_id in (select fpl_player_id from player_ids)

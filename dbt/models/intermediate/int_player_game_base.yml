@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: int_player_game
+  - name: int_player_game_base
     description: 'Intermediate model containing joined fpl only player_game data'
     tests:
       - dbt_utils.unique_combination_of_columns:
@@ -98,13 +98,13 @@ models:
 
       - name: ict_index
 
-      - name: expected_goals
+      - name: fpl_expected_goals
 
-      - name: expected_assists
+      - name: fpl_expected_assists
 
-      - name: expected_goal_involvements
+      - name: fpl_expected_goal_involvements
 
-      - name: expected_goals_conceded
+      - name: fpl_expected_goals_conceded
 
       - name: cost
 

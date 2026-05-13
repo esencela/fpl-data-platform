@@ -61,9 +61,9 @@ select
     player_game.ict_index,
 
     -- Expected stats
-    player_game.expected_goals,
-    player_game.expected_assists,
-    player_game.expected_goal_involvements,
+    player_game.fpl_expected_goals as expected_goals,
+    player_game.fpl_expected_assists as expected_assists,
+    player_game.fpl_expected_goal_involvements as expected_goal_involvements,
 
     -- FPL metrics
     player_game.cost,
@@ -76,7 +76,7 @@ select
     player_game.missing_starts_flag
 
 from
-    {{ ref('int_player_game') }} as player_game
+    {{ ref('int_player_game_base') }} as player_game
     join {{ ref('int_player_season_enriched') }} as player
         on player_game.player_season_key = player.player_season_key
     join {{ ref('dim_fixture') }} as fixture
