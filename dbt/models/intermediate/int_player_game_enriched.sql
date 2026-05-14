@@ -60,7 +60,7 @@ join_understat as (
         fpl.fpl_player_id,
         fpl.fpl_player_season_id,
         understat.roster_id as understat_roster_id,
-        understat.player_id as understat_player_id,
+        fpl.understat_player_id,
         understat.team_id as understat_team_id,
 
         -- Match identifiers
@@ -81,7 +81,10 @@ join_understat as (
             when understat.position_order is not null and understat.position_order != 17 then true
             else false
         end as started,
-        understat.minutes,
+        case    
+            when understat.minutes is null then 0
+            else understat.minutes
+        end as minutes,
         fpl.goals_scored as goals,
         fpl.assists,
         case
