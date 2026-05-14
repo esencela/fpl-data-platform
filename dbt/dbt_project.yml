@@ -49,3 +49,6 @@ seeds:
     fpl_player_id_map:
       +schema: seed
       +alias: fpl_player_id_map
+    missing_understat_id_map:
+      +schema: seed
+      +alias: missing_understat_id_map

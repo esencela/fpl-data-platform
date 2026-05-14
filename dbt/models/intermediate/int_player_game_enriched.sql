@@ -78,7 +78,7 @@ join_understat as (
 
         -- Core stats
         case
-            when understat.position != 'Sub' then true
+            when understat.position_order is not null and understat.position_order != 17 then true
             else false
         end as started,
         understat.minutes,

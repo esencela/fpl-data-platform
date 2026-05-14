@@ -73,7 +73,29 @@ fpl_id_mapped as (
     from cleaned_understat clean
     left join {{ ref('fpl_player_id_map') }} map
         on clean.fpl_player_id = map.from_player_id
+),
+
+-- Add missing understat ids
+add_missing_understat as (
+    -- Select where fpl_player_id exists in base
+    select
+        base.fpl_player_id,
+        coalesce(map.understat_id, base.understat_id) as understat_id
+    from fpl_id_mapped base
+    left join {{ ref('missing_understat_id_map') }} map
+        on base.fpl_player_id = map.fpl_player_id
+
+    union all
+
+    -- Select where fpl_player_id does not exist in base
+    select 
+        map.fpl_player_id,
+        map.understat_id
+    from {{ ref('missing_understat_id_map') }} map
+    left join fpl_id_mapped base
+        on map.fpl_player_id = base.fpl_player_id
+    where base.fpl_player_id is null
 )
 
 select *
-from fpl_id_mapped
+from add_missing_understat
