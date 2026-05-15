@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: int_player_id_map
+    description: 'Holds cleaned understat player ids mapped to fpl ids'
+
+    columns:
+      - name: fpl_player_id
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('int_player_season_base')
+                field: fpl_player_id
+
+      - name: understat_id
+        tests:
+          - unique
