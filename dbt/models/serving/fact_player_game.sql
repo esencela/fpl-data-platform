@@ -13,30 +13,23 @@ select
     cast(fixture.kickoff_time AT TIME ZONE 'Europe/London' as date) as date_key,
 
     -- Game details
-    case -- Some players have zero minutes but have still played
-        when (player_game.minutes > 0 or
-              player_game.starts > 0 or
-              player_game.influence > 0 or
-              player_game.creativity > 0 or
-              player_game.threat > 0 or
-              player_game.ict_index > 0 or
-              player_game.bps > 0
-              ) then 1
-        else 0
+    case
+        when understat_roster_id is null then false
+        else true
     end as played,    
-    player_game.starts,
+    player_game.started,
     player_game.at_home,
     player_game.minutes,
 
     -- Base stats
-    player_game.goals_scored,
+    player_game.goals,
     player_game.assists,
-    player_game.goals_scored + player_game.assists as goal_involvements,
+    player_game.goals + player_game.assists as goal_involvements,
+    player_game.shots,
+    player_game.key_passes,
     player_game.goals_conceded,
     player_game.clean_sheets,
     player_game.own_goals,
-    player_game.penalties_saved,
-    player_game.penalties_missed,
 
     -- Discipline
     player_game.yellow_cards,
@@ -48,6 +41,7 @@ select
     player_game.tackles,
     player_game.defensive_contributions,
     player_game.saves,
+    player_game.penalties_saved,
 
     -- FPL points
     player_game.total_points,
@@ -61,22 +55,21 @@ select
     player_game.ict_index,
 
     -- Expected stats
-    player_game.fpl_expected_goals as expected_goals,
-    player_game.fpl_expected_assists as expected_assists,
-    player_game.fpl_expected_goal_involvements as expected_goal_involvements,
+    player_game.expected_goals as expected_goals,
+    player_game.expected_assists as expected_assists,
+    player_game.expected_goals + player_game.expected_assists as expected_goal_involvements,
+    player_game.expected_goal_chain as expected_goal_chain,
+    player_game.expected_goal_buildup as expected_goal_buildup,
 
     -- FPL metrics
     player_game.cost,
     player_game.selected,
     player_game.transfers_in,
     player_game.transfers_out,
-    player_game.transfers_balance,
-
-    -- Metadata
-    player_game.missing_starts_flag
+    player_game.transfers_balance
 
 from
-    {{ ref('int_player_game_base') }} as player_game
+    {{ ref('int_player_game_enriched') }} as player_game
     join {{ ref('int_player_season_enriched') }} as player
         on player_game.player_season_key = player.player_season_key
     join {{ ref('dim_fixture') }} as fixture

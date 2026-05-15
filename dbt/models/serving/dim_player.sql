@@ -4,6 +4,7 @@
 with season_ranked as (
     select
         fpl_player_id,
+        understat_player_id,
         first_name,
         second_name,
         known_name,
@@ -19,6 +20,7 @@ with season_ranked as (
 
 select
     fpl_player_id as player_id,
+    understat_player_id,
     first_name,
     second_name,
     known_name,

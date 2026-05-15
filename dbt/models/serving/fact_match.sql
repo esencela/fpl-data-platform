@@ -4,7 +4,7 @@ with home_games as (
     select
         fixture_key,
         team_id as home_team_id,
-        sum(goals_scored) as home_team_score,
+        sum(goals) as home_team_score,
         sum(expected_goals) as home_expected_goals,
         sum(yellow_cards) as home_yellow_cards,
         sum(red_cards) as home_red_cards,
@@ -26,7 +26,7 @@ away_games as (
     select
         fixture_key,
         team_id as away_team_id,
-        sum(goals_scored) as away_team_score,
+        sum(goals) as away_team_score,
         sum(expected_goals) as away_expected_goals,
         sum(yellow_cards) as away_yellow_cards,
         sum(red_cards) as away_red_cards,
