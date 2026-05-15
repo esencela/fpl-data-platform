@@ -57,11 +57,10 @@ join_understat as (
         -- Player Identifiers
         fpl.player_game_key,
         fpl.player_season_key,
-        fpl.fpl_player_id,
+        fpl.canon_fpl_player_id as fpl_player_id,
         fpl.fpl_player_season_id,
         understat.roster_id as understat_roster_id,
         fpl.understat_player_id,
-        understat.team_id as understat_team_id,
 
         -- Match identifiers
         fpl.season,

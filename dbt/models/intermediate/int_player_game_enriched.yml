@@ -1,0 +1,158 @@
+version: 2
+
+models:
+  - name: int_player_game_enriched
+    description: 'Intermediate model merging fpl and understat player game data'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - fpl_player_season_id
+              - season
+              - fpl_fixture_season_id
+              - understat_player_id
+
+    columns:
+      - name: player_game_key
+        description: 'Composite key uniquely identifying a player_game - <season>_<fpl_fixture_season_id>_<fpl_player_season_id>'
+        tests:
+          - not_null
+          - unique
+
+      - name: player_season_key
+        description: 'Composite key uniquely identifying a player_season - <season>_<fpl_player_season_id>'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_player_season_enriched')
+                field: player_season_key
+
+      - name: fpl_player_id
+        description: 'Unique player identifier - used in FPL data'
+        tests:
+          - not_null
+          - relationships:  
+              arguments:
+                to: ref('int_player_season_enriched')
+                field: fpl_player_id
+
+      - name: fpl_player_season_id
+        description: 'Unique identifier of each player within a season - used in FPL data'
+        tests:
+          - not_null
+
+      - name: understat_roster_id
+        description: 'Unique identifier for each player-game - used in understat data'
+
+      - name: understat_player_id
+        description: 'Unique player identifier - used in understat data'
+
+      - name: season
+        tests:
+          - not_null
+
+      - name: fixture_key
+        description: 'Composite key uniquely identifying a fixture - <season>_<fpl_fixture_season_id>'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_fixtures')
+                field: fixture_key
+
+      - name: fpl_fixture_season_id
+        description: 'Unique identifier of each fixture within a season - used in FPL data'
+        tests:
+          - not_null
+
+      - name: understat_fixture_id
+        description: 'Unique identifier of fixture - used in understat data'
+        tests:
+          - not_null
+
+      - name: gameweek_id
+
+      - name: at_home
+
+      - name: game_position
+
+      - name: replaced_by_roster_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('int_player_game_enriched')
+                field: understat_roster_id
+
+      - name: replaced_roster_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('int_player_game_enriched')
+                field: understat_roster_id
+
+      - name: started
+
+      - name: minutes
+
+      - name: goals
+
+      - name: assists
+
+      - name: shots
+
+      - name: key_passes
+
+      - name: clean_sheets
+
+      - name: goals_conceded
+
+      - name: own_goals
+
+      - name: yellow_cards
+
+      - name: red_cards
+
+      - name: clearances_blocks_interceptions
+
+      - name: recoveries
+
+      - name: tackles
+
+      - name: defensive_contributions
+
+      - name: saves
+
+      - name: penalties_saved
+
+      - name: expected_goals
+
+      - name: expected_assists
+
+      - name: expected_goal_chain
+
+      - name: expected_goal_buildup
+
+      - name: total_points
+
+      - name: bonus
+
+      - name: bps
+
+      - name: influence
+
+      - name: creativity
+
+      - name: threat
+
+      - name: ict_index
+
+      - name: cost
+
+      - name: selected
+
+      - name: transfers_in
+
+      - name: transfers_out
+
+      - name: transfers_balance
