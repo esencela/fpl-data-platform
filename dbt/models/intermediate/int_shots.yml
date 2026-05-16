@@ -1,0 +1,86 @@
+version: 2
+
+models:
+  - name: int_shots
+    description: 'Intermediate model of shot data from understat'
+
+    columns:
+      - name: shot_id
+        description: 'Unique shot indentifier provided by understat'
+        tests:
+          - unique
+          - not_null
+
+      - name: season
+        description: 'Season of match played - e.g. 2026 for 2025/26 season'
+        tests:
+          - not_null
+
+      - name: fixture_key
+        description: 'Composite key uniquely identifying a fixture - <season>_<fpl_fixture_season_id>'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_fixtures')
+                field: fixture_key
+
+      - name: fpl_player_id
+        description: 'Unique player identifier provided by FPL'
+        tests: 
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_player_season_enriched')
+                field: fpl_player_id
+
+      - name: fpl_team_id
+        description: 'Unique team identifier provided by FPL'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_team_season')
+                field: team_id
+
+      - name: player_name
+
+      - name: player_assisted
+
+      - name: team_name
+
+      - name: is_home
+        tests:
+          - not_null
+
+      - name: minute
+        tests:
+          - not_null
+
+      - name: situation
+        tests:
+          - not_null
+
+      - name: shot_type
+        tests:
+          - not_null
+
+      - name: outcome
+        tests:
+          - not_null
+
+      - name: last_action
+        tests:
+          - not_null
+
+      - name: expected_goals
+        tests:
+          - not_null
+
+      - name: x
+        tests:
+          - not_null
+
+      - name: y
+        tests:
+          - not_null
