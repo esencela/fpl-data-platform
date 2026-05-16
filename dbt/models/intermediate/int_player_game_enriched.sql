@@ -51,6 +51,32 @@ add_understat_match_id as (
         on pg.fixture_key = fixture.fixture_key
 ),
 
+-- Aggregate penalty data for each player-game
+penalty_data as (
+    select
+        fixture_key,
+        fpl_player_id,
+        count(*) as penalties_taken,
+        sum(case when outcome = 'Goal' then 1 else 0 end) as penalties_scored
+    from {{ ref('int_shots') }}
+    where situation = 'Penalty'
+    group by
+        fixture_key,
+        fpl_player_id
+),
+
+-- Join penalty data
+joined_penalty_data as (
+    select
+        player.*,
+        penalty.penalties_taken,
+        penalty.penalties_scored
+    from add_understat_match_id player
+    left join penalty_data penalty
+        on player.fixture_key = penalty.fixture_key
+        and player.fpl_player_id = penalty.fpl_player_id
+),
+
 -- Merge understat data through id
 join_understat as (
     select
@@ -102,13 +128,23 @@ join_understat as (
         fpl.yellow_cards,
         fpl.red_cards,
 
+        -- Penalties
+        case
+            when fpl.penalties_scored is null then 0
+            else fpl.penalties_scored
+        end as penalties_scored,
+        case
+            when fpl.penalties_taken is null then 0
+            else fpl.penalties_taken
+        end as penalties_taken,
+        fpl.penalties_saved,
+
         -- Defensive stats
         fpl.clearances_blocks_interceptions,
         fpl.recoveries,
         fpl.tackles,
         fpl.defensive_contributions,
-        fpl.saves,
-        fpl.penalties_saved,
+        fpl.saves,        
 
         -- Expected metrics
         case
@@ -144,7 +180,7 @@ join_understat as (
         fpl.transfers_out,
         fpl.transfers_balance
 
-    from add_understat_match_id fpl
+    from joined_penalty_data fpl
     left join {{ ref('stg_understat__player_game') }} understat
         on fpl.understat_player_id = understat.player_id
         and fpl.understat_fixture_id = understat.match_id

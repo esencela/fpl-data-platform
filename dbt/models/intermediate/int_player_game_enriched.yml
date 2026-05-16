@@ -113,6 +113,23 @@ models:
 
       - name: red_cards
 
+      - name: penalties_scored
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "<= penalties_taken"
+
+      - name: penalties_taken
+        tests:
+          - not_null
+
+      - name: penalties_saved
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "<= saves"
+
       - name: clearances_blocks_interceptions
 
       - name: recoveries
@@ -122,8 +139,6 @@ models:
       - name: defensive_contributions
 
       - name: saves
-
-      - name: penalties_saved
 
       - name: expected_goals
 
