@@ -12,6 +12,8 @@ with player_season_totals as (
         sum(goal_involvements) as goal_involvements,
         sum(clean_sheets) as clean_sheets,
         sum(own_goals) as own_goals,
+        sum(penalties_scored) as penalties_scored,
+        sum(penalties_taken) as penalties_taken,
         sum(penalties_saved) as penalties_saved,
         sum(yellow_cards) as yellow_cards,
         sum(red_cards) as red_cards,
@@ -54,13 +56,16 @@ select
 
     totals.yellow_cards,
     totals.red_cards,
+    
+    totals.penalties_scored,
+    totals.penalties_taken,
+    totals.penalties_saved,
 
     totals.clearances_blocks_interceptions,
     totals.recoveries,
     totals.tackles,
     totals.defensive_contributions,
     totals.saves,
-    totals.penalties_saved,
 
     totals.total_points,
     totals.bonus,

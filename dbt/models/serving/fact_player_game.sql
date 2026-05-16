@@ -35,13 +35,17 @@ select
     player_game.yellow_cards,
     player_game.red_cards,
 
+    -- Penalties
+    player_game.penalties_scored,
+    player_game.penalties_taken,
+    player_game.penalties_saved,
+
     -- Defensive stats
     player_game.clearances_blocks_interceptions,
     player_game.recoveries,
     player_game.tackles,
     player_game.defensive_contributions,
     player_game.saves,
-    player_game.penalties_saved,
 
     -- FPL points
     player_game.total_points,

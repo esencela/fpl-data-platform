@@ -8,6 +8,8 @@ with home_games as (
         sum(expected_goals) as home_expected_goals,
         sum(yellow_cards) as home_yellow_cards,
         sum(red_cards) as home_red_cards,
+        sum(penalties_scored) as home_penalties_scored,
+        sum(penalties_taken) as home_penalties_taken,
         sum(influence) as home_influence,
         sum(creativity) as home_creativity,
         sum(threat) as home_threat,
@@ -30,6 +32,8 @@ away_games as (
         sum(expected_goals) as away_expected_goals,
         sum(yellow_cards) as away_yellow_cards,
         sum(red_cards) as away_red_cards,
+        sum(penalties_scored) as away_penalties_scored,
+        sum(penalties_taken) as away_penalties_taken,
         sum(influence) as away_influence,
         sum(creativity) as away_creativity,
         sum(threat) as away_threat,
@@ -58,6 +62,12 @@ select
     away.away_expected_goals,
     home.home_team_score - home.home_expected_goals as home_xg_diff,
     away.away_team_score - away.away_expected_goals as away_xg_diff,
+
+    -- Penalties
+    home.home_penalties_scored,
+    home.home_penalties_taken,
+    away.away_penalties_scored,
+    away.away_penalties_taken,
 
     -- FPL metrics
     home.home_influence,
