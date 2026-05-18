@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: dim_team
+    description: 'Dimensional table holding team attributes'
+
+    columns:
+      - name: team_id
+        description: 'Unique identifier for each team - uses fpl team id'
+        tests:
+          - not_null
+          - unique
+
+      - name: understat_team_id
+        description: 'Unique identifier for each team provided by understat'
+        tests:
+          - not_null
+          - unique
+
+      - name: team_name
+        description: 'Team name used in the fpl web app'
+        tests:
+          - not_null
+
+      - name: short_name
+        description: '3 Letter team code for each team'
+        tests:
+          - not_null
+          - unique

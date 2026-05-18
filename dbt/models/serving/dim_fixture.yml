@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: dim_fixture
+    description: 'Dimension table holding fixture attributes'
+
+    columns:
+      - name: fixture_key
+        description: 'Unique composite key identifying each fixture - <season>_<fpl_fixture_season_id>'
+        tests:
+          - unique
+          - not_null
+
+      - name: fpl_fixture_id
+        description: 'Unique identifier for fixture provided by FPL - unavailable for fixtures before 2018/19 season'
+        tests:
+          - unique
+
+      - name: fpl_fixture_season_id
+        description: 'Identifies fixtures within a season - 1 to N for each fixture'
+        tests:
+          - not_null
+
+      - name: understat_fixture_id
+        description: 'Unique identifier for each fixture provided by understat'
+        tests:
+          - not_null
+          - unique
+
+      - name: season
+        description: 'Season of fixture - e.g. 2026 for 2025/26 season'
+        tests:
+          - not_null
+
+      - name: gameweek_id
+        description: 'Identifier for each gameweek within a season provided by FPL'
+        tests:
+          - not_null
+
+      - name: canon_gameweek
+        description: 'Chronological gameweek fixture takes place in'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "between 1 and 38"
+
+      - name: kickoff_time
+        description: 'Scheduled kickoff time of fixture'
+
+      - name: finished
+        description: 'Whether game has been completed'
+        tests:
+          - not_null
+
+      - name: home_team_id
+        description: 'Unique identifier of home team'
+        tests:
+          - not_null
+
+      - name: away_team_id
+        description: 'Unique identifier of away team'  
+        tests:
+          - not_null

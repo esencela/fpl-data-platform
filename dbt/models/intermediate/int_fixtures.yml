@@ -25,6 +25,10 @@ models:
       
       - name: fpl_fixture_id
         description: 'Unique identifier for fixture - used by FPL API'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or season < 2019"
       
       - name: fpl_fixture_season_id
         description: 'Unique identifier for fixture within a season - used by FPL API'

@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: dim_player
+    description: 'Dimension table holding player attributes'
+
+    columns:
+      - name: player_id
+        description: 'Unique identifier for each player - uses fpl player id'
+        tests:
+          - not_null
+          - unique
+
+      - name: understat_player_id
+        description: 'Unique identifier for each player provided by understat - unavailable for players who have no gametime'
+        tests:
+          - unique
+
+      - name: first_name
+        description: 'First name of player'
+        tests:
+          - not_null
+
+      - name: second_name
+        description: 'Second name of player'
+        tests:
+          - not_null
+
+      - name: known_name
+        description: 'Available for players with nicknames or shortened names'
+
+      - name: web_name
+        description: 'Player name used in the fpl web app'
+
+      - name: birth_date
+        description: 'Birth date of player'
