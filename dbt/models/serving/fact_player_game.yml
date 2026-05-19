@@ -1,0 +1,244 @@
+version: 2
+
+models:
+  - name: fact_player_game
+    description: 'Fact table holding metrics of each player per game'
+
+    columns:
+      - name: player_game_key
+        description: 'Composite primary key identifying each player game'
+        tests:
+          - not_null
+          - unique
+
+      - name: player_id
+        description: 'Foreign key referencing player dimension table'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_player')
+                field: player_id
+
+      - name: player_season_key
+        description: 'Foreign key referencing player season fact table'
+        tests:
+          - not_null
+          - relationships: 
+              arguments:
+                to: ref('fact_player_season')
+                field: player_season_key
+
+      - name: team_id
+        description: 'Foreign key referencing team dimension table'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_team')
+                field: team_id
+
+      - name: fixture_key
+        description: 'Foregin key referencing fixture dimension table'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_fixture')
+                field: fixture_key
+
+      - name: date_key
+        description: 'Foreign key referencing date dimension table'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_day
+
+      - name: played
+        description: 'Whether player had any gametime'
+        tests:
+          - not_null
+
+      - name: started
+        description: 'Whether player started in the game'
+        tests:
+          - not_null
+
+      - name: at_home
+        description: 'Whether game was a home fixture'
+        tests:
+          - not_null
+
+      - name: minutes
+        description: 'Amount of minutes played in game'
+        tests:
+          - not_null
+
+      - name: goals
+        description: 'Goals scored by player during game'
+        tests:
+          - not_null
+
+      - name: assists
+        description: 'Assists made by player during game'
+        tests:
+          - not_null
+
+      - name: goal_involvements
+        description: 'Goals + assists during game'
+        tests:
+          - not_null
+
+      - name: shots
+        description: 'Shots attempted by player during game'
+        tests:
+          - not_null
+
+      - name: key_passes
+        description: 'Passes made by player that directly lead to a shot'
+        tests:
+          - not_null
+
+      - name: goals_conceded
+        description: 'Goals conceded by player team while player was on the pitch'
+        tests:
+          - not_null
+
+      - name: clean_sheets
+        description: 'Clean sheets awarded by player - Clean Sheet is defined in fpl by a player who conceded no goals while on the pitch and played at least 60 minutes'
+        tests:
+          - not_null
+
+      - name: own_goals
+        description: 'Own goals scored by player during game'
+        tests:
+          - not_null
+
+      - name: yellow_cards
+        description: 'Yellow cards received by player during game'
+        tests:
+          - not_null
+
+      - name: red_cards
+        description: 'Red cards received by player during game'
+        tests:
+          - not_null
+
+      - name: penalties_scored
+        description: 'Penalties scored by player during game'
+        tests:
+          - not_null
+
+      - name: penalties_taken
+        description: 'Penalties taken by player during game'
+        tests:
+          - not_null
+
+      - name: penalties_saved
+        description: 'Penalties saved by player during game'
+        tests:
+          - not_null
+
+      - name: clearances_blocks_interceptions
+        description: 'Clearances + blocks + interceptions made by player during game'
+
+      - name: recoveries
+        description: 'Amount of times player regained possession for their team during game'
+
+      - name: tackles
+        description: 'Tackles made by player during game'
+
+      - name: defensive_contributions
+        description: 'FPL metric combining all defensive actions - different for each position'
+
+      - name: saves
+        description: 'Saves made by player during game'
+        tests:
+          - not_null
+
+      - name: total_points
+        description: 'FPL points earned by player during game'
+        tests:
+          - not_null
+
+      - name: bonus
+        description: 'Bonus points awarded by FPL'
+        tests:
+          - not_null
+
+      - name: bps
+        description: 'Points earned by player in the FPL bonus points system - Top 3 players earn 3, 2 and 1 bonus points respectively'
+        tests:
+          - not_null
+
+      - name: influence
+        description: 'FPL metric measuring the impact player has had on the game'
+        tests:
+          - not_null
+
+      - name: creativity
+        description: 'FPL metric measuring production of goalscoring opportunities by player'
+        tests:
+          - not_null
+
+      - name: threat
+        description: 'FPL metric measuring players goalscoring likelihood'
+        tests:
+          - not_null
+
+      - name: ict_index
+        description: 'Combined overall score of influence, creativity and threat metrics'
+        tests:
+          - not_null
+
+      - name: expected_goals
+        description: 'Expected goals accumulated by player during game - xG measures each shots probability of being a goal'
+        tests:
+          - not_null
+
+      - name: expected_assists
+        description: 'Expected assists accumulated by player during game - xA measures each completed pass probability of leading to a goal'
+        tests:
+          - not_null
+
+      - name: expected_goal_involvements
+        description: 'Expected goals + expected assists'
+        tests:
+          - not_null
+
+      - name: expected_goal_chain
+        description: 'xGChain measures xG for every possession player is involved in that leads to a shot'
+        tests:
+          - not_null
+
+      - name: expected_goal_buildup
+        description: 'xGBuildup is similar to xGChain but excludes the final shot and pass directly leading to the final shot'
+        tests:
+          - not_null
+
+      - name: cost
+        description: 'FPL transfer cost of player at the time of the game'
+        tests:
+          - not_null
+
+      - name: selected
+        description: 'How many FPL managers have selected this player in their team at the time of the game'
+        tests:
+          - not_null
+
+      - name: transfers_in
+        description: 'How many FPL managers have transferred this player in for fixtures gameweek'
+        tests:
+          - not_null
+
+      - name: transfers_out
+        description: 'How many FPL managers have transferred this player out for fixtures gameweek'
+        tests:
+          - not_null
+
+      - name: transfers_balance
+        description: 'Transfers in - transfers out'
+        tests:
+          - not_null

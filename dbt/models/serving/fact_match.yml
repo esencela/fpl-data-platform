@@ -1,0 +1,140 @@
+version: 2
+
+models:
+  - name: fact_match
+    description: 'Fact table holding metrics for each match'
+
+    columns:
+      - name: fixture_key
+        description: 'Foreign key referencing fixture dimension table'
+        tests:
+          - unique
+          - not_null
+
+      - name: home_team_id
+        description: 'Foreign key referencing team dimension table for home team'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_team')
+                field: team_id
+
+      - name: away_team_id
+        description: 'Foreign key referencing team dimension table for away team'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_team')
+                field: team_id
+
+      - name: home_team_score
+        description: 'Goals scored by home team in match'
+        tests:
+          - not_null
+
+      - name: away_team_score
+        description: 'Goals scored by away team in match'
+        tests:
+          - not_null
+
+      - name: home_expected_goals
+        description: 'Expected goals accumulated by home team during match'
+        tests:
+          - not_null
+
+      - name: away_expected_goals
+        description: 'Expected goals accumulated by away team during match'
+        tests:
+          - not_null
+
+      - name: home_xg_diff
+        description: 'Expected goals - goals scored for home team'
+        tests:
+          - not_null
+
+      - name: away_xg_diff
+        description: 'Expected goals - goals scored for away team'
+        tests:
+          - not_null
+
+      - name: home_penalties_scored
+        description: 'Penalties scored by home team during match'
+        tests:
+          - not_null
+
+      - name: home_penalties_taken
+        description: 'Penalties taken by home team during match'
+        tests:
+          - not_null
+
+      - name: away_penalties_scored
+        description: 'Penalties scored by away team during match'
+        tests:
+          - not_null
+
+      - name: away_penalties_taken
+        description: 'Penalties taken by away team during match'
+        tests:
+          - not_null
+
+      - name: home_influence
+        description: 'Total influence score of each player in home team during match'
+        tests:
+          - not_null
+
+      - name: home_creativity
+        description: 'Total creativity score of each player in home team during match'
+        tests:
+          - not_null
+
+      - name: home_threat
+        description: 'Total threat score of each player in home team during match'
+        tests:
+          - not_null
+
+      - name: home_ict_index
+        description: 'Total ict index score of each player in home team during match'
+        tests:
+          - not_null
+
+      - name: away_influence
+        description: 'Total influence score of each player in away team during match'
+        tests:
+          - not_null
+
+      - name: away_creativity
+        description: 'Total creativity score of each player in away team during match'
+        tests:
+          - not_null
+
+      - name: away_threat
+        description: 'Total threat score of each player in away team during match'
+        tests:
+          - not_null
+
+      - name: away_ict_index
+        description: 'Total ict index score of each player in away team during match'
+        tests:
+          - not_null
+
+      - name: home_yellow_cards
+        description: 'Yellow cards received by home team during match'
+        tests:
+          - not_null
+
+      - name: home_red_cards
+        description: 'Red cards received by home team during match'
+        tests:
+          - not_null
+
+      - name: away_yellow_cards
+        description: 'Yellow cards received by away team during match'
+        tests:
+          - not_null
+
+      - name: away_red_cards
+        description: 'Red cards received by away team during match'
+        tests:
+          - not_null

@@ -6,7 +6,7 @@ models:
 
     columns:
       - name: fixture_key
-        description: 'Unique composite key identifying each fixture - <season>_<fpl_fixture_season_id>'
+        description: 'Composite primary key identifying each fixture - <season>_<fpl_fixture_season_id>'
         tests:
           - unique
           - not_null

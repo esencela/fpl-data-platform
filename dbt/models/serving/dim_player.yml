@@ -6,7 +6,7 @@ models:
 
     columns:
       - name: player_id
-        description: 'Unique identifier for each player - uses fpl player id'
+        description: 'Primary key for each player - uses fpl player id'
         tests:
           - not_null
           - unique

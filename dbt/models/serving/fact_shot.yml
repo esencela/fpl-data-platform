@@ -1,0 +1,84 @@
+version: 2
+
+models:
+  - name: fact_shot
+    description: 'Fact table holding shot metrics'
+
+    columns:
+      - name: shot_id
+        description: 'Primary key identifying each shot - uses understat shot id'
+        tests:
+          - unique
+          - not_null
+
+      - name: fixture_key
+        description: 'Foreign key referencing fixture dimension table'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_fixture')
+                field: fixture_key
+
+      - name: player_id
+        description: 'Foreign key referencing player dimension table for player who took shot'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_player')
+                field: player_id
+
+      - name: team_id
+        description: 'Foreign key referencing team dimension table for team of player who took shot'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_team')
+                field: team_id
+
+      - name: at_home
+        description: 'Whether game was a home fixture for player who took shot'
+        tests:
+          - not_null
+
+      - name: minute
+        description: 'Minute of game which shot was taken in'
+        tests:
+          - not_null
+
+      - name: situation
+        description: 'Situation that shot was taken in'
+        tests:
+          - not_null
+
+      - name: shot_type
+        description: 'Which body part shot was taken with'
+        tests:
+          - not_null
+
+      - name: outcome
+        description: 'Result of shot'
+        tests:
+          - not_null
+
+      - name: last_action
+        description: 'Action that took place directly before shot'
+        tests:
+          - not_null
+
+      - name: expected_goals
+        description: 'Probability that shot would result in a goal'
+        tests:
+          - not_null
+
+      - name: x
+        description: 'Longitudinal position where shot was taken, 0 = own goal, 1 = opponents goal'
+        tests:
+          - not_null
+
+      - name: y 
+        description: 'Lateral position where shot was taken, 0 = right wing, 1 = left wing'
+        tests:
+          - not_null

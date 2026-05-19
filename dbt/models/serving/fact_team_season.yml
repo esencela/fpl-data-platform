@@ -1,0 +1,106 @@
+version: 2
+
+models:
+  - name: fact_team_season
+    description: 'Fact table holding season metrics of each team'
+
+    columns:
+      - name: team_season_key
+        description: 'Composite primary key identifying each team season'
+        tests:
+          - unique
+          - not_null
+
+      - name: team_id
+        description: 'Foreign key referencing team dimension table'
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_team')
+                field: team_id
+
+      - name: season
+        description: 'Season of each team season - e.g. 2026 for 2025/26 season'
+        tests:
+          - not_null
+
+      - name: games_played
+        description: 'Total games played during season'
+        tests:
+          - not_null
+
+      - name: wins
+        description: 'Total wins during season'
+        tests:
+          - not_null
+
+      - name: draws
+        description: 'Total draws during season'
+        tests:
+          - not_null
+
+      - name: losses
+        description: 'Total losses during season'
+        tests:
+          - not_null
+
+      - name: goals_scored
+        description: 'Total goals scored by team during season'
+        tests:
+          - not_null
+
+      - name: goals_against
+        description: 'Total goals conceded by team during season'
+        tests:
+          - not_null
+
+      - name: expected_goals
+        description: 'Expected goals accumulated by team during season'
+        tests:
+          - not_null
+
+      - name: expected_goals_against
+        description: 'Expected goals conceded by team during season'
+        tests:
+          - not_null
+
+      - name: penalties_scored
+        description: 'Penalties scored by team during season'
+        tests:
+          - not_null
+
+      - name: penalties_taken
+        description: 'Penalties taken by team during season'
+        tests:
+          - not_null
+
+      - name: influence
+        description: 'Total influence score of each player in team during season'
+        tests:
+          - not_null
+
+      - name: creativity
+        description: 'Total creativity score of each player in team during season'
+        tests:
+          - not_null
+
+      - name: threat
+        description: 'Total threat score of each player in team during season'
+        tests:
+          - not_null    
+
+      - name: ict_index
+        description: 'Total ict index score of each player in team during season'
+        tests:
+          - not_null
+
+      - name: yellow_cards
+        description: 'Yellow cards received by team during season'
+        tests:
+          - not_null
+      
+      - name: red_cards
+        description: 'Red cards received by team during season'
+        tests:
+          - not_null
