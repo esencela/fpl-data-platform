@@ -109,6 +109,7 @@ select
     losses,
     goals_scored,
     goals_against,
+    goals_scored - goals_against as goal_difference,
     expected_goals,
     expected_goals_against,
     penalties_scored,
