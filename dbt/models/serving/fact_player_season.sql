@@ -10,6 +10,8 @@ with player_season_totals as (
         sum(goals) as goals,
         sum(assists) as assists,
         sum(goal_involvements) as goal_involvements,
+        sum(shots) as shots,
+        sum(key_passes) as key_passes,
         sum(case when clean_sheet then 1 else 0 end) as clean_sheets,
         sum(own_goals) as own_goals,
         sum(penalties_scored) as penalties_scored,
@@ -51,6 +53,8 @@ select
     totals.goals,
     totals.assists,
     totals.goal_involvements,
+    totals.shots,
+    totals.key_passes,
     totals.clean_sheets,
     totals.own_goals,    
 

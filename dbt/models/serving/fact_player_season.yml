@@ -69,6 +69,16 @@ models:
         tests:
           - not_null
 
+      - name: shots
+        description: 'Shots taken by player during season'
+        tests:
+          - not_null
+
+      - name: key_passes
+        description: 'Key passes made by player during season'
+        tests:
+          - not_null
+
       - name: clean_sheets
         description: 'Clean sheets earned by player during season'
         tests:
