@@ -28,7 +28,7 @@ select
     player_game.shots,
     player_game.key_passes,
     player_game.goals_conceded,
-    player_game.clean_sheets,
+    player_game.clean_sheet,
     player_game.own_goals,
 
     -- Discipline

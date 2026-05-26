@@ -103,7 +103,7 @@ models:
 
       - name: key_passes
 
-      - name: clean_sheets
+      - name: clean_sheet
 
       - name: goals_conceded
 

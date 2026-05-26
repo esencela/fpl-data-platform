@@ -106,7 +106,7 @@ models:
         tests:
           - not_null
 
-      - name: clean_sheets
+      - name: clean_sheet
         description: 'Clean sheets awarded by player - Clean Sheet is defined in fpl by a player who conceded no goals while on the pitch and played at least 60 minutes'
         tests:
           - not_null

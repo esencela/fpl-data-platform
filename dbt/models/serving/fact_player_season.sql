@@ -10,7 +10,7 @@ with player_season_totals as (
         sum(goals) as goals,
         sum(assists) as assists,
         sum(goal_involvements) as goal_involvements,
-        sum(clean_sheets) as clean_sheets,
+        sum(case when clean_sheet then 1 else 0 end) as clean_sheets,
         sum(own_goals) as own_goals,
         sum(penalties_scored) as penalties_scored,
         sum(penalties_taken) as penalties_taken,

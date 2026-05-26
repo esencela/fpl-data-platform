@@ -120,7 +120,10 @@ join_understat as (
             when understat.key_passes is null then 0
             else understat.key_passes
         end as key_passes,
-        fpl.clean_sheets,
+        case 
+            when fpl.clean_sheets = 0 then false
+            else true
+        end as clean_sheet,
         fpl.goals_conceded,
         fpl.own_goals,
 
