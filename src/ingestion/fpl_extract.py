@@ -1,15 +1,15 @@
 import requests
 import json
 import logging
+import os
 from pathlib import Path
 from datetime import datetime
 import asyncio
 import aiohttp
-from src.utils.fpl_file_helper import get_latest_bootstrap_file
-from src.config import CURRENT_SEASON
+from src.ingestion.utils.fpl_file_helper import get_latest_bootstrap_file
+from src.ingestion.config import CURRENT_SEASON
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw' / 'fpl'
+RAW_DATA_DIR = os.getenv('RAW_DATA_DIR', '/app/data/raw/fpl')
 
 CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
 

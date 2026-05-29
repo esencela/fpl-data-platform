@@ -1,10 +1,9 @@
+import os
 from pathlib import Path
 from datetime import datetime
-from src.utils.file_utils import get_latest_file_for_each_season
+from src.ingestion.utils.file_utils import get_latest_file_for_each_season
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw' / 'vaastav'
-
+RAW_DATA_DIR = os.getenv('RAW_DATA_DIR', '/app/data/raw/vaastav')
 
 def get_latest_player_files() -> list[Path]:
     """Returns a list of paths to the latest player parquet files."""

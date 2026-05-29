@@ -1,11 +1,10 @@
 import json
+import os
 from pathlib import Path
-from src.config import CURRENT_SEASON
-from src.utils.file_utils import get_latest_path, get_latest_season_folder
+from src.ingestion.config import CURRENT_SEASON
+from src.ingestion.utils.file_utils import get_latest_path, get_latest_season_folder
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw' / 'fpl'
-
+RAW_DATA_DIR = os.getenv('RAW_DATA_DIR', '/app/data/raw/fpl')
 
 def get_latest_bootstrap_file() -> Path:
     """Returns the path to the most recent bootstrap JSON file."""

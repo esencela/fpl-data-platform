@@ -6,10 +6,10 @@ import time
 import logging
 import json
 import asyncio
-from src.utils.understat_file_helper import get_latest_season_files
+import os
+from src.ingestion.utils.understat_file_helper import get_latest_season_files
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw' / 'understat'
+RAW_DATA_DIR = os.getenv('RAW_DATA_DIR', '/app/data/raw/understat')
 
 CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
 MIN_SEASON = 2017

@@ -1,11 +1,10 @@
+import os
 from pathlib import Path
 from datetime import datetime
 import json
-from src.utils.file_utils import get_latest_file_for_each_season, get_latest_path
+from src.ingestion.utils.file_utils import get_latest_file_for_each_season, get_latest_path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw' / 'understat'
-
+RAW_DATA_DIR = os.getenv('RAW_DATA_DIR', '/app/data/raw/understat')
 
 def get_latest_season_files() -> list[Path]:
     """Returns a list of paths to the latest raw season JSON files."""

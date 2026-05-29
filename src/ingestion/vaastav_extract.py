@@ -3,9 +3,9 @@ from pathlib import Path
 from datetime import datetime
 from urllib.error import HTTPError
 import logging
+import os
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-RAW_DATA_DIR = PROJECT_ROOT / 'data' / 'raw' / 'vaastav'
+RAW_DATA_DIR = os.getenv('RAW_DATA_DIR', '/app/data/raw/vaastav')
 
 CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
 MIN_SEASON = 2017

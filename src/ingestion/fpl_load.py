@@ -3,7 +3,7 @@ from psycopg2.extras import execute_values
 import json
 import logging
 from datetime import datetime
-from src.utils.fpl_file_helper import (
+from src.ingestion.utils.fpl_file_helper import (
     get_latest_bootstrap_file, 
     get_latest_element_summaries, 
     get_latest_fixtures_file, 
