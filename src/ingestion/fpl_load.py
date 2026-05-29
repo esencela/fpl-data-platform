@@ -3,6 +3,7 @@ from psycopg2.extras import execute_values
 import json
 import logging
 from datetime import datetime
+from src.config.settings import settings
 from src.ingestion.utils.fpl_file_helper import (
     get_latest_bootstrap_file, 
     get_latest_element_summaries, 
@@ -14,12 +15,13 @@ logger = logging.getLogger(__name__)
 
 # Database connection parameters
 DB_PARAMS = {
-    'dbname': 'fpl_db',
-    'user': 'fpl_user',
-    'password': 'fpl_password',
-    'host': 'localhost',
-    'port': 5433
+    'dbname': settings.DB_NAME,
+    'user': settings.DB_USER,
+    'password': settings.DB_PASSWORD,
+    'host': settings.DB_HOST,
+    'port': settings.DB_PORT
 }
+
 
 def load_bootstrap_to_postgres():
     """Loads latest raw bootstrap JSON data into PostgreSQL database."""    

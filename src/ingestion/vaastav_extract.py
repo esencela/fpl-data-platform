@@ -4,8 +4,9 @@ from datetime import datetime
 from urllib.error import HTTPError
 import logging
 import os
+from src.config.settings import settings
 
-RAW_DATA_DIR = os.getenv('RAW_DATA_DIR', '/app/data/raw/vaastav')
+VAASTAV_DATA_DIR = settings.RAW_DATA_DIR / 'vaastav'
 
 CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
 MIN_SEASON = 2017
@@ -31,7 +32,7 @@ def extract_player_data() -> None:
     logger.info('Extracting player data from GitHub...')  
 
     for season_string, season in seasons:
-        base_path = RAW_DATA_DIR / 'players' / f'season={season}'
+        base_path = VAASTAV_DATA_DIR / 'players' / f'season={season}'
 
         # Raw player data
         player_url = base_url + f'{season_string}/players_raw.csv'
@@ -56,7 +57,7 @@ def extract_gameweek_data() -> None:
     logger.info('Extracting player-game data from GitHub...')  
 
     for season_string, season in seasons:
-        base_path = RAW_DATA_DIR / 'gws' / f'season={season}'
+        base_path = VAASTAV_DATA_DIR / 'gws' / f'season={season}'
 
         # Raw player-game data
         gw_url = base_url + f'{season_string}/gws/merged_gw.csv'
@@ -81,7 +82,7 @@ def extract_fixture_data() -> None:
     logger.info('Extracting fixture data from GitHub...')
 
     for season_string, season in seasons:
-        base_path = RAW_DATA_DIR / 'fixtures' / f'season={season}'
+        base_path = VAASTAV_DATA_DIR / 'fixtures' / f'season={season}'
 
         # Raw fixture data
         fixture_url = base_url + f'{season_string}/fixtures.csv'
@@ -112,7 +113,7 @@ def extract_team_data() -> None:
     logger.info('Extracting team data from GitHub...')
 
     for season_string, season in seasons:
-        base_path = RAW_DATA_DIR / 'teams' / f'season={season}'
+        base_path = VAASTAV_DATA_DIR / 'teams' / f'season={season}'
 
         # Raw team data
         team_url = base_url + f'{season_string}/teams.csv'

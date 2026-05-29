@@ -8,8 +8,9 @@ import json
 import asyncio
 import os
 from src.ingestion.utils.understat_file_helper import get_latest_season_files
+from src.config.settings import settings
 
-RAW_DATA_DIR = os.getenv('RAW_DATA_DIR', '/app/data/raw/understat')
+UNDERSTAT_DATA_DIR = settings.RAW_DATA_DIR / 'understat'
 
 CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
 MIN_SEASON = 2017
@@ -47,7 +48,7 @@ def extract_season_data() -> None:
             continue
 
         # Save the extracted data to a JSON file named with the current date
-        file_path = RAW_DATA_DIR / 'season_data' / f'season={season}' / f'{CURRENT_DATE}.json'
+        file_path = UNDERSTAT_DATA_DIR / 'season_data' / f'season={season}' / f'{CURRENT_DATE}.json'
         file_path.parent.mkdir(parents=True, exist_ok=True)
 
         with open(file_path, 'w', encoding='utf-8') as file:
@@ -87,7 +88,7 @@ def extract_match_data() -> None:
 
     logger.info(f'Extracting match data for {len(match_ids)} matches...')
 
-    base_path = RAW_DATA_DIR / 'matches' 
+    base_path = UNDERSTAT_DATA_DIR / 'matches'
     base_path.mkdir(parents=True, exist_ok=True)
     
     for match_id in match_ids:
@@ -134,7 +135,7 @@ def extract_id_mappings() -> None:
     try:
         df = pd.read_csv(url)
 
-        file_path = RAW_DATA_DIR / 'id_mappings' / f'{CURRENT_DATE}.parquet'
+        file_path = UNDERSTAT_DATA_DIR / 'id_mappings' / f'{CURRENT_DATE}.parquet'
         file_path.parent.mkdir(parents=True, exist_ok=True)
 
         df.to_parquet(file_path, index=False)

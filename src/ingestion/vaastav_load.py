@@ -3,6 +3,7 @@ import pandas as pd
 import logging
 import json
 from datetime import datetime
+from src.config.settings import settings
 from src.ingestion.utils.vaastav_file_helper import (
     get_latest_player_files, 
     get_latest_gameweek_files,
@@ -12,7 +13,7 @@ from src.ingestion.utils.vaastav_file_helper import (
 
 logger = logging.getLogger(__name__)
 
-engine = create_engine('postgresql://fpl_user:fpl_password@localhost:5433/fpl_db')
+engine = create_engine(f'postgresql://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}')
 
 
 def load_players_to_postgres() -> None:

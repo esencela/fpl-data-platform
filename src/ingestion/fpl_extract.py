@@ -7,9 +7,9 @@ from datetime import datetime
 import asyncio
 import aiohttp
 from src.ingestion.utils.fpl_file_helper import get_latest_bootstrap_file
-from src.ingestion.config import CURRENT_SEASON
+from src.config.settings import settings
 
-RAW_DATA_DIR = os.getenv('RAW_DATA_DIR', '/app/data/raw/fpl')
+FPL_DATA_DIR = settings.RAW_DATA_DIR / 'fpl'
 
 CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
 
@@ -35,7 +35,7 @@ def extract_bootstrap() -> None:
         raise Exception(f'API request failed with status code {response.status_code}')
     
     # Save the extracted data to a JSON file named with the current date
-    file_path = RAW_DATA_DIR / 'bootstrap-static' / f'season={CURRENT_SEASON}' / f'{CURRENT_DATE}.json'
+    file_path = FPL_DATA_DIR / 'bootstrap-static' / f'season={settings.CURRENT_SEASON}' / f'{CURRENT_DATE}.json'
     file_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(file_path, 'w', encoding='utf-8') as file:
@@ -57,7 +57,7 @@ async def extract_element_summaries_async() -> None:
     logger.info(f'Starting extraction for {len(player_ids)} players...')
 
     # Create base directory for element summaries
-    base_path = RAW_DATA_DIR / 'element-summary' / f'season={CURRENT_SEASON}' / f'{CURRENT_DATE}'
+    base_path = FPL_DATA_DIR / 'element-summary' / f'season={settings.CURRENT_SEASON}' / f'{CURRENT_DATE}'
     base_path.mkdir(parents=True, exist_ok=True)
 
     # Async fetch with concurrency control
@@ -121,7 +121,7 @@ def extract_fixtures() -> None:
         raise Exception(f'API request failed with status code {response.status_code}')
     
     # Save the extracted data to a JSON file named with the current date
-    file_path = RAW_DATA_DIR / 'fixtures' / f'season={CURRENT_SEASON}' / f'{CURRENT_DATE}.json'
+    file_path = FPL_DATA_DIR / 'fixtures' / f'season={settings.CURRENT_SEASON}' / f'{CURRENT_DATE}.json'
     file_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(file_path, 'w', encoding='utf-8') as file:
@@ -143,7 +143,7 @@ async def extract_events_async():
     logger.info(f'Starting extraction for {len(gameweek_ids)} gameweeks...')
 
     # Create base directory for event summaries
-    base_path = RAW_DATA_DIR / 'events' / f'season={CURRENT_SEASON}' / f'{CURRENT_DATE}'
+    base_path = FPL_DATA_DIR / 'events' / f'season={settings.CURRENT_SEASON}' / f'{CURRENT_DATE}'
     base_path.mkdir(parents=True, exist_ok=True)
 
     # Async fetch with concurrency control

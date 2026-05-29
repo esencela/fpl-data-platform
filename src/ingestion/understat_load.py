@@ -5,6 +5,7 @@ import pandas as pd
 import json
 import logging
 from datetime import datetime
+from src.config.settings import settings
 from src.ingestion.utils.understat_file_helper import (
     get_latest_season_files,
     get_latest_match_files,
@@ -14,12 +15,13 @@ from src.ingestion.utils.understat_file_helper import (
 logger = logging.getLogger(__name__)
 
 DB_PARAMS = {
-    'dbname': 'fpl_db',
-    'user': 'fpl_user',
-    'password': 'fpl_password',
-    'host': 'localhost',
-    'port': 5433
+    'dbname': settings.DB_NAME,
+    'user': settings.DB_USER,
+    'password': settings.DB_PASSWORD,
+    'host': settings.DB_HOST,
+    'port': settings.DB_PORT
 }
+
 
 def load_season_data_to_postgres() -> None:
     """Loads latest raw season data JSON files into PostgreSQL database."""
