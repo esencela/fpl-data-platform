@@ -188,3 +188,9 @@ async def fetch_gameweek_async(session: aiohttp.ClientSession, semaphore: asynci
             logger.error(f'Error fetching gameweek {gameweek_id}: {e}')
 
         await asyncio.sleep(RATE_LIMIT)
+
+
+extract_bootstrap()
+asyncio.run(extract_element_summaries_async())
+extract_fixtures()
+asyncio.run(extract_events_async())

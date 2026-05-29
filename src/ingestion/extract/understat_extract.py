@@ -145,3 +145,8 @@ def extract_id_mappings() -> None:
     except Exception as e:
         logger.error(f'Failed to retrieve ID mappings: {e}')
         raise
+
+
+extract_season_data()
+extract_match_data()
+extract_id_mappings()

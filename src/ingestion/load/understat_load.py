@@ -108,3 +108,8 @@ def load_id_mappings_to_postgres() -> None:
     df.to_sql('id_mappings', engine, schema='raw', if_exists='append', index=False)
 
     logger.info(f'ID mappings data loaded into PostgreSQL database successfully.')
+
+
+load_season_data_to_postgres()
+load_match_data_to_postgres()
+load_id_mappings_to_postgres()

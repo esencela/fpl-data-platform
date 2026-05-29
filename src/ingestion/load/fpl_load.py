@@ -143,3 +143,9 @@ def load_events_to_postgres():
     cursor.close()
     conn.close()
     logger.info('Event data loaded into PostgreSQL database successfully.')
+
+
+load_bootstrap_to_postgres()
+load_element_summaries_to_postgres()
+load_fixtures_to_postgres()
+load_events_to_postgres()

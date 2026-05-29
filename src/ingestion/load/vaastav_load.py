@@ -146,3 +146,9 @@ def load_teams_to_postgres() -> None:
         df.to_sql('vaastav_teams', engine, schema='raw', if_exists='append', index=False)
 
     logger.info(f'Succesfully loaded {len(team_files)} rows to raw.vaastav_teams')
+
+
+load_players_to_postgres()
+load_gws_to_postgres()
+load_fixtures_to_postgres()
+load_teams_to_postgres()

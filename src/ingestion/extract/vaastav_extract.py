@@ -136,3 +136,9 @@ def extract_team_data() -> None:
         except Exception as e:
             logger.error(f'Failed to retrieve team data: {e}')
             raise
+
+
+extract_player_data()
+extract_gameweek_data()
+extract_fixture_data()
+extract_team_data()
