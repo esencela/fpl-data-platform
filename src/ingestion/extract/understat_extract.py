@@ -6,8 +6,8 @@ import time
 import logging
 import json
 import asyncio
-from src.ingestion.utils.understat_file_helper import get_latest_season_files
-from src.config.settings import settings
+from ingestion.utils.understat_file_helper import get_latest_season_files
+from config.settings import settings
 
 UNDERSTAT_DATA_DIR = settings.RAW_DATA_DIR / 'understat'
 
@@ -146,6 +146,9 @@ def extract_id_mappings() -> None:
         raise
 
 
-extract_season_data()
-extract_match_data()
-extract_id_mappings()
+def run_understat_extract() -> None:
+    """Runs the full Understat extraction process for season data, match data, and ID mappings."""
+    
+    extract_season_data()
+    extract_match_data()
+    extract_id_mappings()

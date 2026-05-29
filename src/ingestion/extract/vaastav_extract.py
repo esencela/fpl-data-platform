@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime
 from urllib.error import HTTPError
 import logging
-from src.config.settings import settings
+from config.settings import settings
 
 VAASTAV_DATA_DIR = settings.RAW_DATA_DIR / 'vaastav'
 
@@ -137,7 +137,10 @@ def extract_team_data() -> None:
             raise
 
 
-extract_player_data()
-extract_gameweek_data()
-extract_fixture_data()
-extract_team_data()
+def run_vaastav_extract() -> None:
+    """Runs the full Vaastav extraction process for players, gameweeks, fixtures, and teams."""
+    
+    extract_player_data()
+    extract_gameweek_data()
+    extract_fixture_data()
+    extract_team_data()

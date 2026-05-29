@@ -1,7 +1,7 @@
 from pathlib import Path
 from datetime import datetime
-from src.ingestion.utils.file_utils import get_latest_file_for_each_season
-from src.config.settings import settings
+from ingestion.utils.file_utils import get_latest_file_for_each_season
+from config.settings import settings
 
 VAASTAV_DATA_DIR = settings.RAW_DATA_DIR / 'vaastav'
 

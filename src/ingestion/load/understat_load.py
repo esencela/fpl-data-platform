@@ -5,8 +5,8 @@ import pandas as pd
 import json
 import logging
 from datetime import datetime
-from src.config.settings import settings
-from src.ingestion.utils.understat_file_helper import (
+from config.settings import settings
+from ingestion.utils.understat_file_helper import (
     get_latest_season_files,
     get_latest_match_files,
     get_latest_id_mappings_file
@@ -14,12 +14,13 @@ from src.ingestion.utils.understat_file_helper import (
 
 logger = logging.getLogger(__name__)
 
+# Database connection parameters
 DB_PARAMS = {
-    'dbname': settings.DB_NAME,
-    'user': settings.DB_USER,
-    'password': settings.DB_PASSWORD,
-    'host': settings.DB_HOST,
-    'port': settings.DB_PORT
+    'dbname': settings.postgres_db,
+    'user': settings.postgres_user,
+    'password': settings.postgres_password,
+    'host': settings.postgres_host,
+    'port': settings.postgres_port
 }
 
 
@@ -110,6 +111,9 @@ def load_id_mappings_to_postgres() -> None:
     logger.info(f'ID mappings data loaded into PostgreSQL database successfully.')
 
 
-load_season_data_to_postgres()
-load_match_data_to_postgres()
-load_id_mappings_to_postgres()
+def run_understat_load() -> None:
+    """Runs the full Understat loading process for season data, match data, and ID mappings."""
+
+    load_season_data_to_postgres()
+    load_match_data_to_postgres()
+    load_id_mappings_to_postgres()

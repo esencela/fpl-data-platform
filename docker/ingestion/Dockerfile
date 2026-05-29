@@ -12,3 +12,4 @@ COPY src/config/ ./src/config/
 
 ENV PYTHONPATH=/app/src
 
+ENTRYPOINT ["python", "src/ingestion/main.py"]

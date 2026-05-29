@@ -3,8 +3,8 @@ import pandas as pd
 import logging
 import json
 from datetime import datetime
-from src.config.settings import settings
-from src.ingestion.utils.vaastav_file_helper import (
+from config.settings import settings
+from ingestion.utils.vaastav_file_helper import (
     get_latest_player_files, 
     get_latest_gameweek_files,
     get_latest_fixture_files,
@@ -13,7 +13,7 @@ from src.ingestion.utils.vaastav_file_helper import (
 
 logger = logging.getLogger(__name__)
 
-engine = create_engine(f'postgresql://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}')
+engine = create_engine(f'postgresql://{settings.postgres_user}:{settings.postgres_password}@{settings.postgres_host}:{settings.postgres_port}/{settings.postgres_db}')
 
 
 def load_players_to_postgres() -> None:
@@ -148,7 +148,10 @@ def load_teams_to_postgres() -> None:
     logger.info(f'Succesfully loaded {len(team_files)} rows to raw.vaastav_teams')
 
 
-load_players_to_postgres()
-load_gws_to_postgres()
-load_fixtures_to_postgres()
-load_teams_to_postgres()
+def run_vaastav_load() -> None:
+    """Runs the full Vaastav loading process for players, gameweeks, fixtures, and teams."""
+    
+    load_players_to_postgres()
+    load_gws_to_postgres()
+    load_fixtures_to_postgres()
+    load_teams_to_postgres()

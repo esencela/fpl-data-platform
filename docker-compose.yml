@@ -3,9 +3,9 @@ services:
     image: postgres:15
     container_name: fpl-postgres
     environment:
-      POSTGRES_USER: fpl_user
-      POSTGRES_PASSWORD: fpl_password
-      POSTGRES_DB: fpl_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5433:5432"
     volumes:
@@ -17,6 +17,18 @@ services:
       retries: 5
       start_period: 5s
     restart: always
+
+  ingestion:
+    build:
+      context: .
+      dockerfile: docker/ingestion/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - postgres 
+    
 
 volumes:
   fpl_postgres_data:

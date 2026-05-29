@@ -5,8 +5,8 @@ from pathlib import Path
 from datetime import datetime
 import asyncio
 import aiohttp
-from src.ingestion.utils.fpl_file_helper import get_latest_bootstrap_file
-from src.config.settings import settings
+from ingestion.utils.fpl_file_helper import get_latest_bootstrap_file
+from config.settings import settings
 
 FPL_DATA_DIR = settings.RAW_DATA_DIR / 'fpl'
 
@@ -189,7 +189,10 @@ async def fetch_gameweek_async(session: aiohttp.ClientSession, semaphore: asynci
         await asyncio.sleep(RATE_LIMIT)
 
 
-extract_bootstrap()
-asyncio.run(extract_element_summaries_async())
-extract_fixtures()
-asyncio.run(extract_events_async())
+def run_fpl_extract() -> None:
+    """Runs the full FPL extraction process for bootstrap, element summaries, fixtures, and events."""
+
+    extract_bootstrap()
+    asyncio.run(extract_element_summaries_async())
+    extract_fixtures()
+    asyncio.run(extract_events_async())

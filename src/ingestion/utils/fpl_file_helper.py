@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
-from src.config.settings import settings
-from src.ingestion.utils.file_utils import get_latest_path, get_latest_season_folder
+from config.settings import settings
+from ingestion.utils.file_utils import get_latest_path, get_latest_season_folder
 
 FPL_DATA_DIR = settings.RAW_DATA_DIR / 'fpl'
 

@@ -1,8 +1,8 @@
 from pathlib import Path
 from datetime import datetime
 import json
-from src.config.settings import settings
-from src.ingestion.utils.file_utils import get_latest_file_for_each_season, get_latest_path
+from config.settings import settings
+from ingestion.utils.file_utils import get_latest_file_for_each_season, get_latest_path
 
 UNDERSTAT_DATA_DIR = settings.RAW_DATA_DIR / 'understat'
 

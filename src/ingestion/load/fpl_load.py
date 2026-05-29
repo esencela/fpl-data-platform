@@ -3,8 +3,8 @@ from psycopg2.extras import execute_values
 import json
 import logging
 from datetime import datetime
-from src.config.settings import settings
-from src.ingestion.utils.fpl_file_helper import (
+from config.settings import settings
+from ingestion.utils.fpl_file_helper import (
     get_latest_bootstrap_file, 
     get_latest_element_summaries, 
     get_latest_fixtures_file, 
@@ -15,11 +15,11 @@ logger = logging.getLogger(__name__)
 
 # Database connection parameters
 DB_PARAMS = {
-    'dbname': settings.DB_NAME,
-    'user': settings.DB_USER,
-    'password': settings.DB_PASSWORD,
-    'host': settings.DB_HOST,
-    'port': settings.DB_PORT
+    'dbname': settings.postgres_db,
+    'user': settings.postgres_user,
+    'password': settings.postgres_password,
+    'host': settings.postgres_host,
+    'port': settings.postgres_port
 }
 
 
@@ -145,7 +145,10 @@ def load_events_to_postgres():
     logger.info('Event data loaded into PostgreSQL database successfully.')
 
 
-load_bootstrap_to_postgres()
-load_element_summaries_to_postgres()
-load_fixtures_to_postgres()
-load_events_to_postgres()
+def run_fpl_load() -> None:
+    """Runs the full FPL loading process for bootstrap, element summaries, fixtures, and events."""
+
+    load_bootstrap_to_postgres()
+    load_element_summaries_to_postgres()
+    load_fixtures_to_postgres()
+    load_events_to_postgres()
