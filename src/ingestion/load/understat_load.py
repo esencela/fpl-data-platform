@@ -104,7 +104,7 @@ def load_id_mappings_to_postgres() -> None:
     df['raw_data'] = df[extra_cols].apply(lambda row: row.to_json(default_handler=str), axis=1)
     df = df[known_cols + ['raw_data']]
 
-    engine = create_engine('postgresql://fpl_user:fpl_password@localhost:5433/fpl_db')
+    engine = create_engine(f'postgresql://{settings.postgres_user}:{settings.postgres_password}@{settings.postgres_host}:{settings.postgres_port}/{settings.postgres_db}')
 
     df.to_sql('id_mappings', engine, schema='raw', if_exists='append', index=False)
 
