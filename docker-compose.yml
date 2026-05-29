@@ -29,6 +29,16 @@ services:
     depends_on:
       - postgres 
     
+  dbt:
+    build:
+      context: .
+      dockerfile: docker/dbt/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./dbt:/app/dbt
+    depends_on:
+      - postgres
 
 volumes:
   fpl_postgres_data:
