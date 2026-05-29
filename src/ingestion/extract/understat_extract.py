@@ -6,7 +6,6 @@ import time
 import logging
 import json
 import asyncio
-import os
 from src.ingestion.utils.understat_file_helper import get_latest_season_files
 from src.config.settings import settings
 

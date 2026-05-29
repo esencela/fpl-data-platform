@@ -3,7 +3,6 @@ from pathlib import Path
 from datetime import datetime
 from urllib.error import HTTPError
 import logging
-import os
 from src.config.settings import settings
 
 VAASTAV_DATA_DIR = settings.RAW_DATA_DIR / 'vaastav'

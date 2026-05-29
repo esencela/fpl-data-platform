@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from datetime import datetime
 from src.ingestion.utils.file_utils import get_latest_file_for_each_season
