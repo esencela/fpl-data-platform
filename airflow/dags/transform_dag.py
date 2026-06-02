@@ -1,5 +1,5 @@
 from airflow import DAG
-from airflow.providers.docker.operators.docker import DockerOperator
+from airflow.providers.docker.operators.docker import DockerOperator #type: ignore
 from datetime import datetime
 import os
 
