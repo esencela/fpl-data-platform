@@ -6,7 +6,7 @@ __pycache__/
 # data folder
 data/
 
-# dbt
+# logs
 logs/
 
 # manual testing
