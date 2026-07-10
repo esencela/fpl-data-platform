@@ -285,3 +285,53 @@ def test_vaastav_extract_team_data_failure(tmp_path):
         # Assert no file was created
         expected_file_path = tmp_path / 'teams'
         assert not expected_file_path.exists()
+
+
+def test_get_understat_season():
+    assert understat_extract.get_understat_season(2023) == '2022'
+    assert understat_extract.get_understat_season(2000) == '1999'
+
+
+def mock_understat_season_data():
+    return {
+        'season': '2026',
+        'data': 'mock_season_data'
+    }
+
+
+def test_understat_extract_season_data_success(tmp_path):
+    with patch('ingestion.extract.understat_extract.client.league') as mock_league, \
+         patch.object(understat_extract, 'UNDERSTAT_DATA_DIR', tmp_path), \
+         patch.object(understat_extract, 'CURRENT_DATE', '2026-05-01'), \
+         patch.object(understat_extract.settings, 'CURRENT_SEASON', 2026):
+        
+        mock_league.return_value._get_data.return_value = mock_understat_season_data()
+
+        understat_extract.extract_season_data()
+
+        # Assert file was created at expected path
+        expected_file_path = tmp_path / 'season_data' / 'season=2026' / '2026-05-01.json'
+        assert expected_file_path.exists()
+
+        # Assert content matches mock response
+        with open(expected_file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            assert data == mock_understat_season_data()
+
+
+def test_understat_extract_season_data_failure(tmp_path):
+    with patch('ingestion.extract.understat_extract.client.league') as mock_league, \
+         patch.object(understat_extract, 'UNDERSTAT_DATA_DIR', tmp_path):
+        
+        mock_league.return_value._get_data.side_effect = Exception('Failed to retrieve season data')
+
+        # Assert correct exception is raised
+        with pytest.raises(Exception, match='Failed to retrieve season data'):
+            understat_extract.extract_season_data()
+
+        # Assert no file was created
+        expected_file_path = tmp_path / 'season_data'
+        assert not expected_file_path.exists()
+
+
+### Add more understat tests
