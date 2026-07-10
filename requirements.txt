@@ -6,3 +6,4 @@ dbt-postgres
 pyarrow
 sqlalchemy
 understatapi
+pydantic-settings
