@@ -1,8 +1,9 @@
 import json
+import asyncio
 from urllib.error import HTTPError
 import pandas as pd
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 from ingestion.extract import fpl_extract, vaastav_extract, understat_extract
 
 @pytest.fixture
@@ -53,7 +54,80 @@ def test_fpl_extract_bootstrap_failure(tmp_path):
         assert not (tmp_path / 'bootstrap-static').exists()
 
 
-### ASync test element summary and player
+def mock_aiohttp_response(json_data, status=200):
+    """Mock aiohttp response usable as an async context manager."""
+
+    mock_response = MagicMock()
+    mock_response.status = status
+    mock_response.json = AsyncMock(return_value=json_data)
+
+    mock_context_manager = MagicMock()
+    mock_context_manager.__aenter__ = AsyncMock(return_value=mock_response)
+    mock_context_manager.__aexit__ = AsyncMock(return_value=False)
+
+    return mock_context_manager
+
+
+async def test_fetch_player_async_success(tmp_path):
+    player_data = {"id": 1, "first_name": "Player", "second_name": "One"}
+
+    mock_context_manager = mock_aiohttp_response(player_data, status=200)
+
+    mock_session = MagicMock()
+    mock_session.get.return_value = mock_context_manager
+
+    semaphore = asyncio.Semaphore(10)
+
+    with patch.object(fpl_extract, 'RATE_LIMIT', 0): # Set rate limit to 0 for testing
+        await fpl_extract.fetch_player_async(
+            session=mock_session, 
+            semaphore=semaphore,
+            player_id=1, 
+            base_path=tmp_path)
+        
+    mock_session.get.assert_called_once_with('https://fantasy.premierleague.com/api/element-summary/1/')
+
+    expected_file_path = tmp_path / 'player_id=1.json'
+    assert expected_file_path.exists()
+
+    with open(expected_file_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        assert data == player_data
+
+
+async def test_fetch_player_async_failure(tmp_path):
+    mock_context_manager = mock_aiohttp_response({}, status=404)
+
+    mock_session = MagicMock()
+    mock_session.get.return_value = mock_context_manager
+
+    semaphore = asyncio.Semaphore(10)
+
+    with patch.object(fpl_extract, 'RATE_LIMIT', 0): # Set rate limit to 0 for testing
+        await fpl_extract.fetch_player_async(
+            session=mock_session, 
+            semaphore=semaphore,
+            player_id=1, 
+            base_path=tmp_path)
+        
+    # Assert no file was created
+    assert not (tmp_path / 'player_id=1.json').exists()
+
+
+async def test_extract_element_summaries_async(tmp_path, mock_bootstrap_response):
+    bootstrap_file = tmp_path / 'bootstrap.json'
+    bootstrap_file.write_text(json.dumps(mock_bootstrap_response))
+
+    with patch.object(fpl_extract, 'FPL_DATA_DIR', tmp_path), \
+         patch.object(fpl_extract.settings, 'CURRENT_SEASON', 2026), \
+         patch.object(fpl_extract, 'CURRENT_DATE', '2026-05-01'), \
+         patch('ingestion.extract.fpl_extract.get_latest_bootstrap_file', return_value=bootstrap_file), \
+         patch('ingestion.extract.fpl_extract.fetch_player_async', new=AsyncMock()) as mock_fetch_player, \
+         patch('ingestion.extract.fpl_extract.aiohttp.ClientSession'):
+
+        await fpl_extract.extract_element_summaries_async()
+
+    assert mock_fetch_player.call_count == len(mock_bootstrap_response['elements'])
 
 
 @pytest.fixture
@@ -99,6 +173,66 @@ def test_fpl_extract_fixtures_failure(tmp_path):
 
 
 ### Async test events and gameweeks
+def test_fetch_gameweek_async_success(tmp_path):
+    gameweek_data = {"id": 1, "name": "Gameweek 1"}
+
+    mock_context_manager = mock_aiohttp_response(gameweek_data, status=200)
+
+    mock_session = MagicMock()
+    mock_session.get.return_value = mock_context_manager
+
+    semaphore = asyncio.Semaphore(10)
+
+    with patch.object(fpl_extract, 'RATE_LIMIT', 0): # Set rate limit to 0 for testing
+        asyncio.run(fpl_extract.fetch_gameweek_async(
+            session=mock_session, 
+            semaphore=semaphore,
+            gameweek_id=1, 
+            base_path=tmp_path))
+
+    mock_session.get.assert_called_once_with('https://fantasy.premierleague.com/api/event/1/live/')
+
+    expected_file_path = tmp_path / 'gameweek=1.json'
+    assert expected_file_path.exists()
+
+    with open(expected_file_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        assert data == gameweek_data
+
+
+def test_fetch_gameweek_async_failure(tmp_path):
+    mock_context_manager = mock_aiohttp_response({}, status=404)
+
+    mock_session = MagicMock()
+    mock_session.get.return_value = mock_context_manager
+
+    semaphore = asyncio.Semaphore(10)
+
+    with patch.object(fpl_extract, 'RATE_LIMIT', 0): # Set rate limit to 0 for testing
+        asyncio.run(fpl_extract.fetch_gameweek_async(
+            session=mock_session, 
+            semaphore=semaphore,
+            gameweek_id=1, 
+            base_path=tmp_path))
+
+    # Assert no file was created
+    assert not (tmp_path / 'gameweek=1.json').exists()
+
+
+def test_extract_events_async(tmp_path, mock_bootstrap_response):
+    bootstrap_file = tmp_path / 'bootstrap.json'
+    bootstrap_file.write_text(json.dumps(mock_bootstrap_response))
+
+    with patch.object(fpl_extract, 'FPL_DATA_DIR', tmp_path), \
+         patch.object(fpl_extract.settings, 'CURRENT_SEASON', 2026), \
+         patch.object(fpl_extract, 'CURRENT_DATE', '2026-05-01'), \
+         patch('ingestion.extract.fpl_extract.get_latest_bootstrap_file', return_value=bootstrap_file), \
+         patch('ingestion.extract.fpl_extract.fetch_gameweek_async', new=AsyncMock()) as mock_fetch_gameweek, \
+         patch('ingestion.extract.fpl_extract.aiohttp.ClientSession'):
+        
+        asyncio.run(fpl_extract.extract_events_async())
+
+    assert mock_fetch_gameweek.call_count == len(mock_bootstrap_response['events'])
 
 
 def test_get_season_string():
