@@ -249,7 +249,7 @@ def mock_vaastav_player_dataframe():
 
 
 def test_vaastav_extract_player_data_success(tmp_path):
-    with patch('ingestion.extract.vaastav_extract.pd.read_csv') as mock_df, \
+    with patch('pandas.read_csv') as mock_df, \
          patch.object(vaastav_extract, 'VAASTAV_DATA_DIR', tmp_path), \
          patch.object(vaastav_extract, 'CURRENT_DATE', '2026-05-01'):
         
@@ -469,3 +469,98 @@ def test_understat_extract_season_data_failure(tmp_path):
 
 
 ### Add more understat tests
+def test_fetch_match_ids(tmp_path):
+    season_data = {
+        "dates": [
+            {"id": "1", "isResult": True},
+            {"id": "2", "isResult": False},
+            {"id": "3", "isResult": True}
+        ]
+    }
+
+    # Create mock season data files
+    season_file = tmp_path / 'season_data' / 'season=2026' / '2026-05-01.json'
+    season_file.parent.mkdir(parents=True, exist_ok=True)
+    season_file.write_text(json.dumps(season_data))
+
+    with patch.object(understat_extract, 'UNDERSTAT_DATA_DIR', tmp_path), \
+         patch('ingestion.extract.understat_extract.get_latest_season_files', return_value=[season_file]):
+        
+        # Assert that only match IDs with isResult=True are returned
+        match_ids = understat_extract.fetch_match_ids()
+        assert match_ids == {'1', '3'}
+
+
+def test_fetch_match_data_success(tmp_path):
+    match_data = {"id": "1", "home_team": "Team A", "away_team": "Team B"}
+
+    mock_client = MagicMock()
+    mock_client.match.return_value._get_data.return_value = match_data
+
+    with patch.object(understat_extract, 'client', mock_client):
+        understat_extract.fetch_match_data(match_id="1", base_path=tmp_path)
+
+    # Assert file was created at expected path
+    expected_file_path = tmp_path / 'match_id=1.json'
+    assert expected_file_path.exists()
+
+    # Assert content matches mock response
+    with open(expected_file_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        assert data == match_data
+
+
+def test_fetch_match_data_skips_match_id(tmp_path):
+    match_ids = {'1', '2', '3'}
+
+    # Create a file for match_id=2 to simulate it already exists
+    dummy_file = tmp_path / 'matches' / 'match_id=2.json'
+    dummy_file.mkdir(parents=True, exist_ok=True)
+
+    with patch.object(understat_extract, 'UNDERSTAT_DATA_DIR', tmp_path), \
+         patch.object(understat_extract, 'fetch_match_ids', return_value=match_ids), \
+         patch.object(understat_extract, 'fetch_match_data') as mock_fetch, \
+         patch.object(understat_extract, 'RATE_LIMIT', 0):  # Set rate limit to 0 for testing
+        
+        understat_extract.extract_match_data()
+
+    # Assert fetch was only called for match ids that do not have existing files
+    fetched_ids = {call.args[0] for call in mock_fetch.call_args_list}
+    assert fetched_ids == {'1', '3'}  # match_id=2 should be skipped
+         
+
+def test_extract_id_mappings_success(tmp_path):
+    id_mappings = pd.DataFrame({
+        'player_id': [1, 2],
+        'understat_id': [3, 4]
+    })
+
+    with patch.object(understat_extract, 'UNDERSTAT_DATA_DIR', tmp_path), \
+         patch.object(understat_extract, 'CURRENT_DATE', '2026-05-01'), \
+         patch('pandas.read_csv', return_value=id_mappings):
+        
+        understat_extract.extract_id_mappings()
+
+    # Assert file was created at expected path
+    expected_file_path = tmp_path / 'id_mappings' / '2026-05-01.parquet'
+    assert expected_file_path.exists()
+
+    # Assert content matches mock response
+    df = pd.read_parquet(expected_file_path)
+    assert df.equals(id_mappings)
+
+
+def test_extract_id_mappings_failure(tmp_path):
+    with patch.object(understat_extract, 'UNDERSTAT_DATA_DIR', tmp_path), \
+         patch.object(understat_extract, 'CURRENT_DATE', '2026-05-01'), \
+         patch('pandas.read_csv') as mock_read:
+        
+        mock_read.side_effect = Exception('Failed to retrieve ID mappings')
+
+        # Assert correct exception is raised
+        with pytest.raises(Exception, match='Failed to retrieve ID mappings'):
+            understat_extract.extract_id_mappings()
+
+    # Assert no file was created
+    expected_file_path = tmp_path / 'id_mappings' / '2026-05-01.parquet'
+    assert not expected_file_path.exists()
