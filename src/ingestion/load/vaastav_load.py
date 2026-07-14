@@ -13,7 +13,10 @@ from ingestion.utils.vaastav_file_helper import (
 
 logger = logging.getLogger(__name__)
 
-engine = create_engine(f'postgresql://{settings.postgres_user}:{settings.postgres_password}@{settings.postgres_host}:{settings.postgres_port}/{settings.postgres_db}')
+
+def get_engine():
+    return create_engine(f'postgresql://{settings.postgres_user}:{settings.postgres_password}'
+                         f'@{settings.postgres_host}:{settings.postgres_port}/{settings.postgres_db}')
 
 
 def load_players_to_postgres() -> None:
@@ -43,7 +46,11 @@ def load_players_to_postgres() -> None:
 
         logger.info(f'Loading {file} to PostgreSQL...')
 
-        df.to_sql('vaastav_players', engine, schema='raw', if_exists='append', index=False)
+        try:
+            df.to_sql('vaastav_players', get_engine(), schema='raw', if_exists='append', index=False)
+        except Exception as e:
+            logger.error(f'Failed to load player data to database: {e}')
+            return
 
     logger.info(f'Succesfully loaded {len(player_files)} rows to raw.vaastav_players')
 
@@ -77,7 +84,11 @@ def load_gws_to_postgres() -> None:
 
         logger.info(f'Loading {file} to PostgreSQL...')
 
-        df.to_sql('vaastav_gws', engine, schema='raw', if_exists='append', index=False)
+        try:
+            df.to_sql('vaastav_gws', get_engine(), schema='raw', if_exists='append', index=False)
+        except Exception as e:
+            logger.error(f'Failed to load gameweek data to database: {e}')
+            return
 
     logger.info(f'Succesfully loaded {len(gw_files)} rows to raw.vaastav_gws')
 
@@ -110,7 +121,11 @@ def load_fixtures_to_postgres() -> None:
 
         logger.info(f'Loading {file} to PostgreSQL...')
 
-        df.to_sql('vaastav_fixtures', engine, schema='raw', if_exists='append', index=False)
+        try:
+            df.to_sql('vaastav_fixtures', get_engine(), schema='raw', if_exists='append', index=False)
+        except Exception as e:
+            logger.error(f'Failed to load fixture data to database: {e}')
+            return
 
     logger.info(f'Succesfully loaded {len(fixture_files)} rows to raw.vaastav_fixtures')
 
@@ -143,7 +158,11 @@ def load_teams_to_postgres() -> None:
 
         logger.info(f'Loading {file} to PostgreSQL...')
 
-        df.to_sql('vaastav_teams', engine, schema='raw', if_exists='append', index=False)
+        try:
+            df.to_sql('vaastav_teams', get_engine(), schema='raw', if_exists='append', index=False)
+        except Exception as e:
+            logger.error(f'Failed to load team data to database: {e}')
+            return
 
     logger.info(f'Succesfully loaded {len(team_files)} rows to raw.vaastav_teams')
 
