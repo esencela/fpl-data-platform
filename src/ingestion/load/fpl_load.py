@@ -58,8 +58,6 @@ def load_bootstrap_to_postgres():
 
 def load_element_summaries_to_postgres():
     """Loads latest raw element summary JSON data into PostgreSQL database."""
-    
-    values = get_latest_element_summaries()
 
     try:
         conn = psycopg2.connect(**DB_PARAMS)
@@ -69,6 +67,8 @@ def load_element_summaries_to_postgres():
         logger.error(f'Failed to connect to PostgreSQL database: {e}')
         return
     
+    values = get_latest_element_summaries()
+
     query = """
         INSERT INTO raw.fpl_element_summary (season, player_id, raw_data, fetched_at) 
         VALUES %s
@@ -120,8 +120,6 @@ def load_fixtures_to_postgres():
 def load_events_to_postgres():
     """Loads latest raw events JSON data into PostgreSQL database."""
     
-    values = get_latest_events()
-
     try:
         conn = psycopg2.connect(**DB_PARAMS)
         cursor = conn.cursor()
@@ -130,6 +128,8 @@ def load_events_to_postgres():
         logger.error(f'Failed to connect to PostgreSQL database: {e}')
         return
     
+    values = get_latest_events()
+
     query = """
         INSERT INTO raw.fpl_events (season, gameweek_id, raw_data, fetched_at) 
         VALUES %s
