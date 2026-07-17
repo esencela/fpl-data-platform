@@ -106,7 +106,11 @@ def load_id_mappings_to_postgres() -> None:
 
     engine = create_engine(f'postgresql://{settings.postgres_user}:{settings.postgres_password}@{settings.postgres_host}:{settings.postgres_port}/{settings.postgres_db}')
 
-    df.to_sql('id_mappings', engine, schema='raw', if_exists='append', index=False)
+    try:
+        df.to_sql('id_mappings', engine, schema='raw', if_exists='append', index=False)
+    except Exception as e:
+        logger.error(f'Failed to load id mappings to database: {e}')
+        return
 
     logger.info(f'ID mappings data loaded into PostgreSQL database successfully.')
 

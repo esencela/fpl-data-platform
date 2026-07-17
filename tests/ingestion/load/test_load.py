@@ -458,3 +458,152 @@ def test_vaastav_load_teams_to_postgres_failure(caplog):
 
     mock_sql.assert_called_once()
     assert 'Failed to connect' in caplog.text
+
+
+def test_understat_load_season_data_to_postgres_success(tmp_path):
+    # Create mock file path with season data
+    season_dir = tmp_path / 'season=2026'
+    season_dir.mkdir(parents=True, exist_ok=True)
+    file_path = season_dir / '2026-05-01.json'
+    season_data = {'teams': {'id': 1, 'title': 'Team'}, 'players': [{'id': 2, 'name': 'Player'}]}
+    file_path.write_text(json.dumps(season_data))
+
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_conn.cursor.return_value = mock_cursor
+
+    with patch('ingestion.load.understat_load.get_latest_season_files', return_value=[file_path]), \
+         patch('ingestion.load.understat_load.psycopg2.connect', return_value=mock_conn):
+    
+        understat_load.load_season_data_to_postgres()
+
+    # Assert execute was called with correct values
+    mock_cursor.execute.assert_called_once()
+
+    args = mock_cursor.execute.call_args[0]
+    sql, params = args
+    season, raw_data, fetched_at = params
+
+    assert season == 2026
+    assert json.loads(raw_data) == season_data
+    assert fetched_at.strftime('%Y-%m-%d') == '2026-05-01' 
+
+    # Assert commit and close were called
+    mock_conn.commit.assert_called_once()
+    mock_cursor.close.assert_called_once()
+    mock_conn.close.assert_called_once()
+
+
+def test_understat_load_season_data_to_postgres_failure():
+    with patch('ingestion.load.understat_load.psycopg2.connect') as mock_conn, \
+         patch('ingestion.load.understat_load.get_latest_season_files') as mock_get:
+        
+        mock_conn.side_effect = Exception()
+
+        understat_load.load_season_data_to_postgres()
+
+    mock_conn.assert_called_once()
+    mock_get.assert_not_called()
+
+
+def test_understat_load_match_data_to_postgres_success():
+    # Create mock match data
+    match_data = [
+        (1, {'roster': {'h': {'1': {'id': 1, 'goals': 2}}}}),
+        (2, {'roster': {'a': {'2': {'id': 3, 'goals': 4}}}})
+    ]
+
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_conn.cursor.return_value = mock_cursor
+
+    with patch('ingestion.load.understat_load.get_latest_match_files', return_value=match_data), \
+         patch('ingestion.load.understat_load.psycopg2.connect', return_value=mock_conn), \
+         patch('ingestion.load.understat_load.execute_values') as mock_execute:
+        
+        understat_load.load_match_data_to_postgres()
+
+    # Assert mock execute was called with correct values
+    mock_execute.assert_called_once()
+
+    args = mock_execute.call_args[0]
+    values = args[2]
+
+    assert values == match_data
+
+    # Assert commit and close were called
+    mock_conn.commit.assert_called_once()
+    mock_cursor.close.assert_called_once()
+    mock_conn.commit.assert_called_once()
+
+
+def test_understat_load_match_data_to_postgres_failure():
+    with patch('ingestion.load.understat_load.psycopg2.connect') as mock_conn, \
+         patch('ingestion.load.understat_load.get_latest_match_files') as mock_get:
+        
+        mock_conn.side_effect = Exception()
+
+        understat_load.load_match_data_to_postgres()
+
+    mock_conn.assert_called_once()
+    mock_get.assert_not_called()
+
+
+def test_understat_load_id_mappings_to_postgres_success():
+    mock_file = MagicMock()
+    mock_file.stem = '2026-05-01'
+
+    mock_df = pd.DataFrame({
+        'code': [1, 2, 3],
+        'fbref': [1, 2, 3],
+        'understat': [6, 7, 8]
+    })
+
+    with patch('ingestion.load.understat_load.get_latest_id_mappings_file', return_value=mock_file), \
+         patch('ingestion.load.understat_load.pd.read_parquet', return_value=mock_df), \
+         patch('ingestion.load.understat_load.create_engine'), \
+         patch('pandas.DataFrame.to_sql', autospec=True) as mock_sql:
+        
+        understat_load.load_id_mappings_to_postgres()
+
+    mock_sql.assert_called_once()
+
+    params = mock_sql.call_args
+    df = params.args[0]
+    table_name = params.args[1]
+    kwargs = params.kwargs
+
+    assert table_name == 'id_mappings'
+    assert kwargs == {'schema': 'raw', 'if_exists': 'append', 'index': False}
+
+    assert list(df.columns) == ['code', 'fetched_at', 'raw_data']
+    assert (df['fetched_at'].dt.strftime('%Y-%m-%d') == '2026-05-01').all()
+
+    assert list(df['code']) == [1, 2, 3]
+
+    first_row_data = json.loads(df['raw_data'].iloc[0])
+    assert first_row_data == {'fbref': 1, 'understat': 6}
+
+
+def test_understat_load_id_mappings_to_postgres_failure(caplog):
+    mock_file = MagicMock()
+    mock_file.stem = '2026-05-01'
+
+    mock_df = pd.DataFrame({
+        'code': [1, 2, 3],
+        'fbref': [1, 2, 3],
+        'understat': [6, 7, 8]
+    })
+
+    with patch('ingestion.load.understat_load.get_latest_id_mappings_file', return_value=mock_file), \
+         patch('ingestion.load.understat_load.pd.read_parquet', return_value=mock_df), \
+         patch('ingestion.load.understat_load.create_engine'), \
+         patch('pandas.DataFrame.to_sql', autospec=True) as mock_sql, \
+         caplog.at_level(logging.ERROR):
+        
+        mock_sql.side_effect = Exception()
+
+        understat_load.load_id_mappings_to_postgres()
+
+    mock_sql.assert_called_once()
+    assert 'Failed to load id mappings to database:' in caplog.text
