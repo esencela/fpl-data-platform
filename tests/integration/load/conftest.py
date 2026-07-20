@@ -4,7 +4,7 @@ import pytest
 import psycopg2
 from testcontainers.postgres import PostgresContainer
 
-SQL_INIT_DIR = Path(__file__).resolve().parents[2] / 'sql' / 'init'
+SQL_INIT_DIR = Path(__file__).resolve().parents[3] / 'sql' / 'init'
 RAW_TABLES = [
     'raw.fpl_bootstrap_static', 
     'raw.fpl_element_summary',
@@ -30,8 +30,8 @@ def postgres_container():
         yield container
 
     
-@pytest.fixture(scope='session', autouse=True)
-def db_params(postgres_container):
+@pytest.fixture(scope='session')
+def test_db_params(postgres_container):
     """Returns a dict of postgres container connection details."""
 
     return {
@@ -43,10 +43,10 @@ def db_params(postgres_container):
     }
 
 
-@pytest.fixture
-def clean_db(db_params):
+@pytest.fixture(autouse=True)
+def clean_db(test_db_params):
     """Truncates all tables and indices from postgres container before every test."""
-    conn = psycopg2.connect(**db_params)
+    conn = psycopg2.connect(**test_db_params)
     
     with conn.cursor() as cursor:
         cursor.execute(f'TRUNCATE {", ".join(RAW_TABLES)} RESTART IDENTITY;')
