@@ -107,7 +107,7 @@ CREATE INDEX IF NOT EXISTS idx_vaastav_gws_jsonb
 ON raw.vaastav_gws USING GIN(raw_data);
 
 CREATE INDEX IF NOT EXISTS idx_vaastav_fixtures_season_fixture
-ON raw.vaastav_fixtures(season, fixture_id);
+ON raw.vaastav_fixtures(season, fixture_season_id);
 
 CREATE INDEX IF NOT EXISTS idx_vaastav_fixtures_jsonb
 ON raw.vaastav_fixtures USING GIN(raw_data);
