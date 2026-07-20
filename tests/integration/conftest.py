@@ -30,7 +30,7 @@ def postgres_container():
         yield container
 
     
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='session', autouse=True)
 def db_params(postgres_container):
     """Returns a dict of postgres container connection details."""
 
@@ -54,11 +54,3 @@ def clean_db(db_params):
     conn.commit()
     conn.close()
     yield
-
-
-@pytest.fixture
-def loader_db_params(db_params, clean_db, monkeypatch):
-    """Set loading scripts DB_PARAMS to connect to test container"""
-
-    monkeypatch.setattr('ingestion.load.fpl_load.DB_PARAMS', db_params)
-    return db_params

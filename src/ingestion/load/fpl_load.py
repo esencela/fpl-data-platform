@@ -27,10 +27,7 @@ def load_bootstrap_to_postgres(db_params=None):
     """Loads latest raw bootstrap JSON data into PostgreSQL database."""    
 
     try:
-        if db_params:
-            params=db_params
-        else:
-            params=DB_PARAMS
+        params = db_params or DB_PARAMS
 
         conn = psycopg2.connect(**params)
         cursor = conn.cursor()
@@ -61,11 +58,13 @@ def load_bootstrap_to_postgres(db_params=None):
     logger.info('Bootstrap data loaded into PostgreSQL database successfully.')
 
 
-def load_element_summaries_to_postgres():
+def load_element_summaries_to_postgres(db_params=None):
     """Loads latest raw element summary JSON data into PostgreSQL database."""
 
     try:
-        conn = psycopg2.connect(**DB_PARAMS)
+        params = db_params or DB_PARAMS
+
+        conn = psycopg2.connect(**params)
         cursor = conn.cursor()
         logger.info('Connected to PostgreSQL database successfully.')
     except Exception as e:
@@ -89,11 +88,13 @@ def load_element_summaries_to_postgres():
     logger.info('Element summary data loaded into PostgreSQL database successfully.')
         
 
-def load_fixtures_to_postgres():
+def load_fixtures_to_postgres(db_params=None):
     """Loads latest raw fixtures JSON data into PostgreSQL database."""
     
     try:
-        conn = psycopg2.connect(**DB_PARAMS)
+        params = db_params or DB_PARAMS
+
+        conn = psycopg2.connect(**params)
         cursor = conn.cursor()
         logger.info('Connected to PostgreSQL database successfully.')
     except Exception as e:
@@ -122,11 +123,13 @@ def load_fixtures_to_postgres():
     logger.info('Fixture data loaded into PostgreSQL database successfully.')
 
 
-def load_events_to_postgres():
+def load_events_to_postgres(db_params=None):
     """Loads latest raw events JSON data into PostgreSQL database."""
     
     try:
-        conn = psycopg2.connect(**DB_PARAMS)
+        params = db_params or DB_PARAMS
+
+        conn = psycopg2.connect(**params)
         cursor = conn.cursor()
         logger.info('Connected to PostgreSQL database successfully.')
     except Exception as e:
