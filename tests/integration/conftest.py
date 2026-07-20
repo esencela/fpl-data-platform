@@ -4,14 +4,7 @@ import pytest
 import psycopg2
 from testcontainers.postgres import PostgresContainer
 
-os.environ.setdefault('RAW_DATA_DIR', '/tmp/test_data')
-
-os.environ.setdefault('POSTGRES_DB', 'fpl_test')
-os.environ.setdefault('POSTGRES_USER', 'test_user')
-os.environ.setdefault('POSTGRES_PASSWORD', 'test_password')
-os.environ.setdefault('POSTGRES_HOST', 'localhost')
-
-SQL_INIT_DIR = Path(__file__).parent.parent / 'sql' / 'init'
+SQL_INIT_DIR = Path(__file__).resolve().parents[2] / 'sql' / 'init'
 RAW_TABLES = [
     'raw.fpl_bootstrap_static', 
     'raw.fpl_element_summary',
@@ -43,9 +36,9 @@ def db_params(postgres_container):
 
     return {
         'dbname': postgres_container.dbname,
-        'username': postgres_container.username,
+        'user': postgres_container.username,
         'password': postgres_container.password,
-        'host': postgres_container.get_container_host_ip,
+        'host': postgres_container.get_container_host_ip(),
         'port': postgres_container.get_exposed_port(5432)
     }
 

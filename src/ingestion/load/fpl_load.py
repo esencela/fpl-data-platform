@@ -23,11 +23,16 @@ DB_PARAMS = {
 }
 
 
-def load_bootstrap_to_postgres():
+def load_bootstrap_to_postgres(db_params=None):
     """Loads latest raw bootstrap JSON data into PostgreSQL database."""    
 
     try:
-        conn = psycopg2.connect(**DB_PARAMS)
+        if db_params:
+            params=db_params
+        else:
+            params=DB_PARAMS
+
+        conn = psycopg2.connect(**params)
         cursor = conn.cursor()
         logger.info('Connected to PostgreSQL database successfully.')
     except Exception as e:
@@ -39,7 +44,7 @@ def load_bootstrap_to_postgres():
 
     with open(bootstrap_file, 'r', encoding='utf-8') as file:
         bootstrap_data = json.load(file)
-
+    
     season = int(bootstrap_file.parent.name.split('=')[1])
     fetch_date = datetime.strptime(bootstrap_file.stem, '%Y-%m-%d')
 
