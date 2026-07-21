@@ -1,6 +1,8 @@
 import pytest
 import json
 import psycopg2
+import pandas as pd
+from sqlalchemy import create_engine
 from ingestion.load import fpl_load, vaastav_load, understat_load
 
 
@@ -168,3 +170,240 @@ def test_fpl_load_events_to_postgres(fpl_element_summaries, monkeypatch, test_db
     assert fetched_at.strftime('%Y-%m-%d') == '2026-05-01'
 
     assert raw_data == {'fixtures': '', 'history': ''}
+
+
+@pytest.fixture
+def get_test_engine(test_db_params):
+    return create_engine(f'postgresql://{test_db_params["user"]}:{test_db_params["password"]}'
+                         f'@{test_db_params["host"]}:{test_db_params["port"]}/{test_db_params["dbname"]}')
+
+
+@pytest.fixture()
+def vaastav_players(tmp_path):
+    # Create mock player parquet file
+    season_dir = tmp_path / 'season=2026'
+    season_dir.mkdir()
+
+    player_file = season_dir / '2026-05-01.parquet'
+
+    df_player = pd.DataFrame({
+        'id': [1, 2, 3],
+        'web_name': ['Salah', 'Haaland', 'Mainoo'],
+        'goals': [0, 0, 3]
+    })
+
+    df_player.to_parquet(player_file, index=False)
+
+    return [player_file]
+
+
+def test_vaastav_load_players_to_postgres(monkeypatch, test_db_params, get_test_engine, vaastav_players):
+    # Patch necessary functions
+    monkeypatch.setattr(
+        'ingestion.load.vaastav_load.get_engine',
+        lambda: get_test_engine
+    )
+    monkeypatch.setattr(
+        'ingestion.load.vaastav_load.get_latest_player_files',
+        lambda: vaastav_players
+    )
+
+    vaastav_load.load_players_to_postgres()
+
+    conn = psycopg2.connect(**test_db_params)
+
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT season, player_season_id, fetched_at, raw_data
+            FROM raw.vaastav_players
+        """)
+
+        rows = cursor.fetchall()
+
+    conn.close()
+
+    # Assert correct data has been loaded to database
+    assert len(rows) == 3
+
+    season, player_id, fetched_at, raw_data = rows[0]
+
+    assert season == 2026
+    assert player_id == 1
+    assert fetched_at.strftime('%Y-%m-%d') == '2026-05-01'
+
+    assert raw_data == {
+        'web_name': 'Salah',
+        'goals': 0
+    }
+
+
+@pytest.fixture
+def vaastav_gws(tmp_path):
+    # Create mock gameweek parquet file
+    season_dir = tmp_path / 'season=2026'
+    season_dir.mkdir()
+    gw_file = season_dir / '2026-05-01'
+
+    df_gw = pd.DataFrame({
+        'element': [0, 1],
+        'fixture': [1, 1],
+        'round': [31, 32],
+        'web_name': ['player1', 'player2'],
+        'minutes': [90, 67]
+    })
+
+    df_gw.to_parquet(gw_file, index=False)
+
+    return [gw_file]
+
+
+def test_vaastav_load_gws_to_postgres(monkeypatch, test_db_params, get_test_engine, vaastav_gws):
+    # Patch necessary functions
+    monkeypatch.setattr(
+        'ingestion.load.vaastav_load.get_engine',
+        lambda: get_test_engine
+    )
+    monkeypatch.setattr(
+        'ingestion.load.vaastav_load.get_latest_gameweek_files',
+        lambda: vaastav_gws
+    )
+
+    vaastav_load.load_gws_to_postgres()
+
+    conn = psycopg2.connect(**test_db_params)
+
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT season, player_season_id, fixture_season_id, gameweek_id, fetched_at, raw_data
+            FROM raw.vaastav_gws
+        """)
+
+        rows = cursor.fetchall()
+
+    # Assert correct data has been loaded to database
+    assert len(rows) == 2
+
+    season, player_id, fixture_id, gw_id, fetched_at, raw_data = rows[0]
+
+    assert season == 2026
+    assert player_id == 0
+    assert fixture_id == 1
+    assert gw_id == 31
+    assert fetched_at.strftime('%Y-%m-%d') == '2026-05-01'
+
+    assert raw_data == {
+        'web_name': 'player1',
+        'minutes': 90
+    }
+
+
+@pytest.fixture
+def vaastav_fixtures(tmp_path):
+    # Create mock gameweek parquet file
+    season_dir = tmp_path / 'season=2026'
+    season_dir.mkdir()
+    file = season_dir / '2026-05-01'
+
+    df_fixture = pd.DataFrame({
+        'id': [0, 1],
+        'code': [111000, 232939],
+        'team_h': [3, 5]
+    })
+
+    df_fixture.to_parquet(file, index=False)
+
+    return [file]
+
+
+def test_vaastav_load_fixtures_to_postgres(monkeypatch, test_db_params, get_test_engine, vaastav_fixtures):
+    # Patch necessary functions
+    monkeypatch.setattr(
+        'ingestion.load.vaastav_load.get_engine',
+        lambda: get_test_engine
+    )
+    monkeypatch.setattr(
+        'ingestion.load.vaastav_load.get_latest_fixture_files',
+        lambda: vaastav_fixtures
+    )
+
+    vaastav_load.load_fixtures_to_postgres()
+
+    conn = psycopg2.connect(**test_db_params)
+
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT season, fixture_season_id, fetched_at, raw_data
+            FROM raw.vaastav_fixtures
+        """)
+
+        rows = cursor.fetchall()
+
+    # Assert correct data has been loaded to database
+    assert len(rows) == 2
+
+    season, fixture_id, fetched_at, raw_data = rows[0]
+
+    assert season == 2026
+    assert fixture_id == 0
+    assert fetched_at.strftime('%Y-%m-%d') == '2026-05-01'
+
+    assert raw_data == {
+        'code': 111000,
+        'team_h': 3
+    }
+
+
+@pytest.fixture
+def vaastav_teams(tmp_path):
+    # Create mock gameweek parquet file
+    season_dir = tmp_path / 'season=2026'
+    season_dir.mkdir()
+    file = season_dir / '2026-05-01'
+
+    df_team = pd.DataFrame({
+        'id': [0, 1],
+        'code': [4, 17],
+        'name': ['Team A', 'Team B']
+    })
+
+    df_team.to_parquet(file, index=False)
+
+    return [file]
+
+
+def test_vaastav_load_fixtures_to_postgres(monkeypatch, test_db_params, get_test_engine, vaastav_teams):
+    # Patch necessary functions
+    monkeypatch.setattr(
+        'ingestion.load.vaastav_load.get_engine',
+        lambda: get_test_engine
+    )
+    monkeypatch.setattr(
+        'ingestion.load.vaastav_load.get_latest_team_files',
+        lambda: vaastav_teams
+    )
+
+    vaastav_load.load_teams_to_postgres()
+
+    conn = psycopg2.connect(**test_db_params)
+
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT season, team_season_id, fetched_at, raw_data
+            FROM raw.vaastav_teams
+        """)
+
+        rows = cursor.fetchall()
+
+    # Assert correct data has been loaded to database
+    assert len(rows) == 2
+
+    season, team_id, fetched_at, raw_data = rows[0]
+
+    assert season == 2026
+    assert team_id == 0
+    assert fetched_at.strftime('%Y-%m-%d') == '2026-05-01'
+
+    assert raw_data == {
+        'code': 4,
+        'name': 'Team A'
+    }
