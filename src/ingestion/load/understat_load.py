@@ -24,11 +24,18 @@ DB_PARAMS = {
 }
 
 
-def load_season_data_to_postgres() -> None:
+def get_engine():
+    return create_engine(f'postgresql://{settings.postgres_user}:{settings.postgres_password}'
+                         f'@{settings.postgres_host}:{settings.postgres_port}/{settings.postgres_db}')
+
+
+def load_season_data_to_postgres(db_params=None) -> None:
     """Loads latest raw season data JSON files into PostgreSQL database."""
 
     try:
-        conn = psycopg2.connect(**DB_PARAMS)
+        params = db_params or DB_PARAMS
+
+        conn = psycopg2.connect(**params)
         cursor = conn.cursor()
         logger.info('Connected to PostgreSQL database successfully.')
     
@@ -59,11 +66,13 @@ def load_season_data_to_postgres() -> None:
     conn.close()
 
 
-def load_match_data_to_postgres() -> None:
+def load_match_data_to_postgres(db_params=None) -> None:
     """Loads raw match data JSON files into PostgreSQL database."""
 
     try:
-        conn = psycopg2.connect(**DB_PARAMS)
+        params = db_params or DB_PARAMS
+
+        conn = psycopg2.connect(**params)
         cursor = conn.cursor()
         logger.info('Connected to PostgreSQL database successfully.')
     except Exception as e:
@@ -104,8 +113,8 @@ def load_id_mappings_to_postgres() -> None:
     df['raw_data'] = df[extra_cols].apply(lambda row: row.to_json(default_handler=str), axis=1)
     df = df[known_cols + ['raw_data']]
 
-    engine = create_engine(f'postgresql://{settings.postgres_user}:{settings.postgres_password}@{settings.postgres_host}:{settings.postgres_port}/{settings.postgres_db}')
-
+    engine = get_engine()
+    
     try:
         df.to_sql('id_mappings', engine, schema='raw', if_exists='append', index=False)
     except Exception as e:
