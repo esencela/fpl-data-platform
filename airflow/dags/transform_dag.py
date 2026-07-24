@@ -18,6 +18,16 @@ with DAG(
     catchup=False
 ) as dag:
     
+    seed_dbt = DockerOperator(
+        task_id='seed_dbt',
+        image='fpl-data-platform-dbt:latest',
+        command='dbt seed',
+        auto_remove=True,
+        docker_url='unix://var/run/docker.sock',
+        network_mode='fpl-data-platform_default',
+        environment=env_variables
+    )
+
     transform_dbt = DockerOperator(
         task_id='transform_dbt',
         image='fpl-data-platform-dbt:latest',
@@ -38,4 +48,4 @@ with DAG(
         environment=env_variables
     )
 
-    transform_dbt >> test_dbt
+    seed_dbt >> transform_dbt >> test_dbt
