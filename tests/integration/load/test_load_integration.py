@@ -242,7 +242,7 @@ def vaastav_gws(tmp_path):
     # Create mock gameweek parquet file
     season_dir = tmp_path / 'season=2026'
     season_dir.mkdir()
-    gw_file = season_dir / '2026-05-01'
+    gw_file = season_dir / '2026-05-01.parquet'
 
     df_gw = pd.DataFrame({
         'element': [0, 1],
@@ -280,6 +280,8 @@ def test_vaastav_load_gws_to_postgres(monkeypatch, test_db_params, get_test_engi
 
         rows = cursor.fetchall()
 
+    conn.close()
+
     # Assert correct data has been loaded to database
     assert len(rows) == 2
 
@@ -302,7 +304,7 @@ def vaastav_fixtures(tmp_path):
     # Create mock gameweek parquet file
     season_dir = tmp_path / 'season=2026'
     season_dir.mkdir()
-    file = season_dir / '2026-05-01'
+    file = season_dir / '2026-05-01.parquet'
 
     df_fixture = pd.DataFrame({
         'id': [0, 1],
@@ -338,6 +340,8 @@ def test_vaastav_load_fixtures_to_postgres(monkeypatch, test_db_params, get_test
 
         rows = cursor.fetchall()
 
+    conn.close()
+
     # Assert correct data has been loaded to database
     assert len(rows) == 2
 
@@ -358,7 +362,7 @@ def vaastav_teams(tmp_path):
     # Create mock gameweek parquet file
     season_dir = tmp_path / 'season=2026'
     season_dir.mkdir()
-    file = season_dir / '2026-05-01'
+    file = season_dir / '2026-05-01.parquet'
 
     df_team = pd.DataFrame({
         'id': [0, 1],
@@ -394,6 +398,8 @@ def test_vaastav_load_fixtures_to_postgres(monkeypatch, test_db_params, get_test
 
         rows = cursor.fetchall()
 
+    conn.close()
+
     # Assert correct data has been loaded to database
     assert len(rows) == 2
 
@@ -406,4 +412,146 @@ def test_vaastav_load_fixtures_to_postgres(monkeypatch, test_db_params, get_test
     assert raw_data == {
         'code': 4,
         'name': 'Team A'
+    }
+
+
+@pytest.fixture
+def understat_season_data(tmp_path):
+    # Create mock season json file
+    season_dir = tmp_path / 'season=2026'
+    season_dir.mkdir()
+    season_file = season_dir / '2026-05-01.json'
+    season_data = {'teams': {'id': 1, 'title': 'Team'}, 'players': [{'id': 2, 'name': 'Player'}]}
+    season_file.write_text(json.dumps(season_data))
+
+    return [season_file]
+
+
+def test_understat_load_season_data_to_postgres(understat_season_data, monkeypatch, test_db_params):
+    # Patch get file function
+    monkeypatch.setattr(
+        'ingestion.load.understat_load.get_latest_season_files',
+        lambda: understat_season_data
+    )
+
+    understat_load.load_season_data_to_postgres(db_params=test_db_params)
+
+    conn = psycopg2.connect(**test_db_params)
+
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT season, raw_data, fetched_at
+            FROM raw.understat_season_data
+        """)
+
+        rows = cursor.fetchall()
+
+    conn.close()
+
+    # Assert correct data has been loaded to database
+    season, raw_data, fetched_at = rows[0]
+
+    assert season == 2026
+    assert fetched_at.strftime('%Y-%m-%d') == '2026-05-01'
+
+    assert raw_data == {
+        'teams': {'id': 1, 'title': 'Team'}, 'players': [{'id': 2, 'name': 'Player'}]
+    }
+
+
+@pytest.fixture
+def understat_match_data():
+    # Create mock match data
+    match_data = [
+        (1, json.dumps({'roster': {'h': {'1': {'id': 1, 'goals': 2}}}})),
+        (2, json.dumps({'roster': {'a': {'2': {'id': 3, 'goals': 4}}}}))
+    ]
+
+    return match_data
+
+
+def test_understat_load_match_data_to_postgres(understat_match_data, monkeypatch, test_db_params):
+    # Patch get files function
+    monkeypatch.setattr(
+        'ingestion.load.understat_load.get_latest_match_files',
+        lambda: understat_match_data
+    )
+
+    understat_load.load_match_data_to_postgres(db_params=test_db_params)
+
+    conn = psycopg2.connect(**test_db_params)
+
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT match_id, raw_data
+            FROM raw.understat_match_data
+        """)
+
+        rows = cursor.fetchall()
+
+    conn.close()
+
+    # Assert correct data has been loaded to database
+    assert len(rows) == 2
+
+    match_id, raw_data = rows[0]
+
+    assert match_id == 1
+    assert raw_data == {
+        'roster': {'h': {'1': {'id': 1, 'goals': 2}}}
+    }
+
+
+@pytest.fixture
+def id_mappings(tmp_path):
+    # Create mock id mappings parquet file
+    file = tmp_path / '2026-05-01.parquet'
+
+    mock_df = pd.DataFrame({
+        'code': [1, 2, 3],
+        'fbref': [1, 2, 3],
+        'understat': [6, 7, 8]
+    })
+
+    mock_df.to_parquet(file, index=False)
+
+    return file
+
+
+def test_understat_load_id_mappings_to_postgres(id_mappings, monkeypatch, get_test_engine, test_db_params):
+    # Patch necessary functions
+    monkeypatch.setattr(
+        'ingestion.load.understat_load.get_latest_id_mappings_file',
+        lambda: id_mappings
+    )
+    monkeypatch.setattr(
+        'ingestion.load.understat_load.get_engine',
+        lambda: get_test_engine
+    )
+
+    understat_load.load_id_mappings_to_postgres()
+
+    conn = psycopg2.connect(**test_db_params)
+
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            SELECT code, raw_data, fetched_at
+            FROM raw.id_mappings
+        """)
+
+        rows = cursor.fetchall()
+
+    conn.close()
+
+    # Assert correct data has been loaded to database
+    assert len(rows) == 3
+
+    code, raw_data, fetched_at = rows[0]
+
+    assert code == 1
+    assert fetched_at.strftime('%Y-%m-%d') == '2026-05-01'
+
+    assert raw_data == {
+        'fbref': 1,
+        'understat': 6
     }
