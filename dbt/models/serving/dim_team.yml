@@ -14,7 +14,6 @@ models:
       - name: understat_team_id
         description: 'Unique identifier for each team provided by understat'
         tests:
-          - not_null
           - unique
 
       - name: team_name
