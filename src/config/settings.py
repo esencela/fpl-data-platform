@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 
     # Current season - e.g. 2026 for the 2025/26 season
-    CURRENT_SEASON: int = 2026
+    CURRENT_SEASON: int = 2027
 
     RAW_DATA_DIR: Path = Path('/tmp/fpl_data')
 
