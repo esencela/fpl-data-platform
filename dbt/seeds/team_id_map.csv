@@ -12,8 +12,8 @@ fpl_team_id,fpl_team_name,fpl_short_name,understat_team_id,understat_team_name,u
 11,Everton,EVE,72,Everton,EVE
 54,Fulham,FUL,228,Fulham,FLH
 38,Huddersfield,HUD,219,Huddersfield,HUD
-88,Hull,HUL,91,Hull City,HUL
-40,Ipswich,IPS,285,Ipswich Town,IPS
+88,Hull City,HUL,91,Hull,HUL
+40,Ipswich Town,IPS,285,Ipswich,IPS
 2,Leeds,LEE,245,Leeds,LED
 13,Leicester,LEI,75,Leicester,LEI
 14,Liverpool,LIV,87,Liverpool,LIV
