@@ -37,6 +37,9 @@ models:
     serving:
       +schema: serving
       +materialized: table
+    marts:
+      +schema: marts
+      +materialized: table
 
 seeds:
   fpl_dbt:
