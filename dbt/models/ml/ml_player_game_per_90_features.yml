@@ -3,6 +3,12 @@ version: 2
 models:
   - name: ml_player_game_per_90_features
     description: 'Table holding per 90 stats for use as features in machine learning'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - player_game_key
+              - player_id
 
     columns:
       - name: player_game_key
@@ -11,65 +17,158 @@ models:
           - unique
           - not_null
 
+      - name: season
+        description: 'Season of game - e.g. 2026 for 25/26 season'
+
+      - name: player_id
+        description: 'Unique identifier for each player'
+
+      - name: total_minutes_prior
+        description: 'Minutes played within season, before match'
+
       - name: goals_per_90
         description: 'Goals per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: assists_per_90
         description: 'Assists per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: goal_involvements_per_90
         description: 'Goal involvements per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: shots_per_90
         description: 'Shots per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: key_passes_per_90
         description: 'Key passes per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: goals_conceded_per_90
         description: 'Goals conceded per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: own_goals_per_90
         description: 'Own goals per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: yellow_cards_per_90
         description: 'Yellow cards per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: red_cards_per_90
         description: 'Red cards per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: defensive_contributions_per_90
         description: 'Defensive contributions per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0 or season between 2020 and 2025"
 
       - name: saves_per_90
         description: 'Saves per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: bps_per_90
         description: 'Bonus System points per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: influence_per_90
         description: 'FPL influence per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: creativity_per_90
         description: 'FPL creativity per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: threat_per_90
         description: 'FPL threat per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: ict_index_per_90
         description: 'FPL ICT index per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: expected_goals_per_90
         description: 'Expected goals per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: expected_assists_per_90
         description: 'Expected assists per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: expected_goal_involvements_per_90
         description: 'Expected goal involvements per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: expected_goal_chain_per_90
         description: 'Expected goal chain per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
 
       - name: expected_goal_buildup_per_90
         description: 'Expected goal buildup per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"

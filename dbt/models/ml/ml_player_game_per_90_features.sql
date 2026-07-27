@@ -1,5 +1,5 @@
 {{ config(
-    alias='player_game_per90_features'
+    alias='player_game_per_90_features',
     materialized='table'
 ) }}
 
@@ -17,7 +17,8 @@
     'saves', 
     'bps', 
     'influence', 
-    'creativity', 
+    'creativity',
+    'threat',
     'ict_index', 
     'expected_goals', 
     'expected_assists', 
@@ -28,6 +29,9 @@
 
 select
     player_game_key,
+    season,
+    player_id,
+    SUM(minutes) over w as total_minutes_prior,
 
     {% for stat in stat_columns %}
     SUM({{ stat }}) over w / nullif(sum(minutes) over w, 0)::numeric * 90 as {{stat}}_per_90{{ "," if not loop.last}}
