@@ -37,8 +37,8 @@ models:
     serving:
       +schema: serving
       +materialized: table
-    marts:
-      +schema: marts
+    ml:
+      +schema: ml
       +materialized: table
 
 seeds:

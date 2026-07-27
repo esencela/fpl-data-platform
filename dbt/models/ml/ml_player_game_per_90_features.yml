@@ -1,0 +1,75 @@
+version: 2
+
+models:
+  - name: ml_player_game_per_90_features
+    description: 'Table holding per 90 stats for use as features in machine learning'
+
+    columns:
+      - name: player_game_key
+        description: 'Primary key identifying each player game'
+        tests:
+          - unique
+          - not_null
+
+      - name: goals_per_90
+        description: 'Goals per 90 minutes of game time within season, before match'
+
+      - name: assists_per_90
+        description: 'Assists per 90 minutes of game time within season, before match'
+
+      - name: goal_involvements_per_90
+        description: 'Goal involvements per 90 minutes of game time within season, before match'
+
+      - name: shots_per_90
+        description: 'Shots per 90 minutes of game time within season, before match'
+
+      - name: key_passes_per_90
+        description: 'Key passes per 90 minutes of game time within season, before match'
+
+      - name: goals_conceded_per_90
+        description: 'Goals conceded per 90 minutes of game time within season, before match'
+
+      - name: own_goals_per_90
+        description: 'Own goals per 90 minutes of game time within season, before match'
+
+      - name: yellow_cards_per_90
+        description: 'Yellow cards per 90 minutes of game time within season, before match'
+
+      - name: red_cards_per_90
+        description: 'Red cards per 90 minutes of game time within season, before match'
+
+      - name: defensive_contributions_per_90
+        description: 'Defensive contributions per 90 minutes of game time within season, before match'
+
+      - name: saves_per_90
+        description: 'Saves per 90 minutes of game time within season, before match'
+
+      - name: bps_per_90
+        description: 'Bonus System points per 90 minutes of game time within season, before match'
+
+      - name: influence_per_90
+        description: 'FPL influence per 90 minutes of game time within season, before match'
+
+      - name: creativity_per_90
+        description: 'FPL creativity per 90 minutes of game time within season, before match'
+
+      - name: threat_per_90
+        description: 'FPL threat per 90 minutes of game time within season, before match'
+
+      - name: ict_index_per_90
+        description: 'FPL ICT index per 90 minutes of game time within season, before match'
+
+      - name: expected_goals_per_90
+        description: 'Expected goals per 90 minutes of game time within season, before match'
+
+      - name: expected_assists_per_90
+        description: 'Expected assists per 90 minutes of game time within season, before match'
+
+      - name: expected_goal_involvements_per_90
+        description: 'Expected goal involvements per 90 minutes of game time within season, before match'
+
+      - name: expected_goal_chain_per_90
+        description: 'Expected goal chain per 90 minutes of game time within season, before match'
+
+      - name: expected_goal_buildup_per_90
+        description: 'Expected goal buildup per 90 minutes of game time within season, before match'
