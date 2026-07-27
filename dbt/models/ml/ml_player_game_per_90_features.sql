@@ -15,6 +15,7 @@
     'red_cards', 
     'defensive_contributions', 
     'saves', 
+    'bonus',
     'bps', 
     'influence', 
     'creativity',

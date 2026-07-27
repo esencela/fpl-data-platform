@@ -24,7 +24,7 @@ models:
         description: 'Unique identifier for each player'
 
       - name: total_minutes_prior
-        description: 'Minutes played within season, before match'
+        description: 'Minutes played this season, before match'
 
       - name: goals_per_90
         description: 'Goals per 90 minutes of game time within season, before match'
@@ -98,6 +98,13 @@ models:
 
       - name: saves_per_90
         description: 'Saves per 90 minutes of game time within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes_prior is null or total_minutes_prior = 0"
+
+      - name: bonus_per_90
+        description: 'Bonus points per 90 minutes of game time within season, before match'
         tests:
           - dbt_utils.expression_is_true:
               arguments:
