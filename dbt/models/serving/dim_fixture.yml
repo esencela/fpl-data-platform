@@ -24,7 +24,6 @@ models:
       - name: understat_fixture_id
         description: 'Unique identifier for each fixture provided by understat'
         tests:
-          - not_null
           - unique
 
       - name: season

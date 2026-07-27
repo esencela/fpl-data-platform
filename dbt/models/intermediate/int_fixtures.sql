@@ -78,7 +78,7 @@ understat_joined as (
         u.home_expected_goals,
         u.away_expected_goals
     from add_understat_ids f
-    join {{ ref('stg_understat__fixtures') }} u
+    left join {{ ref('stg_understat__fixtures') }} u
         on f.season = u.season
         and f.home_understat_team_id = u.home_team_id
 	    and f.away_understat_team_id = u.away_team_id
