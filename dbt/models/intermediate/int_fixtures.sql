@@ -75,7 +75,8 @@ add_understat_ids as (
 add_understat_fixture_ids as (
     select
         f.*,
-        u.fixture_id as understat_fixture_id
+        u.fixture_id as understat_fixture_id,
+        u.kickoff_time as understat_kickoff_time
     from add_understat_ids f
     left join {{ ref('stg_understat__fixtures') }} u
         on f.season = u.season
@@ -83,18 +84,7 @@ add_understat_fixture_ids as (
 	    and f.away_understat_team_id = u.away_team_id
 ),
 
--- Understat match data has no fixture id, create a canonical gameweek field to join on
-understat_match_data as (
-    select
-        *,
-        row_number() over (
-            partition by season, team_id
-            order by kickoff_time
-        ) as canon_gameweek
-    from {{ ref('stg_understat__team_game')}}
-),
-
--- Join understat match data on canon gameweek
+-- Understat team data doesn't include fixture ids, join on kickoff_time instead
 add_understat_data as (
     select
         f.*,
@@ -117,14 +107,14 @@ add_understat_data as (
 
 
     from add_understat_fixture_ids f
-    left join understat_match_data home
+    left join {{ ref('stg_understat__team_game')}} home
         on f.home_understat_team_id = home.team_id
         and f.season = home.season
-        and f.corrected_gameweek = home.canon_gameweek
-    left join understat_match_data away
+        and f.understat_kickoff_time = home.kickoff_time
+    left join {{ ref('stg_understat__team_game')}} away
         on f.away_understat_team_id = away.team_id
         and f.season = away.season
-        and f.corrected_gameweek = away.canon_gameweek
+        and f.understat_kickoff_time = away.kickoff_time
 )
 
 select

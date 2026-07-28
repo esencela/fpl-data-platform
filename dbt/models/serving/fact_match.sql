@@ -58,8 +58,8 @@ select
     away.away_team_id,
 
     -- Goal stats
-    home.home_team_score,
-    away.away_team_score,
+    f.home_team_score,
+    f.away_team_score,
     home.home_shots,
     away.away_shots,
     home.home_expected_goals,
