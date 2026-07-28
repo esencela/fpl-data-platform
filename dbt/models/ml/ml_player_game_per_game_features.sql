@@ -31,6 +31,7 @@
 
 select
     player_game_key,
+    pg.fixture_key,
     season,
     player_id,
 

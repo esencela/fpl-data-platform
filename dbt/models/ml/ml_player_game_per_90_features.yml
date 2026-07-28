@@ -17,6 +17,11 @@ models:
           - unique
           - not_null
 
+      - name: fixture_key
+        description: 'Foreign Key identifying each fixture'
+        tests:
+          - not_null
+
       - name: season
         description: 'Season of game - e.g. 2026 for 25/26 season'
 

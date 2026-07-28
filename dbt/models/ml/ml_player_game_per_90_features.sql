@@ -30,6 +30,7 @@
 
 select
     player_game_key,
+    pg.fixture_key,
     season,
     player_id,
     SUM(minutes) over w as total_minutes_prior,
