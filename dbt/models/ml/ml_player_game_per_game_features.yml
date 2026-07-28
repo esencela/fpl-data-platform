@@ -31,6 +31,9 @@ models:
       - name: games_played_prior
         description: 'Games played within season, before match'
 
+      - name: shots_taken_prior
+        description: 'Shots taken within season, before match'
+
       - name: starting_rate
         description: 'Rate at which player starts games they played within season, before match'
         tests:
@@ -44,6 +47,13 @@ models:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: shot_conversion_rate
+        description: 'Rate of goals to shots in played games within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0 or shots_taken_prior = 0"
 
       - name: minutes_per_game
         description: 'Minutes played per game played within season, before match'

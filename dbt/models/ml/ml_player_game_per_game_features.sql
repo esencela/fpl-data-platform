@@ -36,8 +36,10 @@ select
     player_id,
 
     sum(case when played then 1 else 0 end) over w as games_played_prior,
+    sum(shots) over w as shots_taken_prior,
     sum(case when started then 1 else 0 end) over w / nullif(sum(case when played then 1 else 0 end) over w, 0)::numeric as starting_rate,
     sum(case when clean_sheet then 1 else 0 end) over w / nullif(sum(case when played then 1 else 0 end) over w, 0)::numeric as clean_sheet_rate,
+    sum(goals) over w / nullif(sum(shots) over w, 0)::numeric as shot_conversion_rate,
 
     {% for stat in stat_columns %}
     sum({{ stat }}) over w / nullif(sum(case when played then 1 else 0 end) over w, 0)::numeric as {{ stat }}_per_game{{ "," if not loop.last }}
