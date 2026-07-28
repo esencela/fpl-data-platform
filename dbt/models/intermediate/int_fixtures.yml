@@ -81,28 +81,76 @@ models:
           - not_null
       
       - name: home_team_score
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
       
       - name: away_team_score
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
 
       - name: home_expected_goals
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
 
       - name: away_expected_goals
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
 
       - name: home_passes
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
 
       - name: away_passes
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
 
       - name: home_deep_completions
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
 
       - name: away_deep_completions
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
 
       - name: home_defensive_actions
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
 
       - name: away_defensive_actions
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
 
       - name: home_ppda
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
 
       - name: away_ppda
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or finished = false"
       
       - name: home_team_difficulty
       
