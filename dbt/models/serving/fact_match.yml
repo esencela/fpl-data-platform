@@ -89,6 +89,46 @@ models:
         tests:
           - not_null
 
+      - name: home_passes
+        description: 'Passes made by home team during match'
+        tests:
+          - not_null
+
+      - name: home_deep_completions
+        description: 'Non cross passes completed by home team that reach 20 meters of the opponents goal'
+        tests:
+          - not_null
+
+      - name: away_passes
+        description: 'Passes made by away team during match'
+        tests:
+          - not_null
+
+      - name: away_deep_completions
+        description: 'Non cross passes completed by away team that reach 20 meters of the opponents goal'
+        tests:
+          - not_null
+
+      - name: home_defensive_actions
+        description: 'Defensive actions made by home team - e.g. tackles, interceptions, challenges, and fouls'
+        tests:
+          - not_null
+
+      - name: home_ppda
+        description: 'Metric calculating how many passes away team is allowed before home team attempts to win the ball - measures pressing intensity'
+        tests:
+          - not_null
+
+      - name: away_defensive_actions
+        description: 'Defensive actions made by away team - e.g. tackles, interceptions, challenges, and fouls'
+        tests:
+          - not_null
+
+      - name: away_ppda
+        description: 'Metric calculating how many passes home team is allowed before away team attempts to win the ball - measures pressing intensity'
+        tests:
+          - not_null
+
       - name: home_influence
         description: 'Total influence score of each player in home team during match'
         tests:

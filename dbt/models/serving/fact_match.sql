@@ -73,6 +73,18 @@ select
     away.away_penalties_scored,
     away.away_penalties_taken,
 
+    -- Passing
+    f.home_passes,
+    f.home_deep_completions,
+    f.away_passes,
+    f.away_deep_completions,
+
+    -- Defence
+    f.home_defensive_actions,
+    f.home_ppda,
+    f.away_defensive_actions,
+    f.away_ppda,
+
     -- FPL metrics
     home.home_influence,
     home.home_creativity,
@@ -92,3 +104,5 @@ select
 from home_games home
 join away_games away
     on home.fixture_key = away.fixture_key
+join {{ ref('int_fixtures') }} f
+    on home.fixture_key = f.fixture_key
