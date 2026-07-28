@@ -2,7 +2,8 @@
     materialized='incremental',
     alias='shots',
     incremental_strategy='delete_insert',
-    unique_key='shot_id'
+    unique_key='shot_id',
+    on_schema_change='append_new_columns'
 )}}
 
 with fixture_data_added as (

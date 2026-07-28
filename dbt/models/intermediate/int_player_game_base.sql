@@ -2,7 +2,8 @@
     alias='player_game_base',
     materialized='incremental',
     incremental_strategy='delete+insert',
-    unique_key=['player_game_key']
+    unique_key=['player_game_key'],
+    on_schema_change='append_new_columns'
 )}}
 
 with combined as (

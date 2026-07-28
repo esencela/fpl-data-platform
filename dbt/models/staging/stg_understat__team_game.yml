@@ -77,8 +77,40 @@ models:
               arguments:
                 expression: ">= 0"
 
+      - name: passes
+        description: 'Passes made by team'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: defensive_actions
+        description: 'Defensive actions made by team - e.g. tackles, interceptions, challenges, and fouls'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
       - name: passes_per_defensive_action
         description: 'Metric calculating how many passes opposing team is allowed before defense attempts to win the ball - measures pressing intensity'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: opponent_passes
+        description: 'Passes made by opposing team'
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+
+      - name: opponent_defensive_actions
+        description: 'Defensive actions made by opposing team - e.g. tackles, interceptions, challenges, and fouls'
         tests:
           - not_null
           - dbt_utils.expression_is_true:

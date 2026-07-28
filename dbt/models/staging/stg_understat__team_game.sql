@@ -51,7 +51,11 @@ select
     (match_data->>'npxGA')::decimal as non_penalty_expected_goals_conceded,
 
     -- Passing stats
+    (match_data->'ppda_allowed'->>'att')::int as passes,
+    (match_data->'ppda'->>'def')::int as defensive_actions,
     (match_data->'ppda'->>'att')::decimal / (match_data->'ppda'->>'def')::decimal as passes_per_defensive_action,
+    (match_data->'ppda'->>'att')::int as opponent_passes,
+    (match_data->'ppda_allowed'->>'def')::int as opponent_defensive_actions,
     (match_data->'ppda_allowed'->>'att')::decimal / (match_data->'ppda_allowed'->>'def')::decimal as opponent_passes_per_defensive_action,
     (match_data->>'deep')::int as deep_completions,
     (match_data->>'deep_allowed')::int as deep_completions_allowed

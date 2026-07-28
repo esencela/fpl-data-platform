@@ -2,7 +2,8 @@
     alias='team_season',
     materialized='incremental',
     incremental_strategy='delete+insert',
-    unique_key=['team_season_key']
+    unique_key=['team_season_key'],
+    on_schema_change='append_new_columns'
 ) }}
 
 with combined as (

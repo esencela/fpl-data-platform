@@ -2,7 +2,8 @@
     alias='fixtures',
     materialized='incremental',
     incremental_strategy='delete+insert',
-    unique_key=['fixture_key']
+    unique_key=['fixture_key'],
+    on_schema_change='append_new_columns'
 )}}
 
 with combined as (
@@ -70,18 +71,60 @@ add_understat_ids as (
         on fixture.away_team_season_key = away.team_season_key
 ),
 
--- Join understat data on home and away team season keys
-understat_joined as (
+-- Join understat ids on home and away team season keys
+add_understat_fixture_ids as (
     select
         f.*,
-        u.fixture_id as understat_fixture_id,
-        u.home_expected_goals,
-        u.away_expected_goals
+        u.fixture_id as understat_fixture_id
     from add_understat_ids f
     left join {{ ref('stg_understat__fixtures') }} u
         on f.season = u.season
         and f.home_understat_team_id = u.home_team_id
 	    and f.away_understat_team_id = u.away_team_id
+),
+
+-- Understat match data has no fixture id, create a canonical gameweek field to join on
+understat_match_data as (
+    select
+        *,
+        row_number() over (
+            partition by season, team_id
+            order by kickoff_time
+        ) as canon_gameweek
+    from {{ ref('stg_understat__team_game')}}
+),
+
+-- Join understat match data on canon gameweek
+add_understat_data as (
+    select
+        f.*,
+        
+        -- Goals
+        home.expected_goals as home_expected_goals,
+        away.expected_goals as away_expected_goals,
+        home.non_penalty_expected_goals as home_non_penalty_expected_goals,
+        away.non_penalty_expected_goals as away_non_penalty_expected_goals,
+
+        -- Passing
+        home.passes as home_passes,
+        away.passes as away_passes,
+        home.defensive_actions as home_defensive_actions,
+        away.defensive_actions as away_defensive_actions,
+        home.passes_per_defensive_action as home_ppda,
+        away.passes_per_defensive_action as away_ppda,
+        home.deep_completions as home_deep_completions,
+        away.deep_completions as away_deep_completions
+
+
+    from add_understat_fixture_ids f
+    left join understat_match_data home
+        on f.home_understat_team_id = home.team_id
+        and f.season = home.season
+        and f.corrected_gameweek = home.canon_gameweek
+    left join understat_match_data away
+        on f.away_understat_team_id = away.team_id
+        and f.season = away.season
+        and f.corrected_gameweek = away.canon_gameweek
 )
 
 select
@@ -106,11 +149,26 @@ select
     away_team_season_id as away_fpl_team_season_id,
     away_understat_team_id,
 
+    -- Goals
     home_team_score,
     away_team_score,
     home_expected_goals,
     away_expected_goals,
+
+    -- Passing
+    home_passes,
+    away_passes,
+    home_deep_completions,
+    away_deep_completions,
+
+    -- Defense
+    home_defensive_actions,
+    away_defensive_actions,
+    home_ppda,
+    away_ppda,
+
+    -- FPL
     home_team_difficulty,
     away_team_difficulty
 
-from understat_joined
+from add_understat_data

@@ -87,6 +87,22 @@ models:
       - name: home_expected_goals
 
       - name: away_expected_goals
+
+      - name: home_passes
+
+      - name: away_passes
+
+      - name: home_deep_completions
+
+      - name: away_deep_completions
+
+      - name: home_defensive_actions
+
+      - name: away_defensive_actions
+
+      - name: home_ppda
+
+      - name: away_ppda
       
       - name: home_team_difficulty
       
