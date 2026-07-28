@@ -39,6 +39,16 @@ models:
         tests:
           - not_null
 
+      - name: home_shots
+        description: 'Shots taken by home team in match'
+        tests:
+          - not_null
+
+      - name: away_shots
+        description: 'Shots taken by away team in match'
+        tests:
+          - not_null
+
       - name: home_expected_goals
         description: 'Expected goals accumulated by home team during match'
         tests:
