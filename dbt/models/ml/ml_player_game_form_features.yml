@@ -1,0 +1,313 @@
+version: 2
+
+models:
+  - name: ml_player_game_form_features
+    description: 'Table holding rolling stats for use as features in machine learning'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - player_game_key
+              - player_id
+
+    columns: 
+      - name: player_game_key
+        description: 'Primary key identifying each player game'
+        tests:
+          - unique
+          - not_null
+
+      - name: fixture_key
+        description: 'Foreign Key identifying each fixture'
+        tests:
+          - not_null
+
+      - name: season
+        description: 'Season of game - e.g. 2026 for 25/26 season'
+
+      - name: player_id
+        description: 'Unique identifier for each player'
+
+      - name: games_last_30_days
+        description: 'How many games team played in last 30 days'
+
+      - name: minutes_last_30_days
+        description: 'Minutes played in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: avg_minutes_last_30_days
+        description: 'Average minutes played in each game in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments: 
+                expression: "is not null or minutes_last_30_days is null or minutes_last_30_days = 0"
+
+      - name: goals_last_30_days
+        description: 'Goals scored in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: goals_per_90_last_30_days
+        description: 'Goals per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: assists_last_30_days
+        description: 'Assists in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: assists_per_90_last_30_days
+        description: 'Assists per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: goal_involvements_last_30_days
+        description: 'Goal involvements in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: goal_involvements_per_90_last_30_days
+        description: 'Goal involvements per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: shots_last_30_days
+        description: 'Shots taken in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: shots_per_90_last_30_days
+        description: 'Shots taken per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: key_passes_last_30_days
+        description: 'Key passes made in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: key_passes_per_90_last_30_days
+        description: 'Key passes made per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: goals_conceded_last_30_days
+        description: 'Goals conceded in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: goals_conceded_per_90_last_30_days
+        description: 'Goals conceded per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: defensive_contributions_last_30_days
+        description: 'Defensive contributions in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0 or season between 2020 and 2025"
+
+      - name: defensive_contributions_per_90_last_30_days
+        description: 'Defensive contributions per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null or season between 2020 and 2025"
+
+      - name: saves_last_30_days
+        description: 'Saves made in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: saves_per_90_last_30_days
+        description: 'Saves made per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: bonus_last_30_days
+        description: 'Bonus points received in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: bonus_per_90_last_30_days
+        description: 'Bonus points received per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: bps_last_30_days
+        description: 'Bonus system points received in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: bps_per_90_last_30_days
+        description: 'Bonus system points received per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: influence_last_30_days
+        description: 'Cumulative FPL influence in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: influence_per_90_last_30_days
+        description: 'FPL influence per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: creativity_last_30_days
+        description: 'Cumulative FPL creativity in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: creativity_per_90_last_30_days
+        description: 'FPL creativity per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: threat_last_30_days
+        description: 'Cumulative FPL threat in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: threat_per_90_last_30_days
+        description: 'FPL threat per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: ict_index_last_30_days
+        description: 'Cumulative FPL ICT index in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: ict_index_per_90_last_30_days
+        description: 'FPL ICT index per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: expected_goals_last_30_days
+        description: 'Cumulative expected goals in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: expected_goals_per_90_last_30_days
+        description: 'Expected goals per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: expected_assists_last_30_days
+        description: 'Cumulative expected assists in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: expected_assists_per_90_last_30_days
+        description: 'Expected assists per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: expected_goal_involvements_last_30_days
+        description: 'Cumuative expected goal involvements in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: expected_goal_involvements_per_90_last_30_days
+        description: 'Expected goal involvements per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: expected_goal_chain_last_30_days
+        description: 'Cumulative expected goal chain in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: expected_goal_chain_per_90_last_30_days
+        description: 'Expected goal chain per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
+      - name: expected_goal_buildup_last_30_days
+        description: 'Cumulative expected goal buildup in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_last_30_days = 0"
+
+      - name: expected_goal_buildup_per_90_last_30_days
+        description: 'Expected goal buildup per 90 minutes of game time in last 30 days'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or minutes_last_30_days = 0 or minutes_last_30_days is null"
+
