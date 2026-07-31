@@ -78,7 +78,7 @@ models:
                 expression: ">= 0"
 
       - name: passes
-        description: 'Passes made by team'
+        description: 'Passes made by team in own half'
         tests:
           - not_null
           - dbt_utils.expression_is_true:
@@ -102,7 +102,7 @@ models:
                 expression: ">= 0"
 
       - name: opponent_passes
-        description: 'Passes made by opposing team'
+        description: 'Passes made by opposing team in their half'
         tests:
           - not_null
           - dbt_utils.expression_is_true:

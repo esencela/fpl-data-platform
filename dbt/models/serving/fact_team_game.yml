@@ -1,0 +1,106 @@
+version: 2
+
+models:
+  - name: fact_team_game
+    description: 'Fact table holding team stats for every game played'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['fixture_key', 'team_id']
+
+    columns:
+      - name: fixture_key
+        description: 'Composite key uniquely identifying fixture played'
+        tests:
+          - not_null
+
+      - name: team_id
+        description: 'Unique identifier of team'
+        tests:
+          - not_null
+
+      - name: at_home
+        description: 'Whether game was a home fixture'
+        tests:
+          - not_null
+
+      - name: goals_scored
+        description: 'Goals scored by team during game'
+
+      - name: goals_conceded
+        description: 'Goals scored by opposing team during game'
+
+      - name: shots
+        description: 'Shots taken by team during game'
+
+      - name: shots_against
+        description: 'Shots taken by opposing team during game'
+
+      - name: expected_goals
+        description: 'Expected goals accumulated by team during game'
+
+      - name: expected_goals_conceded
+        description: 'Expected goals accumulated by opposing team during game'
+
+      - name: xg_diff
+        description: 'Expected goals - goals, measures finishing performance'
+
+      - name: xgc_diff
+        description: 'Expected goals conceded - goals conceded, measures defensive performance'
+
+      - name: penalties_scored
+        description: 'Penalties scored by team during game'
+
+      - name: penalties_taken
+        description: 'Penalties awarded to team during game'
+
+      - name: penalties_conceded
+        description: 'Penalties awarded to opposing team during game'
+
+      - name: passes
+        description: 'Passes made by team in their own half during game'
+
+      - name: deep_completions
+        description: 'Non cross passes completed by team that reach within 20 meters of the opponents goal'
+
+      - name: opponent_passes
+        description: 'Passes made by opposing team in their half during game'
+
+      - name: opponent_deep_completions
+        description: 'Non cross passes completed by opposing team that reach within 20 meters of the teams goal'
+
+      - name: defensive_actions
+        description: 'Defensive actions made by team - e.g. tackles, interceptions, challenges, and fouls'
+
+      - name: passes_per_defensive_action
+        description: 'Passes / defensive actions, measures teams pressing intensity'
+
+      - name: influence
+        description: 'Accumulated FPL influence by players on team'
+
+      - name: creativity
+        description: 'Accumulated FPL creativity by players on team'
+
+      - name: threat
+        description: 'Accumulated FPL threat by players on team'
+
+      - name: ict_index
+        description: 'Accumulated FPL ICT index by players on team'
+
+      - name: opponent_influence
+        description: 'Accumulated FPL influence by players on opposing team'
+
+      - name: opponent_creativity
+        description: 'Accumulated FPL creativity by players on opposing team'
+
+      - name: opponent_threat
+        description: 'Accumulated FPL threat by players on opposing team'
+
+      - name: opponent_ict_index
+        description: 'Accumulated FPL ICT index by players on opposing team'
+
+      - name: yellow_cards
+        description: 'Yellow cards received by team during game'
+
+      - name: red_cards
+        description: 'Red cards received by team during game'
