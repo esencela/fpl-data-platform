@@ -1,0 +1,391 @@
+version: 2
+
+models:
+  - name: ml_team_game_per_game_features
+    description: 'Table holding per game team stats for us as features for machine learning'
+
+    columns:
+      - name: fixture_key
+        description: 'Composite key uniquely identifying each fixture'
+        tests:
+          - not_null
+
+      - name: team_id
+        description: 'Unique identifier of team'
+        tests:
+          - not_null
+
+      - name: at_home
+        description: 'Whether game was a home fixture'
+        tests:
+          - not_null
+
+      - name: games_played_prior
+        description: 'Games played by team this season up to this match'
+
+      - name: team_goals_scored_per_game
+        description: 'Goals scored per game this season by team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_goals_conceded_per_game
+        description: 'Goals conceded per game this season by team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_shots_per_game
+        description: 'Shots taken per game this season by team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_shots_against_per_game
+        description: 'Shots conceded per game this season by team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_expected_goals_per_game
+        description: 'Expected goals per game this season by team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_expected_goals_conceded_per_game
+        description: 'Expected goals conceded per game this season by team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_xg_diff_per_game
+        description: 'Average expected goals - goals this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_xgc_diff_per_game
+        description: 'Average expected goals conceded - goals conceded this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_penalties_taken_per_game
+        description: 'Penalties awarded per game to team this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_penalties_conceded_per_game
+        description: 'Penalties given per game against team this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_passes_per_game
+        description: 'Passes made in own half by team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_deep_completions_per_game
+        description: 'Average non cross passes completed by team that reach within 20 meters of the opponents goal this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_passes_against_per_game
+        description: 'Passes allowed in opposition half by team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_deep_completions_against_per_game
+        description: 'Average non cross passes allowed by team that reach within 20 meters of the teams goal this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_defensive_actions_per_game
+        description: 'Average defensive actions made by team per game this season - e.g. tackles, interceptions, challenges, and fouls'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_passes_per_defensive_action_per_game
+        description: 'Average team ppda per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_influence_per_game
+        description: 'Average team FPL influence per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_creativity_per_game
+        description: 'Average team FPL creativity per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_threat_per_game
+        description: 'Average team FPL threat per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_ict_index_per_game
+        description: 'Average team FPL ICT index per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_influence_against_per_game
+        description: 'Average FPL influence against team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_creativity_against_per_game
+        description: 'Average FPL creativity against team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_threat_against_per_game
+        description: 'Average FPL threat against per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_ict_index_against_per_game
+        description: 'Average FPL ICT index against per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_yellow_cards_per_game
+        description: 'Yellow cards against team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: team_red_cards_per_game
+        description: 'Red cards against team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior is null or games_played_prior = 0"
+
+      - name: opp_games_played_prior
+        description: 'Games played this season by opposing team up to this match'
+
+      - name: opp_team_goals_scored_per_game
+        description: 'Goals scored per game this season by opposing team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_goals_conceded_per_game
+        description: 'Goals conceded per game this season by opposing team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_shots_per_game
+        description: 'Shots taken per game this season by opposing team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_shots_against_per_game
+        description: 'Shots conceded per game this season by opposing team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_expected_goals_per_game
+        description: 'Expected goals per game this season by opposing team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_expected_goals_conceded_per_game
+        description: 'Expected goals conceded per game this season by opposing team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_xg_diff_per_game
+        description: 'Average expected goals - goals for opposing team this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_xgc_diff_per_game
+        description: 'Average expected goals conceded - goals conceded for opposing team this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_penalties_taken_per_game
+        description: 'Penalties awarded per game to opposing team this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_penalties_conceded_per_game
+        description: 'Penalties given per game against opposing team this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_passes_per_game
+        description: 'Passes made in own half by opposing team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_deep_completions_per_game
+        description: 'Average non cross passes completed by opposing team that reach within 20 meters of the opponents goal this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_passes_against_per_game
+        description: 'Passes allowed in opposition half by opposing team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_deep_completions_against_per_game
+        description: 'Average non cross passes allowed by opposing team that reach within 20 meters of the teams goal this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_defensive_actions_per_game
+        description: 'Average defensive actions made by opposing team per game this season - e.g. tackles, interceptions, challenges, and fouls'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_passes_per_defensive_action_per_game
+        description: 'Average team ppda per game this season for opposing team'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_influence_per_game
+        description: 'Opposing teams FPL influence per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_creativity_per_game
+        description: 'Opposing teams FPL creativity per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_threat_per_game
+        description: 'Opposing teams FPL threat per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_ict_index_per_game
+        description: 'Opposing teams FPL ICT index per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_influence_against_per_game
+        description: 'Average FPL influence against opposing team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_creativity_against_per_game
+        description: 'Average FPL creativity against opposing team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_threat_against_per_game
+        description: 'Average FPL threat against opposing team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_ict_index_against_per_game
+        description: 'Average FPL ICT index against opposing team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_yellow_cards_per_game
+        description: 'Yellow cards against opposing team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"
+
+      - name: opp_team_red_cards_per_game
+        description: 'Red cards against opposing team per game this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior is null or opp_games_played_prior = 0"

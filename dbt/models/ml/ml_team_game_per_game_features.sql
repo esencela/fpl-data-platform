@@ -38,7 +38,7 @@ with team_features as (
         team_id,
         at_home,
         
-        count(*) over w as games_played,
+        count(*) over w as games_played_prior,
 
         {% for stat in stat_columns %}
         avg({{ stat }}) over w as team_{{ stat }}_per_game{{ "," if not loop.last }}
@@ -56,6 +56,8 @@ with team_features as (
 
 select
     us.*,
+
+    opp.games_played_prior as opp_games_played_prior,
 
     {% for stat in stat_columns %}
     opp.team_{{ stat }}_per_game as opp_team_{{ stat }}_per_game{{ "," if not loop.last }}
