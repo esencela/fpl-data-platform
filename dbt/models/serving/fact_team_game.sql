@@ -22,8 +22,8 @@ with home_games as (
 
         home_passes as passes,
         home_deep_completions as deep_completions,
-        away_passes as opponent_passes,
-        away_deep_completions as opponent_deep_completions,
+        away_passes as passes_against,
+        away_deep_completions as deep_completions_against,
 
         home_defensive_actions as defensive_actions,
         home_ppda as passes_per_defensive_action,
@@ -33,10 +33,10 @@ with home_games as (
         home_threat as threat,
         home_ict_index as ict_index,
 
-        away_influence as opponent_influence,
-        away_creativity as opponent_creativity,
-        away_threat as opponent_threat,
-        away_ict_index as opponent_ict_index,
+        away_influence as influence_against,
+        away_creativity as creativity_against,
+        away_threat as threat_against,
+        away_ict_index as ict_index_against,
 
         home_yellow_cards as yellow_cards,
         home_red_cards as red_cards
@@ -66,8 +66,8 @@ away_games as (
 
         away_passes as passes,
         away_deep_completions as deep_completions,
-        home_passes as opponent_passes,
-        home_deep_completions as opponent_deep_completions,
+        home_passes as passes_against,
+        home_deep_completions as deep_completions_against,
 
         away_defensive_actions as defensive_actions,
         away_ppda as passes_per_defensive_action,
@@ -77,10 +77,10 @@ away_games as (
         away_threat as threat,
         away_ict_index as ict_index,
 
-        home_influence as opponent_influence,
-        home_creativity as opponent_creativity,
-        home_threat as opponent_threat,
-        home_ict_index as opponent_ict_index,
+        home_influence as influence_against,
+        home_creativity as creativity_against,
+        home_threat as threat_against,
+        home_ict_index as ict_index_against,
 
         away_yellow_cards as yellow_cards,
         away_red_cards as red_cards

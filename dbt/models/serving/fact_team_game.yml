@@ -63,10 +63,10 @@ models:
       - name: deep_completions
         description: 'Non cross passes completed by team that reach within 20 meters of the opponents goal'
 
-      - name: opponent_passes
+      - name: passes_against
         description: 'Passes made by opposing team in their half during game'
 
-      - name: opponent_deep_completions
+      - name: deep_completions_against
         description: 'Non cross passes completed by opposing team that reach within 20 meters of the teams goal'
 
       - name: defensive_actions
@@ -87,16 +87,16 @@ models:
       - name: ict_index
         description: 'Accumulated FPL ICT index by players on team'
 
-      - name: opponent_influence
+      - name: influence_against
         description: 'Accumulated FPL influence by players on opposing team'
 
-      - name: opponent_creativity
+      - name: creativity_against
         description: 'Accumulated FPL creativity by players on opposing team'
 
-      - name: opponent_threat
+      - name: threat_against
         description: 'Accumulated FPL threat by players on opposing team'
 
-      - name: opponent_ict_index
+      - name: ict_index_against
         description: 'Accumulated FPL ICT index by players on opposing team'
 
       - name: yellow_cards
