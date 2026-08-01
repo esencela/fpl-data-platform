@@ -1,0 +1,374 @@
+version: 2
+
+models:
+  - name: ml_team_game_form_features
+    description: 'Features for team form model'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['fixture_key', 'team_id']
+
+    columns:
+      - name: fixture_key
+        description: 'Composite key uniquely identifying fixture played'
+        tests:
+          - not_null
+
+      - name: team_id
+        description: 'Unique identifier of team'
+        tests:
+          - not_null
+
+      - name: at_home
+        description: 'Whether game was a home fixture'
+        tests:
+          - not_null
+
+      - name: games_played_prior
+        description: 'Number of games considered in form calculation, excluding current game'
+
+      - name: team_goals_scored_per_game_last_5
+        description: 'Average goals scored by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_goals_conceded_per_game_last_5
+        description: 'Average goals conceded by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_shots_per_game_last_5
+        description: 'Average shots taken by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_shots_against_per_game_last_5
+        description: 'Average shots taken by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_expected_goals_per_game_last_5
+        description: 'Average expected goals accumulated by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_expected_goals_conceded_per_game_last_5
+        description: 'Average expected goals accumulated by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_xg_diff_per_game_last_5
+        description: 'Expected goals - goals per game, measures finishing performance'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_xgc_diff_per_game_last_5
+        description: 'Expected goals conceded - goals conceded per game, measures defensive performance'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_penalties_scored_per_game_last_5
+        description: 'Average penalties scored by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_penalties_taken_per_game_last_5
+        description: 'Average penalties awarded to team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_penalties_conceded_per_game_last_5
+        description: 'Average penalties awarded against team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_passes_per_game_last_5
+        description: 'Average own half passes completed by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_deep_completions_per_game_last_5
+        description: 'Average deep completions by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_passes_against_per_game_last_5
+        description: 'Average own half passes completed against team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_deep_completions_against_per_game_last_5
+        description: 'Average deep completions against team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_defensive_actions_per_game_last_5
+        description: 'Average defensive actions by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_passes_per_defensive_action_per_game_last_5
+        description: 'Average passes per defensive action by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_influence_per_game_last_5
+        description: 'Average FPL influence by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_creativity_per_game_last_5
+        description: 'Average FPL creativity by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_threat_per_game_last_5
+        description: 'Average FPL threat by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_ict_index_per_game_last_5
+        description: 'Average FPL ICT index by team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_influence_against_per_game_last_5
+        description: 'Average FPL influence against team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_creativity_against_per_game_last_5
+        description: 'Average FPL creativity against team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_threat_against_per_game_last_5
+        description: 'Average FPL threat against team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: team_ict_index_against_per_game_last_5
+        description: 'Average FPL ICT index against team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played_prior = 0 or games_played_prior is null"
+
+      - name: opp_games_played_prior
+        description: 'Number of games considered in form calculation, excluding current game - for opposing team'
+
+      - name: opp_team_goals_scored_per_game_last_5
+        description: 'Average goals scored by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_goals_conceded_per_game_last_5
+        description: 'Average goals conceded by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_shots_per_game_last_5
+        description: 'Average shots taken by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_expected_goals_per_game_last_5
+        description: 'Average expected goals accumulated by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_expected_goals_conceded_per_game_last_5
+        description: 'Average expected goals accumulated by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_xg_diff_per_game_last_5
+        description: 'Expected goals - goals per game, measures finishing performance'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_xgc_diff_per_game_last_5
+        description: 'Expected goals conceded - goals conceded per game, measures defensive performance'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_penalties_scored_per_game_last_5
+        description: 'Average penalties scored by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_penalties_taken_per_game_last_5
+        description: 'Average penalties awarded to opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_penalties_conceded_per_game_last_5
+        description: 'Average penalties awarded against opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_passes_per_game_last_5
+        description: 'Average own half passes completed by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_deep_completions_per_game_last_5
+        description: 'Average deep completions by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_passes_against_per_game_last_5
+        description: 'Average own half passes completed against opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_deep_completions_against_per_game_last_5
+        description: 'Average deep completions against opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_defensive_actions_per_game_last_5
+        description: 'Average defensive actions by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_passes_per_defensive_action_per_game_last_5
+        description: 'Average passes per defensive action by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_influence_per_game_last_5
+        description: 'Average FPL influence by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_creativity_per_game_last_5
+        description: 'Average FPL creativity by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_threat_per_game_last_5
+        description: 'Average FPL threat by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_ict_index_per_game_last_5
+        description: 'Average FPL ICT index by opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_influence_against_per_game_last_5
+        description: 'Average FPL influence against opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_creativity_against_per_game_last_5
+        description: 'Average FPL creativity against opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_threat_against_per_game_last_5
+        description: 'Average FPL threat against opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"
+
+      - name: opp_team_ict_index_against_per_game_last_5
+        description: 'Average FPL ICT index against opposing team in last 5 games'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or opp_games_played_prior = 0 or opp_games_played_prior is null"

@@ -3,6 +3,10 @@ version: 2
 models:
   - name: ml_team_game_per_game_features
     description: 'Table holding per game team stats for us as features for machine learning'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['fixture_key', 'team_id']
 
     columns:
       - name: fixture_key
