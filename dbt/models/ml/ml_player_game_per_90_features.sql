@@ -33,6 +33,7 @@ select
     pg.fixture_key,
     season,
     player_id,
+    team_id,
     SUM(minutes) over w as total_minutes_prior,
 
     {% for stat in stat_columns %}

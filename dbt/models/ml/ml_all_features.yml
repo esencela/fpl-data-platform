@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: all_features
+    description: 'Table containing all features for ML model training'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - player_game_key
+              - fixture_key
+
+    columns:
+      - name: player_game_key
+        tests:
+          - not_null
+          - unique
+
+      - name: fixture_key
+        tests:
+          - not_null

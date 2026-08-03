@@ -28,6 +28,9 @@ models:
       - name: player_id
         description: 'Unique identifier for each player'
 
+      - name: team_id
+        description: 'Unique identifier for each team'
+
       - name: total_minutes_prior
         description: 'Minutes played this season, before match'
 

@@ -28,6 +28,12 @@ models:
       - name: player_id
         description: 'Unique identifier for each player'
 
+      - name: team_id
+        description: 'Unique identifier for each team'
+
+      - name: at_home
+        description: 'Whether game was a home fixture'
+
       - name: games_played_prior
         description: 'Games played within season, before match'
 

@@ -28,6 +28,9 @@ models:
       - name: player_id
         description: 'Unique identifier for each player'
 
+      - name: team_id
+        description: 'Unique identifier for each team'
+
       - name: games_last_30_days
         description: 'How many games team played in last 30 days'
 

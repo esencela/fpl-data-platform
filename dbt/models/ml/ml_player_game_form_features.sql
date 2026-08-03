@@ -30,6 +30,7 @@ select
     pg.fixture_key,
     f.season,
     player_id,
+    team_id,
 
     count(*) over last_30_days as games_last_30_days,
     sum(minutes) over last_30_days as minutes_last_30_days,

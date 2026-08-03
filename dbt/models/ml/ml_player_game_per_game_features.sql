@@ -34,6 +34,8 @@ select
     pg.fixture_key,
     season,
     player_id,
+    team_id,
+    at_home,
 
     sum(case when played then 1 else 0 end) over w as games_played_prior,
     sum(shots) over w as shots_taken_prior,
