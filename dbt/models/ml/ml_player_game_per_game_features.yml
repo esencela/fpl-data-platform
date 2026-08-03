@@ -40,6 +40,16 @@ models:
       - name: shots_taken_prior
         description: 'Shots taken within season, before match'
 
+      - name: games_prior
+        description: 'Games played by team within season, before match'
+
+      - name: appearance_rate
+        description: 'Rate at which player appears in games within season, before match'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_prior is null or games_prior = 0"
+
       - name: starting_rate
         description: 'Rate at which player starts games they played within season, before match'
         tests:
