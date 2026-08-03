@@ -178,3 +178,15 @@ models:
 
       - name: expected_goal_involvements
         description: 'Expected goals + expected assists during season'
+        tests:
+          - not_null
+
+      - name: expected_goal_chain
+        description: 'Expected goal chain accumulated throughout season'
+        tests:
+          - not_null
+
+      - name: expected_goal_buildup
+        description: 'Expected goal buildup accumulated throughout season'
+        tests:
+          - not_null

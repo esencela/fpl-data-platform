@@ -33,7 +33,9 @@ with player_season_totals as (
         sum(ict_index) as ict_index,
         sum(expected_goals) as expected_goals,
         sum(expected_assists) as expected_assists,
-        sum(expected_goal_involvements) as expected_goal_involvements
+        sum(expected_goal_involvements) as expected_goal_involvements,
+        sum(expected_goal_chain) as expected_goal_chain,
+        sum(expected_goal_buildup) as expected_goal_buildup
 
     from {{ ref('fact_player_game') }}
     group by player_season_key
@@ -82,7 +84,9 @@ select
 
     totals.expected_goals,
     totals.expected_assists,
-    totals.expected_goal_involvements
+    totals.expected_goal_involvements,
+    totals.expected_goal_chain,
+    totals.expected_goal_buildup
 
 from
     {{ ref('int_player_season_enriched') }} as player_season
