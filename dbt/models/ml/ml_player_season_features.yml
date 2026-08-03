@@ -1,0 +1,380 @@
+version: 2
+
+models:
+  - name: ml_player_season_features
+    description: 'Table holding season stats for use as features in machine learning'
+
+    columns:
+      - name: player_season_key
+        description: 'Primary key identifying each player season'
+        tests:
+          - unique
+          - not_null
+
+      - name: player_id
+        description: 'Unique identifier for each player'
+        tests:
+          - not_null
+
+      - name: season
+        description: 'Season of game - e.g. 2026 for 25/26 season'
+        tests:
+          - not_null
+
+      - name: games_total
+        description: 'Total games played by team within season'
+
+      - name: games_played
+        description: 'Games played by player within season'
+
+      - name: games_started
+        description: 'Games started by player within season'
+
+      - name: total_minutes
+        description: 'Total minutes played by player within season'
+
+      - name: shots
+        description: 'Total shots taken by player within season'
+
+      - name: appearance_rate
+        description: 'Rate at which player appears in games within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_total is null or games_total = 0"
+
+      - name: starting_rate
+        description: 'Rate at which player starts games they played within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: clean_sheet_rate
+        description: 'Rate at which player keeps clean sheets in games they played within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: shot_conversion_rate
+        description: 'Rate at which player scores goals from shots taken within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or shots is null or shots = 0"
+
+      - name: minutes_per_game
+        description: 'Average minutes per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: goals_per_game
+        description: 'Average goals per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: assists_per_game
+        description: 'Average assists per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: goal_involvements_per_game
+        description: 'Average goal involvements per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: shots_per_game
+        description: 'Average shots per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+      
+      - name: key_passes_per_game
+        description: 'Average key passes per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: goals_conceded_per_game
+        description: 'Average goals conceded per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: own_goals_per_game
+        description: 'Average own goals per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: yellow_cards_per_game
+        description: 'Average yellow cards per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: red_cards_per_game
+        description: 'Average red cards per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: defensive_contributions_per_game
+        description: 'Average defensive contributions per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0 or season between 2020 and 2025"
+
+      - name: saves_per_game
+        description: 'Average saves per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: bonus_per_game
+        description: 'Average bonus points per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: bps_per_game
+        description: 'Average bonus points system (bps) per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: influence_per_game
+        description: 'Average FPL influence per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+      
+      - name: creativity_per_game
+        description: 'Average FPL creativity per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: threat_per_game
+        description: 'Average FPL threat per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: ict_index_per_game
+        description: 'Average FPL ICT index per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: expected_goals_per_game
+        description: 'Average expected goals per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: expected_assists_per_game
+        description: 'Average expected assists per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: expected_goal_involvements_per_game
+        description: 'Average expected goal involvements per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: expected_goal_chain_per_game
+        description: 'Average expected goal chain per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: expected_goal_buildup_per_game
+        description: 'Average expected goal buildup per game played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_played is null or games_played = 0"
+
+      - name: goals_per_90
+        description: 'Average goals per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: assists_per_90
+        description: 'Average assists per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: goal_involvements_per_90
+        description: 'Average goal involvements per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: shots_per_90
+        description: 'Average shots per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: key_passes_per_90
+        description: 'Average key passes per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: goals_conceded_per_90
+        description: 'Average goals conceded per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: own_goals_per_90
+        description: 'Average own goals per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: yellow_cards_per_90
+        description: 'Average yellow cards per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: red_cards_per_90
+        description: 'Average red cards per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: defensive_contributions_per_90
+        description: 'Average defensive contributions per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0 or season between 2020 and 2025"
+
+      - name: saves_per_90
+        description: 'Average saves per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: bonus_per_90
+        description: 'Average bonus points per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: bps_per_90
+        description: 'Average bonus points system (bps) per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: influence_per_90
+        description: 'Average FPL influence per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: creativity_per_90
+        description: 'Average FPL creativity per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+      
+      - name: threat_per_90
+        description: 'Average FPL threat per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: ict_index_per_90
+        description: 'Average FPL ICT index per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: expected_goals_per_90
+        description: 'Average expected goals per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: expected_assists_per_90
+        description: 'Average expected assists per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+      
+      - name: expected_goal_involvements_per_90
+        description: 'Average expected goal involvements per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: expected_goal_chain_per_90
+        description: 'Average expected goal chain per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
+
+      - name: expected_goal_buildup_per_90
+        description: 'Average expected goal buildup per 90 minutes played by player within season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or total_minutes is null or total_minutes = 0"
