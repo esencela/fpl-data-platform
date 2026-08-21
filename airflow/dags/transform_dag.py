@@ -14,8 +14,9 @@ env_variables = {
 with DAG(
     'transform_dag',
     start_date=datetime(2026, 6, 1),
-    schedule='@daily',
-    catchup=False
+    schedule=None,
+    catchup=False,
+    max_active_runs=1
 ) as dag:
     
     seed_dbt = DockerOperator(

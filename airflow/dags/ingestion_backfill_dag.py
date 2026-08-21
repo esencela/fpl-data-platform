@@ -19,8 +19,9 @@ BASE_DIR = os.getenv('HOST_DATA_DIR')
 with DAG(
     'ingestion_backfill_dag',
     start_date=datetime(2026, 6, 1),
-    schedule='@daily',
-    catchup=False
+    schedule=None,
+    catchup=False,
+    max_active_runs=1
 ) as dag:
     
     extract_fpl = DockerOperator(
