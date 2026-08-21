@@ -27,6 +27,9 @@ models:
       - name: games_played_prior
         description: 'Games played by team this season up to this match'
 
+      - name: team_days_since_last_game
+        description: 'Days since last game played by team this season up to this match'
+
       - name: team_goals_scored_per_game
         description: 'Goals scored per game this season by team'
         tests:
@@ -211,6 +214,9 @@ models:
 
       - name: opp_games_played_prior
         description: 'Games played this season by opposing team up to this match'
+
+      - name: opp_team_days_since_last_game
+        description: 'Days since last game played this season by opposing team up to this match'
 
       - name: opp_team_goals_scored_per_game
         description: 'Goals scored per game this season by opposing team'
