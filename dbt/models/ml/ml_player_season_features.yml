@@ -36,6 +36,9 @@ models:
       - name: shots
         description: 'Total shots taken by player within season'
 
+      - name: fpl_position
+        description: 'FPL position of player during season - e.g. GKP, DEF, MID, FWD'
+
       - name: appearance_rate
         description: 'Rate at which player appears in games within season'
         tests:

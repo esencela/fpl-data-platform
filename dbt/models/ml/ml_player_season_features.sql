@@ -37,6 +37,7 @@ select
     games_started,
     total_minutes,
     shots,
+    fpl_position,
 
     games_played / nullif(games_total, 0)::numeric as appearance_rate,
     games_started / nullif(games_played, 0)::numeric as starting_rate,

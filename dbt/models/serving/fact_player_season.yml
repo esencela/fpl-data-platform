@@ -34,6 +34,11 @@ models:
                 to: ref('dim_team')
                 field: team_id
 
+      - name: fpl_position
+        description: 'FPL position of player during season - e.g. GKP, DEF, MID, FWD'
+        tests:
+          - not_null
+
       - name: games_total
         description: 'Amount of games player was in squad for during season'
         tests:

@@ -47,6 +47,7 @@ select
     player_season.fpl_player_id as player_id,
     player_season.season,
     player_season.fpl_team_id as team_id,
+    player_season.position as fpl_position,
 
     totals.games_total,
     totals.games_played,

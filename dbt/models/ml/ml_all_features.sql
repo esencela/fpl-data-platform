@@ -7,6 +7,7 @@ select
     -- Identifiers
     player_per_game.player_game_key,
     player_per_game.fixture_key,
+    current_season.fpl_position,
     player_per_game.team_id,
     player_per_game.at_home,
 
@@ -65,6 +66,9 @@ join {{ ref('ml_team_game_per_game_features') }} team_per_game
 join {{ ref('ml_team_game_form_features') }} team_form
     on player_per_game.fixture_key = team_form.fixture_key
     and player_per_game.team_id = team_form.team_id
-join {{ ref('ml_player_season_features') }} last_season
+left join {{ ref('ml_player_season_features') }} last_season
     on player_per_game.player_id = last_season.player_id
     and player_per_game.season - 1 = last_season.season
+join {{ ref('ml_player_season_features') }} current_season
+    on player_per_game.player_id = current_season.player_id
+    and player_per_game.season = current_season.season
