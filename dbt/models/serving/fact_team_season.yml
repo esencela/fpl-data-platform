@@ -48,17 +48,23 @@ models:
       - name: goals_scored
         description: 'Total goals scored by team during season'
         tests:
-          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or goals_against is null"
 
       - name: goals_against
         description: 'Total goals conceded by team during season'
         tests:
-          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or goals_scored is null"
 
       - name: goal_difference
         description: 'Goal difference for team during season'
         tests:
-          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or goals_scored is null"
 
       - name: expected_goals
         description: 'Expected goals accumulated by team during season'

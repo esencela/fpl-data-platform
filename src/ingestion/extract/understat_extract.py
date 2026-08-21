@@ -13,7 +13,6 @@ UNDERSTAT_DATA_DIR = settings.RAW_DATA_DIR / 'understat'
 
 CURRENT_DATE = datetime.now().strftime('%Y-%m-%d')
 MIN_SEASON = 2017
-CURRENT_SEASON = 2026
 
 RATE_LIMIT = 0.1 # seconds between requests to avoid hitting API rate limits
 
@@ -32,7 +31,7 @@ def extract_season_data() -> None:
 
     logger.info('Extracting season data from Understat...')
 
-    for season in range(MIN_SEASON, CURRENT_SEASON + 1):
+    for season in range(MIN_SEASON, settings.CURRENT_SEASON + 1):
         season_str = get_understat_season(season)
 
         try:
