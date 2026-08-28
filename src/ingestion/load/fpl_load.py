@@ -155,14 +155,15 @@ def load_events_to_postgres(db_params=None, season: int = None):
     logger.info('Event data loaded into PostgreSQL database successfully.')
 
 
-def run_fpl_load(season: int) -> None:
+def run_fpl_load(season: int = None) -> None:
     """Runs the full FPL loading process for bootstrap, element summaries, fixtures, and events."""
 
-    season = int(season)  # Ensure season is an integer
-    available_seasons = get_available_seasons()
+    if season is not None:
+        season = int(season)  # Ensure season is an integer
+        available_seasons = get_available_seasons()
 
-    if season not in available_seasons:
-        raise ValueError(f"Season {season} is not available.")
+        if season not in available_seasons:
+            raise ValueError(f"Season {season} is not available.")
 
     load_bootstrap_to_postgres(season=season)
     load_element_summaries_to_postgres(season=season)
