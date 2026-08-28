@@ -39,6 +39,37 @@ def get_latest_path(dir: Path, file_type: str = None) -> Path:
     return max(paths)
 
 
+def get_latest_path_for_season(dir: Path, season: int, file_type: str = None) -> Path:
+    """
+        Returns the latest path for a specific season in a given directory.
+
+        Files should follow naming convention: dir/season=YYYY/YYYY-MM-DD where file name is date fetched.
+
+        Params:
+            dir(Path): Directory to be searched.
+            season(int): Season to search for - e.g. 2023.
+            file_type(str): What file type to search for - e.g. '.parquet' or '.*'. Leave as None to search for folders.
+
+        Raises:
+            FileNotFoundError: Raised if folder does not contain any files
+    """
+
+    season_folder = dir / f'season={season}'
+
+    if not season_folder.exists():
+        raise FileNotFoundError(f'Season folder not found: {season_folder}')
+
+    if file_type:
+        paths = list(season_folder.glob(f'*{file_type}'))
+    else:
+        paths = list(season_folder.glob('*'))
+
+    if not paths:
+        raise FileNotFoundError(f'No files found in directory: {season_folder}')
+    
+    return max(paths)
+
+
 def get_latest_file_for_each_season(dir: Path, file_type: str) -> list[Path]:
     """
         Returns a list containing the latest file for each season.

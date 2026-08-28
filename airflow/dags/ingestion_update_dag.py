@@ -17,7 +17,7 @@ env_variables = {
 BASE_DIR = os.getenv('HOST_DATA_DIR')
 
 with DAG(
-    'ingestion_backfill_dag',
+    'ingestion_update_dag',
     start_date=datetime(2026, 6, 1),
     schedule=None,
     catchup=False,

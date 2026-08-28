@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2.extras import execute_values
 import json
+import pickle
 import logging
 from datetime import datetime
 from config.settings import settings
@@ -8,7 +9,8 @@ from ingestion.utils.fpl_file_helper import (
     get_latest_bootstrap_file, 
     get_latest_element_summaries, 
     get_latest_fixtures_file, 
-    get_latest_events
+    get_latest_events,
+    get_available_seasons
 )
 
 logger = logging.getLogger(__name__)
@@ -23,7 +25,7 @@ DB_PARAMS = {
 }
 
 
-def load_bootstrap_to_postgres(db_params=None):
+def load_bootstrap_to_postgres(db_params=None, season: int = None):
     """Loads latest raw bootstrap JSON data into PostgreSQL database."""    
 
     try:
@@ -37,7 +39,7 @@ def load_bootstrap_to_postgres(db_params=None):
         return
     
     # Load latest bootstrap JSON file into postgres
-    bootstrap_file = get_latest_bootstrap_file()
+    bootstrap_file = get_latest_bootstrap_file(season=season)
 
     with open(bootstrap_file, 'r', encoding='utf-8') as file:
         bootstrap_data = json.load(file)
@@ -58,7 +60,7 @@ def load_bootstrap_to_postgres(db_params=None):
     logger.info('Bootstrap data loaded into PostgreSQL database successfully.')
 
 
-def load_element_summaries_to_postgres(db_params=None):
+def load_element_summaries_to_postgres(db_params=None, season: int = None):
     """Loads latest raw element summary JSON data into PostgreSQL database."""
 
     try:
@@ -71,7 +73,7 @@ def load_element_summaries_to_postgres(db_params=None):
         logger.error(f'Failed to connect to PostgreSQL database: {e}')
         return
     
-    values = get_latest_element_summaries()
+    values = get_latest_element_summaries(season=season)
 
     query = """
         INSERT INTO raw.fpl_element_summary (season, player_id, raw_data, fetched_at) 
@@ -88,7 +90,7 @@ def load_element_summaries_to_postgres(db_params=None):
     logger.info('Element summary data loaded into PostgreSQL database successfully.')
         
 
-def load_fixtures_to_postgres(db_params=None):
+def load_fixtures_to_postgres(db_params=None, season: int = None):
     """Loads latest raw fixtures JSON data into PostgreSQL database."""
     
     try:
@@ -102,7 +104,7 @@ def load_fixtures_to_postgres(db_params=None):
         return
     
     # Load latest fixtures JSON file into postgres
-    fixtures_file = get_latest_fixtures_file()
+    fixtures_file = get_latest_fixtures_file(season=season)
 
     with open(fixtures_file, 'r', encoding='utf-8') as file:
         fixtures_data = json.load(file)
@@ -123,7 +125,7 @@ def load_fixtures_to_postgres(db_params=None):
     logger.info('Fixture data loaded into PostgreSQL database successfully.')
 
 
-def load_events_to_postgres(db_params=None):
+def load_events_to_postgres(db_params=None, season: int = None):
     """Loads latest raw events JSON data into PostgreSQL database."""
     
     try:
@@ -136,7 +138,7 @@ def load_events_to_postgres(db_params=None):
         logger.error(f'Failed to connect to PostgreSQL database: {e}')
         return
     
-    values = get_latest_events()
+    values = get_latest_events(season=season)
 
     query = """
         INSERT INTO raw.fpl_events (season, gameweek_id, raw_data, fetched_at) 
@@ -153,10 +155,27 @@ def load_events_to_postgres(db_params=None):
     logger.info('Event data loaded into PostgreSQL database successfully.')
 
 
-def run_fpl_load() -> None:
+def run_fpl_load(season: int) -> None:
     """Runs the full FPL loading process for bootstrap, element summaries, fixtures, and events."""
 
-    load_bootstrap_to_postgres()
-    load_element_summaries_to_postgres()
-    load_fixtures_to_postgres()
-    load_events_to_postgres()
+    season = int(season)  # Ensure season is an integer
+    available_seasons = get_available_seasons()
+
+    if season not in available_seasons:
+        raise ValueError(f"Season {season} is not available.")
+
+    load_bootstrap_to_postgres(season=season)
+    load_element_summaries_to_postgres(season=season)
+    load_fixtures_to_postgres(season=season)
+    load_events_to_postgres(season=season)
+
+
+def run_fpl_list_seasons(output_path: str = '/tmp/airflow_xcom_seasons.json') -> None:
+    """Lists available seasons and writes them to a JSON file for Airflow XCom."""
+
+    seasons = get_available_seasons()
+
+    with open(output_path, 'wb') as f:
+        pickle.dump(seasons, f)
+
+    logger.info(f"Available seasons written to {output_path}: {seasons}")

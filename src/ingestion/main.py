@@ -15,6 +15,7 @@ def main():
         sys.exit(1)
 
     job_name = sys.argv[1]
+    job_args = sys.argv[2:]  # Additional arguments for the job
 
     if job_name not in JOBS:
         print(f"Invalid job name: {job_name}. Available jobs:")
@@ -22,7 +23,7 @@ def main():
             print(f" - {job_name}")
         sys.exit(1)
 
-    JOBS[job_name]()
+    JOBS[job_name](*job_args)
 
 
 if __name__ == "__main__":
