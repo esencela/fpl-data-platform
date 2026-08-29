@@ -107,6 +107,7 @@ join_understat as (
             when understat.position_order is not null and understat.position_order != 17 then true
             else false
         end as started,
+        fpl.minutes as fpl_minutes,
         case    
             when understat.minutes is null then 0
             else understat.minutes
