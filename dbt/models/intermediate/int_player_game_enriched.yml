@@ -94,6 +94,10 @@ models:
       - name: started
 
       - name: minutes
+        description: 'Minutes data collected from understat - used in serving tables'
+
+      - name: fpl_minutes
+        description: 'Minutes data collected from fpl - used for validation'
 
       - name: goals
 

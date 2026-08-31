@@ -8,8 +8,8 @@
 with total_minutes_for_null_understat_id as (
     select
         fpl_player_id,
-        sum(fpl_minutes) as total_minutes
-    from {{ ref('int_player_game_enriched')}}
+        sum(minutes) as total_minutes
+    from {{ ref('int_understat_player_id_bridge')}}
     where understat_player_id is null
     group by fpl_player_id
 ),
@@ -25,23 +25,23 @@ missing_ids as (
 season_ranked as (
     select
         fpl_player_id,
-        understat_player_id,
         first_name,
         second_name,
+        known_name,
         web_name,
         row_number() over (
             partition by fpl_player_id
             order by season desc
         ) as rn
-    from {{ ref('int_player_season_enriched')}}
+    from {{ ref('int_player_season_base')}}
 ),
 
 fpl_missing_info as (
     select
         fpl_player_id,
-        understat_player_id,
         first_name,
         second_name,
+        known_name,
         web_name
     from season_ranked
     where rn = 1
@@ -56,6 +56,7 @@ select
 	m.fpl_player_id,
 	m.first_name,
 	m.second_name,
+    m.known_name,
 	m.web_name,
 	e.understat_player_id,
     case 
@@ -65,7 +66,7 @@ select
     e.understat_fixture_id,
 	b.*
 from fpl_missing_info m
-join {{ ref('int_player_game_enriched') }} e
+join {{ ref('int_understat_player_id_bridge') }} e
 	on m.fpl_player_id = e.fpl_player_id
 left join {{ ref('int_player_game_base') }} b
 	on e.player_game_key = b.player_game_key

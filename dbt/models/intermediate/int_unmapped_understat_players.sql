@@ -9,6 +9,6 @@ from {{ ref('stg_understat__player_game')}}
 where player_id not in (
 	select
 		understat_player_id
-	from dev_intermediate.player_game_enriched
+	from {{ ref('int_understat_player_id_bridge') }}
 	where understat_player_id is not null
 )

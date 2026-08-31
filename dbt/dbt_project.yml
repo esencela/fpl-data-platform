@@ -22,6 +22,11 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+on-run-start:
+  - "create extension if not exists unaccent"
+  - "create extension if not exists pg_trgm"
+  - "{{ create_normalize_player_name_function() }}"
+
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
