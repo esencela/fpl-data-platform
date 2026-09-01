@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: int_fpl_understat_player_id_map
-    description: 'FPL -> Understat player id map for missing understat ids, matched on name similarity'
+    description: 'FPL -> Understat player id map for missing understat ids, mapped on best name similarity matches over a certain threshold'
 
     columns:
       - name: fpl_player_id

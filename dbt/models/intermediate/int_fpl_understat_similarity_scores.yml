@@ -1,0 +1,44 @@
+version: 2
+
+models: 
+  - name: int_fpl_understat_similarity_scores
+    description: 'Intermediate model comparing name similarity between FPL and Understat players to identify missing Understat ids'
+    
+    columns:
+      - name: fpl_player_id
+        description: 'Unique player identifier - used in FPL data'
+        tests:
+          - not_null
+
+      - name: understat_player_id
+        description: 'Unique player identifier - used in Understat data'
+        tests:
+          - not_null
+
+      - name: fpl_norm_name
+        description: 'Normalized player name from FPL data'
+        tests:
+          - not_null
+
+      - name: name_type
+        description: 'Name compared from fpl data - e.g. "full_name", "first_name"'
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['full_name', 'first_name', 'second_name', 'web_name', 'known_name']
+
+      - name: understat_norm_name
+        description: 'Normalized player name from Understat data'
+        tests:
+          - not_null
+
+      - name: similarity
+        description: 'Similarity score between FPL and Understat normalized names'
+        tests:
+          - not_null
+
+      - name: rank
+        description: 'Rank of similarity score for each FPL player, with 1 being the highest similarity'
+        tests:
+          - not_null

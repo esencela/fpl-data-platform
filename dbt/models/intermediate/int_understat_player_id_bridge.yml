@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: int_understat_player_id_bridge
+    description: 'Intermediate model bridging FPL and Understat player ids, adding understat ids to FPL player-game data where available'
+
+    columns:
+      - name: player_game_key
+        description: 'Composite key uniquely identifying a player_game - <season>_<fpl_fixture_season_id>_<fpl_player_season_id>'
+        tests:
+          - not_null
+          - unique
+
+      - name: understat_player_id
+        description: 'Unique player identifier - used in Understat data'
+
+      - name: understat_fixture_id
+        description: 'Unique understat fixture identifier'
+        tests:
+          - not_null

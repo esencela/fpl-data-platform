@@ -1,0 +1,29 @@
+version: 2
+
+models: 
+  - name: int_fpl_players_missing_understat_id
+    description: 'Collects FPL players that are missing an understat id, despite having minutes played'
+
+    columns:
+      - name: player_game_key
+        description: 'Composite key uniquely identifying a player_game - <season>_<fpl_fixture_season_id>_<fpl_player_season_id>'
+        tests:
+          - not_null
+          - unique
+
+      - name: understat_player_id
+        description: 'Unique understat player identifier - should be null for all rows in this model'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is null"
+
+      - name: understat_team_id
+        description: 'Unique understat team identifier'
+        tests:
+          - not_null
+
+      - name: understat_fixture_id
+        description: 'Unique understat fixture identifier'
+        tests:
+          - not_null

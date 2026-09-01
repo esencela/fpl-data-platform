@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: int_unmapped_understat_players
+    description: 'Intermediate model collecting all understat player-game rows that are not mapped to FPL players'
+
+    columns:
+      - name: roster_id
+        description: 'Unique identifier for each player-game - used in understat data'
+        tests:
+          - not_null
+          - unique
+
+      - name: player_id
+        description: 'Unique player identifier - used in Understat data'
+        tests:
+          - not_null
+
+      - name: team_id
+        description: 'Unique team identifier - used in Understat data'
+        tests:
+          - not_null
+
+      - name: match_id
+        description: 'Unique fixture identifier - used in Understat data'
+        tests:
+          - not_null
+
+      - name: player_name
+        description: 'Player name as provided in Understat data'
+        tests:
+          - not_null
