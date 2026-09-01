@@ -11,7 +11,7 @@ with missing_mappings as (
     from {{ ref('int_fpl_understat_similarity_scores') }}
     -- Select the best id mapping over a certain similarity threshold, manually map any others
     where rank = 1 
-        and similarity > 0.8
+        and similarity > 0.7
 ),
 
 -- Join into extracted map

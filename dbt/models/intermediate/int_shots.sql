@@ -34,8 +34,8 @@ player_id_added as (
         shot.*,
         map.fpl_player_id
     from team_id_added shot
-    left join {{ ref('int_player_id_map')}} map
-        on shot.player_id = map.understat_id
+    left join {{ ref('int_fpl_understat_player_id_map')}} map
+        on shot.player_id = map.understat_player_id
 )
 
 select

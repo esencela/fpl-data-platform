@@ -26,9 +26,9 @@ id_fixed as (
 understat_joined as (
     select
         s.*,
-        map.understat_id as understat_player_id
+        map.understat_player_id as understat_player_id
     from id_fixed s
-    left join {{ ref('int_player_id_map') }} map
+    left join {{ ref('int_fpl_understat_player_id_map') }} map
         on s.canon_fpl_player_id = map.fpl_player_id
 )
 

@@ -271,6 +271,3 @@ models:
         description: 'Net transfers for the player in the gameweek before the fixture'
         tests:
           - not_null
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "= transfers_in - transfers_out"

@@ -6,7 +6,7 @@ returns text as $func$
         lower(
             unaccent(
                 translate(
-                    name,
+                    regexp_replace(name, '[''\-]', ' ', 'g'),
                     'İIıŞşĞğÖöÜüÇç',
                     'IIiSsGgOoUuCc'
                 )
