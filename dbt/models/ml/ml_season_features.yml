@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: ml_season_features
+    description: "This model contains features for league wide metrics on a player game grain."
+
+    columns:
+      - name: player_game_key
+        description: 'Primary key identifying each player game'
+        tests:
+          - unique
+          - not_null
+
+      - name: fixture_key
+        description: 'Foreign Key identifying each fixture'
+        tests:
+          - not_null
+
+      - name: season
+        description: 'Season of game - e.g. 2026 for 25/26 season'
+
+      - name: kickoff_time
+        description: 'Kickoff time of the fixture'
+
+      - name: games_this_season
+        description: 'Number of games played before this fixture in the league this season'
+
+      - name: avg_bps_this_season
+        description: 'Average BPS for all players in the league before this fixture this season'
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "is not null or games_this_season = 0"
+          - group_consistency:
+              arguments:
+                group_by: "fixture_key"

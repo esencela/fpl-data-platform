@@ -52,6 +52,14 @@ select
         except=["player_season_key", "player_id", "season", "team_id", "games_total", "games_played", "games_started", "total_minutes", "shots"],
         relation_alias="last_season",
         prefix="prev_season_"
+    ) }},
+
+    -- League wide season features
+    {{ dbt_utils.star(
+        from=ref('ml_season_features'), 
+        except=["player_game_key", "fixture_key", "season", "kickoff_time", "games_this_season"],
+        relation_alias="season_features",
+        prefix="league_"
     ) }}
 
 
@@ -72,3 +80,5 @@ left join {{ ref('ml_player_season_features') }} last_season
 join {{ ref('ml_player_season_features') }} current_season
     on player_per_game.player_id = current_season.player_id
     and player_per_game.season = current_season.season
+join {{ ref('ml_season_features') }} season_features
+    on player_per_game.player_game_key = season_features.player_game_key
