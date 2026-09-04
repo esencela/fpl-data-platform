@@ -111,7 +111,7 @@ join_understat as (
         case    
             when understat.minutes is null then 0
             else understat.minutes
-        end as minutes,
+        end as understat_minutes,
         fpl.goals_scored as goals,
         fpl.assists,
         case

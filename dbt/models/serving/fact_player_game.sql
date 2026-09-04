@@ -19,7 +19,7 @@ select
     end as played,    
     player_game.started,
     player_game.at_home,
-    player_game.minutes,
+    player_game.fpl_minutes as minutes,
 
     -- Base stats
     player_game.goals,
