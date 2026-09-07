@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: stg_fpl__scoring_rules
+    description: 'Staging model for FPL scoring rules'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - season
+              - rule_name
+              - position
+
+    columns:
+      - name: season
+        description: 'Season for which the scoring rules are relevant - e.g. 2026 for the 2025/2026 season'
+        tests:
+          - not_null
+
+      - name: rule_name
+        description: 'Name of stat that is scored in FPL - e.g. goals_scored, assists, clean_sheets, etc.'
+        tests:
+          - not_null
+      
+      - name: position
+        description: 'Position for which the scoring rules apply - e.g. GKP, DEF, MID, FWD'
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['GKP', 'DEF', 'MID', 'FWD']
+
+      - name: points
+        description: 'Points awarded in FPL for the stat and position'
+        tests:
+          - not_null

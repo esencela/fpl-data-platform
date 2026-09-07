@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: int_total_points_recalculated
+    description: 'Intermediate model that recalculates FPL points for each player game using current FPL scoring rules'
+
+    columns:
+      - name: player_game_key
+        description: 'Composite primary key identifying each player game'
+        tests:
+          - not_null
+          - unique
+
+      - name: player_id
+        description: 'Foreign key referencing player dimension table'
+        tests:
+          - not_null
+
+      - name: season
+        description: 'Season of each player game - e.g. 2026 for 2025/26 season'
+        tests:
+          - not_null
+
+      - name: recalculated_points
+        description: 'FPL points earned by player during game, recalculated using current FPL scoring rules'
+        tests:
+          - not_null
