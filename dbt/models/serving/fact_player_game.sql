@@ -49,6 +49,7 @@ select
 
     -- FPL points
     player_game.total_points,
+    recalculated.recalculated_points as total_points_recalculated,
     player_game.bonus,
     player_game.bps,
 
@@ -78,3 +79,6 @@ from
         on player_game.player_season_key = player.player_season_key
     join {{ ref('dim_fixture') }} as fixture
         on player_game.fixture_key = fixture.fixture_key
+    left join {{ ref('int_total_points_recalculated') }} as recalculated
+        on player_game.player_game_key = recalculated.player_game_key
+    

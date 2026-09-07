@@ -60,3 +60,6 @@ seeds:
     missing_understat_id_map:
       +schema: seed
       +alias: missing_understat_id_map
+    defensive_contribution_thresholds:
+      +schema: seed
+      +alias: defensive_contribution_thresholds

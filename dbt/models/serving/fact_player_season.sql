@@ -26,6 +26,7 @@ with player_season_totals as (
         sum(defensive_contributions) as defensive_contributions,
         sum(saves) as saves,
         sum(total_points) as total_points,
+        sum(total_points_recalculated) as total_points_recalculated,
         sum(bonus) as bonus,
         sum(bps) as bps,
         sum(influence) as influence,
@@ -77,6 +78,7 @@ select
     totals.saves,
 
     totals.total_points,
+    totals.total_points_recalculated,
     totals.bonus,
     totals.bps,
 

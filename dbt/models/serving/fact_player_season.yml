@@ -141,6 +141,11 @@ models:
         tests:
           - not_null
 
+      - name: total_points_recalculated
+        description: 'FPL points earned by player during season, recalculated using current FPL scoring rules'
+        tests:
+          - not_null
+
       - name: bonus
         description: 'Bonus points received by player during season'
         tests:
