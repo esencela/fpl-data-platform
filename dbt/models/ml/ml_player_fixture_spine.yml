@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: ml_player_fixture_spine
+    description: 'Model creates a fixture spine for each player, including both past and upcoming fixtures. Feeds into training and prediction features for ML models.'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - player_id
+              - fixture_key
+
+    columns:
+      - name: player_game_key
+        description: 'Unique key for each player-game combination, formatted as {season}_{fixture_season_id}_{player_season_id} - null for upcoming fixtures.'
+        tests:
+          - unique
+
+      - name: season
+        description: 'Season of the fixture - e.g. 2026 for the 2025/26 season.'
+        tests:
+          - not_null
+
+      - name: fixture_key
+        description: 'Unique key for each fixture, formatted as {season}_{fixture_season_id}.'
+        tests:
+          - not_null
+
+      - name: player_id
+        description: 'Unique identifier for the player.'
+        tests:
+          - not_null
+
+      - name: team_id
+        description: 'Unique identifier for the team the player belongs to.'
+        tests:
+          - not_null
+
+      - name: at_home
+        description: 'Whether match is a home fixture.'
+        tests:
+          - not_null
+
+      - name: kickoff_time
+        description: 'Kickoff time of the fixture.'
+        tests:
+          - not_null
+
+      - name: finished
+        description: 'Whether the fixture has finished.'
+        tests:
+          - not_null
