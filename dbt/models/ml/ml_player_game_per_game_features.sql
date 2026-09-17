@@ -30,12 +30,12 @@
 ] %}
 
 select
-    player_game_key,
-    pg.fixture_key,
-    season,
-    player_id,
-    team_id,
-    at_home,
+    spine.player_game_key,
+    spine.fixture_key,
+    spine.season,
+    spine.player_id,
+    spine.team_id,
+    spine.at_home,
 
     sum(case when played then 1 else 0 end) over w as games_played_prior,
     sum(shots) over w as shots_taken_prior,
@@ -50,11 +50,11 @@ select
     {% endfor %}
 
 
-from {{ ref('fact_player_game') }} pg
-join {{ ref('dim_fixture') }} f
-on pg.fixture_key = f.fixture_key
+from {{ ref('ml_player_fixture_spine') }} spine
+left join {{ ref('fact_player_game') }} pg
+    on spine.player_game_key = pg.player_game_key
 window w as (
-    partition by player_id, season
-    order by date_key
+    partition by spine.player_id, spine.season
+    order by spine.kickoff_time
     rows between unbounded preceding and 1 preceding
 )

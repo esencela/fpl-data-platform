@@ -1,12 +1,13 @@
 {{ config(
     materialized='table',
-    alias='all_features'
+    alias='training_features'
 ) }}
 
 select
     -- Identifiers
     player_per_game.player_game_key,
     player_per_game.fixture_key,
+    player_per_game.player_id,
     current_season.fpl_position,
     player_per_game.team_id,
     player_per_game.at_home,
@@ -35,14 +36,14 @@ select
     -- Team per game features
     {{ dbt_utils.star(
         from=ref('ml_team_game_per_game_features'), 
-        except=["fixture_key", "team_id", "at_home", "games_played_prior", "opp_games_played_prior"],
+        except=["fixture_key", "team_id", "at_home", "games_played_prior", "opp_games_played_prior", "finished"],
         relation_alias="team_per_game"
     ) }},
 
     -- Team form features
     {{ dbt_utils.star(
         from=ref('ml_team_game_form_features'), 
-        except=["fixture_key", "team_id", "at_home", "games_played_prior", "opp_games_played_prior"],
+        except=["fixture_key", "team_id", "at_home", "games_played_prior", "opp_games_played_prior", "finished"],
         relation_alias="team_form"
     ) }},
 
@@ -56,9 +57,9 @@ select
 
     -- League wide season features
     {{ dbt_utils.star(
-        from=ref('ml_season_features'), 
-        except=["player_game_key", "fixture_key", "season", "kickoff_time", "games_this_season"],
-        relation_alias="season_features",
+        from=ref('ml_league_season_features'), 
+        except=["player_game_key", "fixture_key", "season", "kickoff_time", "games_this_season", "finished"],
+        relation_alias="league_season_features",
         prefix="league_"
     ) }}
 
@@ -77,8 +78,8 @@ join {{ ref('ml_team_game_form_features') }} team_form
 left join {{ ref('ml_player_season_features') }} last_season
     on player_per_game.player_id = last_season.player_id
     and player_per_game.season - 1 = last_season.season
-join {{ ref('ml_player_season_features') }} current_season
+join {{ ref('fact_player_season') }} current_season
     on player_per_game.player_id = current_season.player_id
     and player_per_game.season = current_season.season
-join {{ ref('ml_season_features') }} season_features
-    on player_per_game.player_game_key = season_features.player_game_key
+join {{ ref('ml_league_season_features') }} league_season_features
+    on player_per_game.fixture_key = league_season_features.fixture_key

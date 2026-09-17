@@ -9,13 +9,14 @@ models:
             combination_of_columns:
               - player_game_key
               - player_id
+          config:
+            where: "player_game_key is not null"
 
     columns: 
       - name: player_game_key
-        description: 'Primary key identifying each player game'
+        description: 'Primary key identifying each player game - null for future fixtures'
         tests:
           - unique
-          - not_null
 
       - name: fixture_key
         description: 'Foreign Key identifying each fixture'

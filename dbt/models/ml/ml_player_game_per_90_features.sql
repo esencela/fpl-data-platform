@@ -29,22 +29,22 @@
 ] %}
 
 select
-    player_game_key,
-    pg.fixture_key,
-    season,
-    player_id,
-    team_id,
-    SUM(minutes) over w as total_minutes_prior,
+    spine.player_game_key,
+    spine.fixture_key,
+    spine.season,
+    spine.player_id,
+    spine.team_id,
+    sum(minutes) over w as total_minutes_prior,
 
     {% for stat in stat_columns %}
-    SUM({{ stat }}) over w / nullif(sum(minutes) over w, 0)::numeric * 90 as {{stat}}_per_90{{ "," if not loop.last}}
+    sum({{ stat }}) over w / nullif(sum(minutes) over w, 0)::numeric * 90 as {{stat}}_per_90{{ "," if not loop.last}}
     {% endfor %}
 
-from {{ ref('fact_player_game') }} pg
-join {{ ref('dim_fixture') }} f
-on pg.fixture_key = f.fixture_key
+from {{ ref('ml_player_fixture_spine') }} spine
+left join {{ ref('fact_player_game') }} pg
+on spine.player_game_key = pg.player_game_key
 window w as (
-    partition by player_id, season
-    order by date_key
+    partition by spine.player_id, spine.season
+    order by spine.kickoff_time
     rows between unbounded preceding and 1 preceding
 )

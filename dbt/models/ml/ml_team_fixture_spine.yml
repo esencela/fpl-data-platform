@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: ml_team_fixture_spine
+    description: 'Table holding all team fixtures for use as features in machine learning'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - fixture_key
+              - team_id
+
+    columns:
+      - name: fixture_key
+        description: 'Foreign Key identifying each fixture'
+        tests:
+          - not_null
+
+      - name: season
+        description: 'Season of game - e.g. 2026 for 25/26 season'
+
+      - name: team_id
+        description: 'Unique identifier for each team'
+
+      - name: at_home
+        description: 'Whether game was a home fixture'
+
+      - name: kickoff_time
+        description: 'Kickoff time of fixture'
+
+      - name: finished
+        description: 'Whether fixture has finished'

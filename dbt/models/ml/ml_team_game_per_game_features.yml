@@ -24,6 +24,11 @@ models:
         tests:
           - not_null
 
+      - name: finished
+        description: 'Whether the fixture has been played yet'
+        tests:
+          - not_null
+
       - name: games_played_prior
         description: 'Games played by team this season up to this match'
 
