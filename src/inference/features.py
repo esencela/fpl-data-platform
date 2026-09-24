@@ -11,7 +11,7 @@ def get_prediction_features(db_url: str, schema: str, table: str) -> pd.DataFram
     with engine.connect() as conn:
         df = pd.read_sql(query, conn)
 
-    if df.empty():
+    if df.empty:
         raise ValueError(f'No feature rows found in {schema}.{table}')
 
     return df
