@@ -17,4 +17,9 @@ class Settings(BaseSettings):
     postgres_host: str
     postgres_port: int = 5432
 
+    # Model Container
+    MODEL_DIR: Path = Path('/models')
+    PREDICTION_SCHEMA: str = 'dev_ml'
+    PREDICTION_TABLE: str = 'points_prediction'
+
 settings = Settings()
