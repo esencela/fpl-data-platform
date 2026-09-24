@@ -19,7 +19,7 @@ class Settings(BaseSettings):
 
     # Model Container
     MODEL_DIR: Path = Path('/models')
-    TARGET_SCHEMA: str = 'dev_ml'
+    ML_SCHEMA: str = 'dev_ml'
     FEATURES_TABLE: str = 'prediction_features'
     PREDICTION_TABLE: str = 'predicted_points'
 
