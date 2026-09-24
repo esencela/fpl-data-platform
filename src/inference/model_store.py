@@ -22,16 +22,19 @@ class ModelStore(Protocol):
 
 
 class LocalModelStore:
-    def load(self, model_dir: str) -> tuple[Any, ModelMeta]:
+    def __init__(self, model_dir: str):
+        self.model_dir = model_dir
+
+    def load(self) -> tuple[Any, ModelMeta]:
         """Loads a model and its metadata from the local filesystem."""
-        model_path = Path(model_dir) / 'model.pkl'
-        meta_path = Path(model_dir) / 'meta.json'
+        model_path = Path(self.model_dir) / 'model.pkl'
+        meta_path = Path(self.model_dir) / 'meta.json'
 
         if not model_path.exists():
-            raise FileNotFoundError(f'Model not found in {model_dir}')
+            raise FileNotFoundError(f'Model not found in {self.model_dir}')
 
         if not meta_path.exists():
-            raise FileNotFoundError(f'Metadata not found in {model_dir}')
+            raise FileNotFoundError(f'Metadata not found in {self.model_dir}')
 
         with open(meta_path, 'r', encoding='utf-8') as file:
             raw = json.load(file)
