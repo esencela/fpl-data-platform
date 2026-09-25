@@ -10,7 +10,7 @@ def load_predictions(db_url: str, schema: str, table: str, predictions: pd.DataF
     model_version = predictions['model_version'].iloc[0]
     target = predictions['target'].iloc[0]
 
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         conn.execute(
             text(f"""
                 DELETE FROM {schema}.{table}
@@ -20,5 +20,5 @@ def load_predictions(db_url: str, schema: str, table: str, predictions: pd.DataF
             """),
             {'model_name': model_name, 'model_version': model_version, 'target': target}
         )
-
-        predictions.to_sql(f'{schema}.{table}', conn, if_exists='append', index=False)
+        
+        predictions.to_sql(table, conn, schema=schema, if_exists='append', index=False)
