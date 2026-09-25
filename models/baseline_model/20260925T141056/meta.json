@@ -1,6 +1,6 @@
 {
   "model_name": "baseline_model",
-  "model_version": "20260923T165320",
+  "model_version": "20260925T141056",
   "target": "total_points_recalculated",
   "feature_columns": [
     "fpl_position",
@@ -251,8 +251,26 @@
     "prev_season_expected_goal_buildup_per_90",
     "league_avg_bps_this_season"
   ],
+  "categorical_columns": [
+    "fpl_position",
+    "prev_season_fpl_position"
+  ],
+  "category_maps": {
+    "fpl_position": [
+      "DEF",
+      "FWD",
+      "GKP",
+      "MID"
+    ],
+    "prev_season_fpl_position": [
+      "DEF",
+      "FWD",
+      "GKP",
+      "MID"
+    ]
+  },
   "trained_through_season": 2024,
-  "trained_at": "2026-09-23T16:53:20.858693+00:00",
+  "trained_at": "2026-09-25T14:10:56.498673+00:00",
   "framework": "lightgbm",
   "framework_version": "4.6.0",
   "training_params": {

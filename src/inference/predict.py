@@ -16,7 +16,12 @@ def predict(features: pd.DataFrame, model, meta: ModelMeta) -> pd.DataFrame:
     if missing_features:
         raise ValueError(f'Feature table is missing feature(s): {missing_features}')
 
+    # Build feature dataframe
     X = features[meta.feature_columns]
+
+    for col, categories in meta.category_maps.items():
+        X[col] = pd.Categorical(X[col], categories=categories)
+
     yhat = model.predict(X)
 
     df = features[REQUIRED_ID_COLUMNS].copy()

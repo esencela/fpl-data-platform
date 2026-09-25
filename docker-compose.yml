@@ -61,7 +61,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./models/baseline_model/20260923T165320:/models:ro
+      - ./models/baseline_model/20260925T141056:/models:ro
     depends_on:
       postgres:
         condition: service_healthy

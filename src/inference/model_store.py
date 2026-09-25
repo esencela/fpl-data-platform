@@ -10,6 +10,8 @@ class ModelMeta:
     model_version: str
     target: str
     feature_columns: list[str]
+    categorical_columns: list[str]
+    category_maps: dict
     trained_through_season: int
     trained_at: str
     framework: str
@@ -43,6 +45,8 @@ class LocalModelStore:
                 model_version=raw['model_version'],
                 target=raw['target'],
                 feature_columns=raw['feature_columns'],
+                categorical_columns=raw['categorical_columns'],
+                category_maps=raw['category_maps'],
                 trained_through_season=raw['trained_through_season'],
                 trained_at=raw['trained_at'],
                 framework=raw['framework'],

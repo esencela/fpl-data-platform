@@ -60,6 +60,7 @@ with played_form as (
 current_form as (
     select distinct on (team_id, season)
         fixture_key,
+        season,
         team_id,
         at_home,
 
@@ -90,7 +91,7 @@ team_features as (
         on spine.fixture_key = played.fixture_key
         and spine.team_id = played.team_id
     left join current_form current
-        on spine.fixture_key = current.fixture_key
+        on spine.season = current.season
         and spine.team_id = current.team_id
 )
 
