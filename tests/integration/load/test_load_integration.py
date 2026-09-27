@@ -28,7 +28,7 @@ def test_fpl_load_bootstrap_to_postgres(bootstrap_file, monkeypatch, test_db_par
     # Patch mock bootstrap file
     monkeypatch.setattr(
         'ingestion.load.fpl_load.get_latest_bootstrap_file', 
-        lambda: bootstrap_file
+        lambda season=None: bootstrap_file
     )
     
     fpl_load.load_bootstrap_to_postgres(db_params=test_db_params)
@@ -75,7 +75,7 @@ def test_fpl_load_element_summaries_to_postgres(fpl_element_summaries, monkeypat
     # Patch mock element summaries
     monkeypatch.setattr(
         'ingestion.load.fpl_load.get_latest_element_summaries',
-        lambda: fpl_element_summaries
+        lambda season=None: fpl_element_summaries
     )
 
     fpl_load.load_element_summaries_to_postgres(db_params=test_db_params)
@@ -108,7 +108,7 @@ def test_fpl_load_fixtures_to_postgres(bootstrap_file, monkeypatch, test_db_para
     # Reuse bootstrap file as it has the same structure
     monkeypatch.setattr(
         'ingestion.load.fpl_load.get_latest_fixtures_file', 
-        lambda: bootstrap_file
+        lambda season=None: bootstrap_file
     )
     
     fpl_load.load_fixtures_to_postgres(db_params=test_db_params)
@@ -143,7 +143,7 @@ def test_fpl_load_events_to_postgres(fpl_element_summaries, monkeypatch, test_db
     # Reuse element summaries as it has the same structure
     monkeypatch.setattr(
         'ingestion.load.fpl_load.get_latest_events',
-        lambda: fpl_element_summaries
+        lambda season=None: fpl_element_summaries
     )
 
     fpl_load.load_events_to_postgres(db_params=test_db_params)
