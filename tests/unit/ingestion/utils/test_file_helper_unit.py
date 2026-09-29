@@ -78,3 +78,25 @@ def test_get_latest_element_summaries_with_season(tmp_path):
     mock_get_season.assert_called_once()
     mock_get.assert_not_called()
     assert output == expected_output
+
+
+def test_get_latest_fixtures_file_with_season():
+    # Season logic, function should call different functions based on season param
+    with patch('ingestion.utils.fpl_file_helper.get_latest_path_for_season') as mock_get_season, \
+         patch('ingestion.utils.fpl_file_helper.get_latest_path') as mock_get:
+        
+        fpl_file_helper.get_latest_fixtures_file()
+
+    mock_get.assert_called_once()
+    mock_get_season.assert_not_called()
+
+
+def test_get_latest_fixtures_file_without_season():
+    # Season logic, function should call different functions based on season param
+    with patch('ingestion.utils.fpl_file_helper.get_latest_path_for_season') as mock_get_season, \
+         patch('ingestion.utils.fpl_file_helper.get_latest_path') as mock_get:
+        
+        fpl_file_helper.get_latest_fixtures_file(season=2025)
+
+    mock_get_season.assert_called_once()
+    mock_get.assert_not_called()
