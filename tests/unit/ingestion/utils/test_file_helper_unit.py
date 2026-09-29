@@ -29,10 +29,9 @@ def test_get_latest_bootstrap_file_with_season():
 def test_get_latest_element_summaries_without_season(tmp_path):
     dir = tmp_path / 'season=2026' / '2026-03-01'
     dir.mkdir(parents=True, exist_ok=True)
+    data = {'fixtures': '', 'history': ''}
 
     for player_id in [1, 2, 3]:
-        data = {'fixtures': '', 'history': ''}
-
         file = dir / f'player_id={player_id}.json'
         file.write_text(json.dumps(data))
 
@@ -57,14 +56,15 @@ def test_get_latest_element_summaries_with_season(tmp_path):
     dir = tmp_path / 'season=2026' / '2026-03-01'
     dir.mkdir(parents=True, exist_ok=True)
 
-    for player_id in [1, 2, 3]:
-        data = {'fixtures': '', 'history': ''}
+    data = {'fixtures': '', 'history': ''}
 
+    for player_id in [1, 2, 3]:
         file = dir / f'player_id={player_id}.json'
         file.write_text(json.dumps(data))
 
     with patch('ingestion.utils.fpl_file_helper.get_latest_path') as mock_get, \
-            patch('ingestion.utils.fpl_file_helper.get_latest_path_for_season') as mock_get_season:
+         patch('ingestion.utils.fpl_file_helper.get_latest_path_for_season') as mock_get_season:
+        
         mock_get_season.return_value = dir
 
         output = fpl_file_helper.get_latest_element_summaries(season=2026)
@@ -100,3 +100,59 @@ def test_get_latest_fixtures_file_without_season():
 
     mock_get_season.assert_called_once()
     mock_get.assert_not_called()
+
+
+def test_get_latest_events_without_season(tmp_path):
+    dir = tmp_path / 'season=2026' / '2026-03-01'
+    dir.mkdir(parents=True, exist_ok=True)
+
+    data = {'test': '', 'data': ''}
+
+    for id in [1, 2, 3]:
+        file = dir / f'gameweek_id={id}.json'
+        file.write_text(json.dumps(data))
+
+    with patch('ingestion.utils.fpl_file_helper.get_latest_path') as mock_get, \
+         patch('ingestion.utils.fpl_file_helper.get_latest_path_for_season') as mock_get_season:
+
+        mock_get.return_value = dir
+
+        output = fpl_file_helper.get_latest_events()
+
+    expected_output = [
+        (2026, 1, json.dumps({'test': '', 'data': ''}), '2026-03-01'),
+        (2026, 2, json.dumps({'test': '', 'data': ''}), '2026-03-01'),
+        (2026, 3, json.dumps({'test': '', 'data': ''}), '2026-03-01')
+    ]
+
+    mock_get.assert_called_once()
+    mock_get_season.assert_not_called()
+    assert output == expected_output
+
+
+def test_get_latest_events_with_season(tmp_path):
+    dir = tmp_path / 'season=2026' / '2026-03-01'
+    dir.mkdir(parents=True, exist_ok=True)
+
+    data = {'test': '', 'data': ''}
+
+    for id in [1, 2, 3]:
+        file = dir / f'gameweek_id={id}.json'
+        file.write_text(json.dumps(data))
+
+    with patch('ingestion.utils.fpl_file_helper.get_latest_path') as mock_get, \
+         patch('ingestion.utils.fpl_file_helper.get_latest_path_for_season') as mock_get_season:
+
+        mock_get_season.return_value = dir
+
+        output = fpl_file_helper.get_latest_events(season=2026)
+
+    expected_output = [
+        (2026, 1, json.dumps({'test': '', 'data': ''}), '2026-03-01'),
+        (2026, 2, json.dumps({'test': '', 'data': ''}), '2026-03-01'),
+        (2026, 3, json.dumps({'test': '', 'data': ''}), '2026-03-01')
+    ]
+
+    mock_get_season.assert_called_once()
+    mock_get.assert_not_called()
+    assert output == expected_output
