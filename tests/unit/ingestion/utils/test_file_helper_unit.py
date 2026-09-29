@@ -1,6 +1,7 @@
 from unittest.mock import patch, MagicMock
 import pytest
 import json
+import pandas as pd
 from ingestion.utils import fpl_file_helper, vaastav_file_helper, understat_file_helper
 
 
@@ -181,3 +182,29 @@ def test_get_latest_match_files(tmp_path):
     print(expected_output)
 
     assert output == expected_output
+
+
+def test_get_latest_id_mappings_file_success(tmp_path):
+    dir = tmp_path / 'id_mappings'
+    dir.mkdir(parents=True, exist_ok=True)
+
+    for date in ['2026-04-03', '2026-01-02', '2027-01-01']:
+        file = dir / f'{date}.parquet'
+
+        df = pd.DataFrame({'test': [1]})
+
+        df.to_parquet(file)
+
+    with patch.object(understat_file_helper, 'UNDERSTAT_DATA_DIR', tmp_path):
+        output = understat_file_helper.get_latest_id_mappings_file()
+
+    assert output == dir / '2027-01-01.parquet'
+
+
+def test_get_latest_id_mappings_file_empty_folder(tmp_path):
+    dir = tmp_path / 'id_mappings'
+    dir.mkdir(parents=True, exist_ok=True)
+
+    with patch.object(understat_file_helper, 'UNDERSTAT_DATA_DIR', tmp_path), \
+         pytest.raises(FileNotFoundError, match='No ID mappings files'):
+        understat_file_helper.get_latest_id_mappings_file()
