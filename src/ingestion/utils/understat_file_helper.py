@@ -22,7 +22,7 @@ def get_latest_match_files() -> list[tuple[str, str]]:
     match_files = []
 
     for file in match_data_dir.glob('match_id=*.json'):
-        match_id = file.stem.split('=')[1]
+        match_id = int(file.stem.split('=')[1])
 
         with open(file, 'r', encoding='utf-8') as f:
             data = json.load(f)

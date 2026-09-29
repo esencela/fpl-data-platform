@@ -156,3 +156,28 @@ def test_get_latest_events_with_season(tmp_path):
     mock_get_season.assert_called_once()
     mock_get.assert_not_called()
     assert output == expected_output
+
+
+def test_get_latest_match_files(tmp_path):
+    dir = tmp_path / 'matches'
+    dir.mkdir(parents=True, exist_ok=True)
+
+    data = {'test': '', 'data': ''}
+
+    for id in [1, 2, 3]:
+        file = dir / f'match_id={id}.json'
+        file.write_text(json.dumps(data))
+
+    with patch.object(understat_file_helper, 'UNDERSTAT_DATA_DIR', tmp_path):
+        output = understat_file_helper.get_latest_match_files()
+
+    expected_output = [
+        (1, json.dumps(data)),
+        (2, json.dumps(data)),
+        (3, json.dumps(data))
+    ]
+
+    print(output)
+    print(expected_output)
+
+    assert output == expected_output
