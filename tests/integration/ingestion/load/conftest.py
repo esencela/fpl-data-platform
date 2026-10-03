@@ -4,7 +4,7 @@ import pytest
 import psycopg2
 from testcontainers.postgres import PostgresContainer
 
-SQL_INIT_DIR = Path(__file__).resolve().parents[3] / 'sql' / 'init'
+SQL_INIT_DIR = Path(__file__).resolve().parents[4] / 'sql' / 'init'
 RAW_TABLES = [
     'raw.fpl_bootstrap_static', 
     'raw.fpl_element_summary',
