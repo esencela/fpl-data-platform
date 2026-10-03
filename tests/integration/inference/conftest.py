@@ -9,7 +9,7 @@ from testcontainers.postgres import PostgresContainer
 
 @pytest.fixture(scope='session')
 def features_db():
-    """Starts a PostgreSQL container with custom schema and tables."""
+    """Starts a PostgreSQL container with features schema and tables."""
 
     # Create features table to test prediction features loading
     with PostgresContainer('postgres:15') as container:
@@ -40,4 +40,29 @@ def features_db():
 
         engine.dispose()
         yield db_url
-        
+
+
+@pytest.fixture(scope='session')
+def predictions_db():
+    """Starts a PostgreSQL container with predictions schema and tables."""
+
+    with PostgresContainer('postgres:15') as container:
+        db_url = container.get_connection_url()
+        engine = create_engine(db_url)
+
+        with engine.begin() as conn:
+            # Create schema and table for predictions
+            conn.execute(text('CREATE SCHEMA IF NOT EXISTS test_schema'))
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS test_schema.test_predictions (
+                    fixture_key TEXT,
+                    player_id INTEGER,
+                    model_name TEXT,
+                    model_version TEXT,
+                    target TEXT,
+                    predicted_value FLOAT
+                );
+            """))
+
+        engine.dispose()
+        yield db_url
