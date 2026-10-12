@@ -33,6 +33,10 @@ upcoming as (
 		on ps.team_id in (f.home_team_id, f.away_team_id)
 		and ps.season = f.season
 	where f.finished = false
+	and f.fixture_key not in (
+		select fixture_key
+		from played
+	)
 )
 
 select *
