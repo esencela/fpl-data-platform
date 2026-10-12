@@ -29,7 +29,7 @@ select
     -- Fixture info
     (fixture->>'event')::int as gameweek_id,
     (fixture->>'kickoff_time')::timestamptz as kickoff_time,    
-    (fixture->>'finished')::boolean as finished,
+    (fixture->>'finished_provisional')::boolean as finished,
 
     -- Team info
     (fixture->>'team_h')::int as home_team_season_id,
