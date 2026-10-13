@@ -25,7 +25,7 @@ DB_PARAMS = {
 
 
 def get_engine():
-    return create_engine(f'postgresql://{settings.postgres_user}:{settings.postgres_password}'
+    return create_engine(f'postgresql+psycopg2://{settings.postgres_user}:{settings.postgres_password}'
                          f'@{settings.postgres_host}:{settings.postgres_port}/{settings.postgres_db}')
 
 
